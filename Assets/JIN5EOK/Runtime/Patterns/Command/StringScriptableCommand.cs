@@ -1,17 +1,19 @@
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace Jin5eok.Patterns.Commands
 {
     public class StringScriptableCommand : ScriptableCommand
-    {
-        public static Dictionary<string, ICommand> CommandMap { get; private set; } = new();
-        public string stringCommand;
+    { 
+        [SerializeField] private string _commandLine;
+        public string CommandLine => _commandLine;
+        private StringCommand _stringCommand;
         public override void Execute(object target)
         {
-            if (CommandMap.TryGetValue(stringCommand, out var command))
+            if (_stringCommand == null || _stringCommand.commandLine.Equals(_commandLine) == false)
             {
-                command.Execute(target);
+                _stringCommand = new StringCommand(_commandLine);
             }
+            _stringCommand.Execute(target);
         }
     }
 }
