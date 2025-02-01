@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Jin5eok.Patterns.Commands
+namespace Jin5eok.Patterns.Command
 {
     [Serializable]
     public class StringCommand : ICommand

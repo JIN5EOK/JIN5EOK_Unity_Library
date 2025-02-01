@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Jin5eok.Patterns.Commands
+namespace Jin5eok.Patterns.Command
 {
     public class StringScriptableCommand : ScriptableCommand
     {

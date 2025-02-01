@@ -1,4 +1,4 @@
-namespace Jin5eok.Patterns.Commands
+namespace Jin5eok.Patterns.Command
 {
     public interface ICommand
     {
