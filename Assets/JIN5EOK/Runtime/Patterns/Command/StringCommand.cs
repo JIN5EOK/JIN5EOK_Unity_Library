@@ -1,11 +1,21 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Jin5eok.Patterns.Commands
 {
+    [Serializable]
     public class StringCommand : ICommand
     {
         public static Dictionary<string, ICommand> CommandMap { get; private set; } = new();
-        public string commandLine { get; private set;}
+        [SerializeField]
+        private string _commandLine;
+        public string commandLine
+        {
+            get => _commandLine; 
+            private set => _commandLine = value;
+            
+        }
         public StringCommand(string commandLine)
         {
             this.commandLine = commandLine;
