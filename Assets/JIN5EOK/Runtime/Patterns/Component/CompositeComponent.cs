@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace Jin5eok.Patterns.Component
 {
@@ -12,14 +11,13 @@ namespace Jin5eok.Patterns.Component
 
         public virtual int Count => _componentsMap.Count;
         
-        [CanBeNull]
         public virtual TElement Get<TElement>() where TElement : IComponent
         {
             _componentsMap.TryGetValue(typeof(T), out var status);
             return status is TElement value ? value : default;
         }
         
-        public virtual bool Get<TElement>([CanBeNull] out TElement result) where TElement : IComponent
+        public virtual bool Get<TElement>(out TElement result) where TElement : IComponent
         {
             result = Get<TElement>();
             return result != null;
@@ -68,7 +66,5 @@ namespace Jin5eok.Patterns.Component
                 thisComponent.CopyFrom(source);
             }
         }
-        
-        public virtual IComponent GetDefault() => null;
     }
 }
