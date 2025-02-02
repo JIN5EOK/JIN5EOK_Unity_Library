@@ -7,7 +7,7 @@ namespace Jin5eok.Patterns.Component
     [Serializable]
     public class CompositeComponent<T> : IComponent where T : class, IComponent
     {
-        private Dictionary<Type, T> _componentsMap = new ();
+        protected Dictionary<Type, T> _componentsMap = new ();
 
         public virtual int Count => _componentsMap.Count;
         
@@ -46,25 +46,6 @@ namespace Jin5eok.Patterns.Component
         public virtual bool Contains<TKey>() where TKey : T
         {
             return _componentsMap.ContainsKey(typeof(TKey));
-        }
-        
-        public virtual void CopyFrom(IComponent source)
-        {
-            if (source is CompositeComponent<T> composite)
-            {
-                var fromComponents = composite.GetAll();
-                foreach (var fromComponent in fromComponents)
-                {
-                    if (_componentsMap.TryGetValue(fromComponent.GetType(), out var thisComponent))
-                    {
-                        thisComponent.CopyFrom(fromComponent);
-                    }
-                }    
-            }
-            else if (_componentsMap.TryGetValue(source.GetType(), out var thisComponent))
-            {
-                thisComponent.CopyFrom(source);
-            }
         }
     }
 }
