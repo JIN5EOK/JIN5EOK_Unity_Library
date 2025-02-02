@@ -28,9 +28,9 @@ namespace Jin5eok.Patterns.Component
             return _componentsMap.Values.ToArray();
         }
         
-        public virtual bool Add(T status)
+        public virtual bool Add<TKey>(T status) where TKey : T
         {
-            return _componentsMap.TryAdd(status.GetType(), status);
+            return _componentsMap.TryAdd(typeof(TKey), status);
         }
         
         public virtual bool Remove(Type type)
@@ -43,9 +43,9 @@ namespace Jin5eok.Patterns.Component
             _componentsMap.Clear();
         }
 
-        public virtual bool Contains(T item)
+        public virtual bool Contains<TKey>() where TKey : T
         {
-            return item != null && _componentsMap.ContainsKey(item.GetType());
+            return _componentsMap.ContainsKey(typeof(TKey));
         }
         
         public virtual void CopyFrom(IComponent source)
