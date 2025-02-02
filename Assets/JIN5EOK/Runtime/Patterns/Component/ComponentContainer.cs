@@ -5,7 +5,7 @@ using System.Linq;
 namespace Jin5eok.Patterns.Component
 {
     [Serializable]
-    public class CompositeComponent<T> : IComponent where T : class, IComponent
+    public class ComponentContainer<T> : IComponent where T : class, IComponent
     {
         protected Dictionary<Type, T> _componentsMap = new ();
 
