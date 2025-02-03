@@ -5,7 +5,7 @@ using System.Linq;
 namespace Jin5eok.Patterns.Component
 {
     [Serializable]
-    public class ComponentContainer<T> : IComponent where T : class, IComponent
+    public class ComponentContainer<T> where T : class, IComponent
     {
         protected Dictionary<Type, T> _componentsMap = new ();
 
@@ -13,8 +13,8 @@ namespace Jin5eok.Patterns.Component
         
         public virtual TElement Get<TElement>() where TElement : IComponent
         {
-            _componentsMap.TryGetValue(typeof(T), out var status);
-            return status is TElement value ? value : default;
+            _componentsMap.TryGetValue(typeof(TElement), out var item);
+            return item is TElement value ? value : default;
         }
         
         public virtual bool Get<TElement>(out TElement result) where TElement : IComponent
@@ -28,16 +28,28 @@ namespace Jin5eok.Patterns.Component
             return _componentsMap.Values.ToArray();
         }
         
-        public virtual bool Add<TKey>(T status) where TKey : T
+        public virtual bool Add<TKey>(T item) where TKey : T
         {
-            return _componentsMap.TryAdd(typeof(TKey), status);
+            return _componentsMap.TryAdd(typeof(TKey), item);
         }
         
-        public virtual bool Remove(Type type)
+        public virtual bool Remove<TKey>() where TKey : T
         {
-            return _componentsMap.Remove(type);
+            return _componentsMap.Remove(typeof(TKey));    
         }
 
+        public virtual bool RemoveInherited<TKey>() where TKey : T
+        {
+            foreach (var componentType in _componentsMap.Keys)
+            {
+                if (typeof(TKey).IsAssignableFrom(componentType))
+                {
+                    return _componentsMap.Remove(typeof(TKey));
+                }
+            }
+            return false;
+        }
+        
         public virtual void Clear()
         {
             _componentsMap.Clear();
