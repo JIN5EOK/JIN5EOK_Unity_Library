@@ -5,21 +5,46 @@ using System.Linq;
 namespace Jin5eok.Patterns.Component
 {
     [Serializable]
-    public class ComponentContainer<T> where T : class, IComponent
+    public class ComponentContainer<T>
     {
         protected Dictionary<Type, T> _componentsMap = new ();
 
         public virtual int Count => _componentsMap.Count;
         
-        public virtual TElement Get<TElement>() where TElement : IComponent
+        public virtual TKey Get<TKey>() where TKey : class, T
         {
-            _componentsMap.TryGetValue(typeof(TElement), out var item);
-            return item is TElement value ? value : default;
+            _componentsMap.TryGetValue(typeof(TKey), out var item);
+            return item as TKey;
         }
         
-        public virtual bool Get<TElement>(out TElement result) where TElement : IComponent
+        public virtual TKey GetInherited<TKey>() where TKey : T
         {
-            result = Get<TElement>();
+            foreach (var key in _componentsMap.Values)
+            {
+                if (key is TKey component)
+                {
+                    return component;
+                }
+            }
+            return default;
+        }
+
+        public virtual List<TKey> GetInheritedAll<TKey>() where TKey : T
+        {
+            var list = new List<TKey>();
+            foreach (var value in _componentsMap.Values)
+            {
+                if (value is TKey component)
+                {
+                    list.Add(component);
+                }
+            }
+            return list;
+        }
+
+        public virtual bool Get<TKey>(out TKey result) where TKey : class, T
+        {
+            result = Get<TKey>();
             return result != null;
         }
 
@@ -28,12 +53,12 @@ namespace Jin5eok.Patterns.Component
             return _componentsMap.Values.ToArray();
         }
         
-        public virtual bool Add<TKey>(T item) where TKey : T
+        public virtual bool Add(T item)
         {
-            return _componentsMap.TryAdd(typeof(TKey), item);
+            return _componentsMap.TryAdd(item.GetType(), item);
         }
-        
-        public virtual bool Remove<TKey>() where TKey : T
+
+        public virtual bool Remove<TKey>() where TKey : class, T
         {
             return _componentsMap.Remove(typeof(TKey));    
         }
