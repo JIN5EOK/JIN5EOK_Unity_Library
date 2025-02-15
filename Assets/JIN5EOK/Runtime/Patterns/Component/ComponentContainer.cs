@@ -69,7 +69,7 @@ namespace Jin5eok.Patterns.Component
             {
                 if (typeof(TKey).IsAssignableFrom(componentType))
                 {
-                    return _componentsMap.Remove(typeof(TKey));
+                    return _componentsMap.Remove(componentType);
                 }
             }
             return false;
@@ -78,11 +78,13 @@ namespace Jin5eok.Patterns.Component
         public virtual int RemoveInheritedAll<TKey>() where TKey : T
         {
             var removeCount = 0;
-            foreach (var componentType in _componentsMap.Keys)
+            var keys = _componentsMap.Keys.ToArray();
+
+            for (int i = keys.Length - 1; i >= 0; --i)
             {
-                if (typeof(TKey).IsAssignableFrom(componentType))
+                if (typeof(TKey).IsAssignableFrom(keys[i]))
                 {
-                    removeCount += _componentsMap.Remove(typeof(TKey)) ? 1 : 0;
+                    removeCount += _componentsMap.Remove(keys[i]) ? 1 : 0;
                 }
             }
             return removeCount;
