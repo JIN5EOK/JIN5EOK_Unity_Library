@@ -33,6 +33,17 @@ namespace Jin5eok.Samples
             public int subField2;
         }
         
+        public class SubFoo3 : BaseFoo
+        {
+            public SubFoo3() : base("I'm SubFoo3")
+            {
+                subField3 = Vector2.left;
+            }
+            
+            public Vector2 subField3;
+        }
+        
+        
         private ComponentContainer<BaseFoo> _fooContainer = new ComponentContainer<BaseFoo>();        
         void Start()
         {
@@ -49,16 +60,20 @@ namespace Jin5eok.Samples
     
         public void AddAndGetItem(ComponentContainer<BaseFoo> fooContainer)
         {
+            
             fooContainer.Add(new SubFoo1("I'm SubFoo1",true));
             fooContainer.Add(new SubFoo2("I'm SubFoo2", 500));
+            fooContainer.Add<SubFoo3>();
             fooContainer.Add(new BaseFoo("I'm BaseFoo"));
-
+            
             var subFoo1 = fooContainer.Get<SubFoo1>();
             var subFoo2 = fooContainer.Get<SubFoo2>();
+            var subFoo3 = fooContainer.Get<SubFoo3>();
             var baseFoo = fooContainer.Get<BaseFoo>();
 
             Debug.Log($"Add {nameof(SubFoo1)} : {subFoo1.say}, {subFoo1.subField1}");
             Debug.Log($"Add {nameof(SubFoo2)} : {subFoo2.say}, {subFoo2.subField2}");
+            Debug.Log($"Add {nameof(SubFoo3)} : {subFoo3.say}, {subFoo3.subField3}");
             Debug.Log($"Add {nameof(BaseFoo)} : {baseFoo.say}");
         }
     

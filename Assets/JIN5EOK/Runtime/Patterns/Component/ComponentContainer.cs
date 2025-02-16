@@ -58,6 +58,26 @@ namespace Jin5eok.Patterns.Component
             return _componentsMap.TryAdd(item.GetType(), item);
         }
 
+        public virtual TKey Add<TKey>() where TKey : class, T, new()
+        {
+            if (_componentsMap.ContainsKey(typeof(TKey)) == false)
+            {
+                var addTarget = new TKey();
+                _componentsMap.Add(typeof(TKey), addTarget);
+                return addTarget;
+            }
+            return default;
+        }
+
+        public virtual TKey AddOrGet<TKey>() where TKey : class, T, new()
+        {
+            if (Get<TKey>(out var result))
+            {
+                return result;
+            }
+            return Add<TKey>();
+        }
+        
         public virtual bool Remove<TKey>() where TKey : class, T
         {
             return _componentsMap.Remove(typeof(TKey));    
