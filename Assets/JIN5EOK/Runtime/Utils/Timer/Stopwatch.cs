@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 
-namespace Jin5eok.Timer
+namespace Jin5eok.Utils.Timer
 {
     public class Stopwatch : ITimer
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Jin5eok.Timer
+namespace Jin5eok.Utils.Timer
 {
     /// <summary>
     /// 목표 시간이 되면 종료되는 타이머

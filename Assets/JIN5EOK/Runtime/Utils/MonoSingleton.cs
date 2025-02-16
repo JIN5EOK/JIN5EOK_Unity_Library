@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Jin5eok
+namespace Jin5eok.Utils
 {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
