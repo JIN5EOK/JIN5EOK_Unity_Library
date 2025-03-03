@@ -7,6 +7,6 @@ namespace Jin5eok.Patterns.Component
 {
     public class ComponentContainer<T> : ComponentContainerBase<T>
     {
-        protected override Dictionary<Type, T> ComponentsMap { get; set; }
+        protected override Dictionary<Type, T> ComponentsMap { get; set; } = new ();
     }
 }
