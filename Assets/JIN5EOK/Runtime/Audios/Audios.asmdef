@@ -3,7 +3,8 @@
     "rootNamespace": "Jin5eok",
     "references": [
         "JIN5EOK",
-        "Unity.Addressables"
+        "Unity.Addressables",
+        "Unity.ResourceManager"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

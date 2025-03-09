@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Jin5eok.Audios
@@ -7,31 +7,55 @@ namespace Jin5eok.Audios
     {
         public AudioClip AudioClip => _audioSource.clip;
         public bool IsPlaying => _audioSource.isPlaying;
-        public SoundType SoundType { get; private set; }
-        private float _volumeScale;
-
-        public float VolumeScale
-        {
-            get => _volumeScale;
-            private set => _volumeScale = Mathf.Clamp01(value);
-        }
-        private float DefaultVolume => 
-            SoundType == SoundType.Bgm ? AudioModel.Instance.BgmVolume :
-            SoundType == SoundType.Sfx ? AudioModel.Instance.SfxVolume : 1.0f;
+        public AudioModel AudioPlayerModel { get; set; } = new GlobalAudio();
         
+        private AudioModel _baseAudioModel;
+        private GlobalAudio _globalAudio;
         private AudioSource _audioSource;
+        private Coroutine _fadeCoroutine;
         
-        public void Initialize(AudioClip audioClip, SoundType soundType)
+        public void Initialize(AudioClip audioClip, AudioModel baseAudioModel, GlobalAudio globalAudio)
         {
+            if (_audioSource == null)
+            {
+                _audioSource = gameObject.AddComponent<AudioSource>();    
+            }
             _audioSource.clip = audioClip;
-            SoundType = soundType;
-            AddVolumeChangeEvent();
+            _baseAudioModel = baseAudioModel;
+            _globalAudio = globalAudio;
+            AddEvent();
+            OnAudioModelsChanged();
+        }
+
+        private void AddEvent()
+        {
+            _globalAudio.OnVolumeChanged += OnVolumeChanged;
+            _globalAudio.OnMuteChanged += OnMuteChanged;
+            _baseAudioModel.OnVolumeChanged += OnVolumeChanged;
+            _baseAudioModel.OnMuteChanged += OnMuteChanged;
+            AudioPlayerModel.OnVolumeChanged += OnVolumeChanged;
+            AudioPlayerModel.OnMuteChanged += OnMuteChanged;
+        }
+
+        private void OnVolumeChanged(float defaultVolume)
+        {
+            OnAudioModelsChanged();
+        }
+        
+        private void OnMuteChanged(bool mute)
+        {
+            OnAudioModelsChanged();
         }
         
         public AudioPlayResult Play()
         {
+            if (AudioClip == null)
+            {
+                return AudioPlayResult.GetFailedResult();
+            }
+            
             _audioSource.Play();
-            return AudioClip != null ? AudioPlayResult.GetSucceedResult(AudioClip) : AudioPlayResult.GetFailedResult();
+            return AudioPlayResult.GetSucceedResult(AudioClip);
         }
         
         public void Pause()
@@ -44,63 +68,47 @@ namespace Jin5eok.Audios
             _audioSource.Stop();
         }
         
-        public void SetVolumeScale(float to)
+        public void FadeVolumeScale(float from, float to, float duration)
         {
-            VolumeScale = to;
-            SetAudioSourceVolume();
-        }
-        
-        public async Awaitable FadeVolumeScale(float from, float to, float duration)
-        {
-            while (duration > 0f)
+            if (_fadeCoroutine != null)
             {
-                duration -= Time.deltaTime;
-                SetVolumeScale(Mathf.Lerp(from, to, duration));
-                await Awaitable.NextFrameAsync();
+                StopCoroutine(_fadeCoroutine);
             }
-            SetVolumeScale(to);
+            _fadeCoroutine = StartCoroutine(FadeVolumeScaleCoroutine(from, to, duration));
         }
         
-        private void AddVolumeChangeEvent()
+        private IEnumerator FadeVolumeScaleCoroutine(float from, float to, float targetDuration)
         {
-            switch (SoundType)
+            var time = 0.0f;
+            while (time < targetDuration)
             {
-                case SoundType.Bgm:
-                    AudioModel.Instance.OnBgmVolumeChanged += OnDefaultVolumeChanged;  
-                    break;
-                case SoundType.Sfx:
-                    AudioModel.Instance.OnSfxVolumeChanged += OnDefaultVolumeChanged;
-                    break;
+                time += Time.deltaTime;
+                AudioPlayerModel.Volume = (Mathf.Lerp(from, to, time / targetDuration)); 
+                yield return null;
             }
+            AudioPlayerModel.Volume = to;
         }
         
-        private void RemoveVolumeChangeEvent()
+        private void OnAudioModelsChanged()
         {
-            switch (SoundType)
-            {
-                case SoundType.Bgm:
-                    AudioModel.Instance.OnBgmVolumeChanged -= OnDefaultVolumeChanged;  
-                    break;
-                case SoundType.Sfx:
-                    AudioModel.Instance.OnSfxVolumeChanged -= OnDefaultVolumeChanged;
-                    break;
-            }
-        }
-        
-        private void OnDefaultVolumeChanged(float defaultVolume)
-        {
-            SetAudioSourceVolume();
-        }
-        
-        private void SetAudioSourceVolume()
-        {
-            _audioSource.volume = DefaultVolume * VolumeScale;
+            _audioSource.mute = AudioPlayerModel.Mute || _baseAudioModel.Mute || _globalAudio.Mute;
+            _audioSource.volume = AudioPlayerModel.Volume * _baseAudioModel.Volume * _globalAudio.Volume;
         }
         
         public void OnDestroy()
         {
             Stop();
             RemoveVolumeChangeEvent();
+        }
+
+        private void RemoveVolumeChangeEvent()
+        {
+            _globalAudio.OnVolumeChanged -= OnVolumeChanged;
+            _globalAudio.OnMuteChanged -= OnMuteChanged;
+            _baseAudioModel.OnVolumeChanged -= OnVolumeChanged;
+            _baseAudioModel.OnMuteChanged -= OnMuteChanged;
+            AudioPlayerModel.OnVolumeChanged -= OnVolumeChanged;
+            AudioPlayerModel.OnMuteChanged -= OnMuteChanged;
         }
     }
 }

@@ -1,81 +1,34 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Jin5eok.Audios
-{    
-    public enum SoundType
+{
+    public abstract class AudioModel
     {
-        Bgm,
-        Sfx,
-    }
-    
-    public class AudioModel
-    {
-        private static AudioModel _instance;
-
-        public static AudioModel Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new AudioModel();
-                }
-
-                return _instance;
-            }
-        }
-
-        public event Action<float> OnBgmVolumeChanged;
-        public event Action<float> OnSfxVolumeChanged;
+        public event Action<float> OnVolumeChanged;
+        public event Action<bool> OnMuteChanged;
         
-        private float _bgmVolume;
-        private float _sfxVolume;
-        
-        public float BgmVolume
+        public bool Mute
         {
-            get => _bgmVolume;
+            get => _mute;
             set
             {
-                _bgmVolume = Mathf.Clamp01(value);
-                OnBgmVolumeChanged?.Invoke(_bgmVolume);
-            }   
+                _mute = value;
+                OnMuteChanged?.Invoke(value);
+            }
         }
-
-        public float SfxVolume
+        private bool _mute;
+        public float Volume
         {
-            get => _sfxVolume;
+            get => _volume;
             set
             {
-                _sfxVolume = Mathf.Clamp01(value);
-                OnSfxVolumeChanged?.Invoke(_sfxVolume);
-            }   
-        }
-        
-        public Dictionary<string, AudioClip> Clips { get; private set; } = new ();
-        
-        public AudioClip GetAudioClipResources(string resourcePath)
-        {
-            if (Clips.ContainsKey(resourcePath) == false)
-            {
-                var clip = Resources.Load<AudioClip>(resourcePath);
-                Clips.Add(resourcePath, clip);
+                _volume = Mathf.Clamp01(value);
+                OnVolumeChanged?.Invoke(_volume);
             }
-            return Clips[resourcePath];
         }
-#if USE_ADDRESSABLES
-        public AudioClip GetAudioClipAddressables(string address)
-        {
-            if (Clips.ContainsKey(address) == false)
-            {
-                var clip = Addressables.LoadAssetAsync<AudioClip>(address).WaitForCompletion();
-                Clips.Add(address, clip);
-            }
-
-            return Clips[address];
-        }
+        private float _volume  = 1f;
     }
-#endif
+
+    public class GlobalAudio : AudioModel { }
 }

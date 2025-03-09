@@ -1,39 +1,65 @@
+using System;
+using System.Collections.Generic;
+using Jin5eok.Helper;
 using Jin5eok.Utils;
 using UnityEngine;
+#if USE_ADDRESSABLES
+#endif
 
 namespace Jin5eok.Audios
 {
     public class AudioManager : MonoSingleton<AudioManager>
     {
-        private AudioSource _oneshotAudioSource;
+        private GlobalAudio _globalAudio;
+        private Dictionary<Type, AudioModel> _audioModels = new ();
+        private Dictionary<Type, OneShotAudioPlayer> _oneShotAudioPlayers = new ();
         
         protected override void Awake()
         {
             base.Awake();
-            _oneshotAudioSource = gameObject.AddComponent<AudioSource>();
-        }
-        
-        public AudioPlayer GetAudioPlayerInstance(AudioClip audioClip, SoundType soundType)
-        {
-            var playerObject = new GameObject($"{nameof(AudioPlayer)}/{audioClip.name}");
-            playerObject.transform.SetParent(this.transform);
+            var subclasses = ReflectionHelper.GetSubclasses<AudioModel>();
             
-            var player = playerObject.AddComponent<AudioPlayer>();
-            player.Initialize(audioClip, soundType);
-            
-            return player;
-        }
-        
-        public AudioPlayResult PlayOneshot(AudioClip clip, SoundType soundType)
-        {
-            if (clip == null)
+            foreach (var sub in subclasses)
             {
-                return AudioPlayResult.GetFailedResult();
+                var audioModel = Activator.CreateInstance(sub) as AudioModel;
+                _audioModels.Add(sub, audioModel);
             }
+            
+            foreach (var sub in subclasses)
+            {
+                var oneShotPlayerGameObject = new GameObject($"{nameof(OneShotAudioPlayer)}:{sub.Name}");
+                oneShotPlayerGameObject.transform.SetParent(transform);
+                
+                var oneShotPlayer = oneShotPlayerGameObject.AddComponent<OneShotAudioPlayer>();
+                oneShotPlayer.Initialize(_audioModels[sub], GetGlobalAudioModel());
+                _oneShotAudioPlayers.Add(sub, oneShotPlayer);
+            }
+        }
+        
+        public AudioPlayer InstantiateAudioPlayer<T>(AudioClip audioClip) where T : AudioModel
+        {
+            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}/{audioClip.name}");
+            playerGameObject.transform.SetParent(transform);
+            
+            var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
+            playerInstance.Initialize(audioClip, _audioModels[typeof(T)], GetGlobalAudioModel());
+            
+            return playerInstance;
+        }
 
-            var volume = soundType == SoundType.Bgm ? AudioModel.Instance.BgmVolume : AudioModel.Instance.SfxVolume;
-            _oneshotAudioSource.PlayOneShot(clip, volume);
-            return AudioPlayResult.GetSucceedResult(clip);
+        public AudioPlayResult PlayOneShot<T>(AudioClip sfxClip) where T : AudioModel
+        {
+            return _oneShotAudioPlayers[typeof(T)].Play(sfxClip);
+        }
+        
+        public GlobalAudio GetGlobalAudioModel()
+        {
+            return GetAudioModel<GlobalAudio>();
+        }
+        
+        public T GetAudioModel<T>() where T : AudioModel
+        {
+            return (T)_audioModels[typeof(T)];
         }
     }   
 }
