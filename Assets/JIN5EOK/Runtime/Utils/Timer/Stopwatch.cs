@@ -1,14 +1,14 @@
+#if USE_AWAITABLE // Awaitable is supported from Unity 2023.1 , use UniTask for older versions if available
 using System;
-using System.Threading;
 using UnityEngine;
 
 namespace Jin5eok.Utils.Timer
 {
     public class Stopwatch : ITimer
     {
-        public event Action<float> OnElapsed; // 주기마다 발생할 이벤트
-        public event Action<float> OnStop; // 스톱워치를 멈추면 발생할 이벤트
-        public float ElapsedSeconds { get; private set; } // 경과 시간 (초)
+        public event Action<float> OnElapsed;
+        public event Action<float> OnStop;
+        public float ElapsedSeconds { get; private set; }
 
         public bool IsRunning
         {
@@ -48,7 +48,7 @@ namespace Jin5eok.Utils.Timer
                 return;
             
             Pause();
-            OnStop?.Invoke(ElapsedSeconds); // 타이머 완료
+            OnStop?.Invoke(ElapsedSeconds);
             ElapsedSeconds = 0;
         }
         
@@ -70,5 +70,74 @@ namespace Jin5eok.Utils.Timer
         }
     }
 }
+#elif !UNITY_2023_1_OR_NEWER && USE_UNITASK
+using System;
+using System.Threading;
+using UnityEngine;
+using Cysharp.Threading.Tasks;
+namespace Jin5eok.Utils.Timer
+{
+    public class Stopwatch : ITimer
+    {
+        public event Action<float> OnElapsed;
+        public event Action<float> OnStop;
+        public float ElapsedSeconds { get; private set; }
 
+        public Stopwatch()
+        {
+            ElapsedSeconds = 0;
+        }
 
+        public bool IsRunning => _cancellationTokenSource != null;
+        private CancellationTokenSource _cancellationTokenSource;
+
+        public void Start()
+        {
+            if (_cancellationTokenSource != null)
+            {
+                return;
+            }
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            var token = _cancellationTokenSource.Token;
+            Run(_cancellationTokenSource.Token).Forget();
+        }
+
+        public void Pause()
+        {
+            if (_cancellationTokenSource == null)
+                return;
+
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
+        }
+
+        public void Stop()
+        {
+            Pause();
+            OnStop?.Invoke(ElapsedSeconds);
+            ElapsedSeconds = 0;
+        }
+
+        public void Reset()
+        {
+            Pause();
+            OnElapsed = null;
+            OnStop = null;
+            ElapsedSeconds = 0;
+        }
+
+        private async UniTaskVoid Run(CancellationToken cancellationToken)
+        {
+            while (cancellationToken.IsCancellationRequested == false)
+            {
+                await UniTask.NextFrame(cancellationToken);
+                await UniTask.SwitchToMainThread();
+                ElapsedSeconds += Time.unscaledDeltaTime;
+                OnElapsed?.Invoke(ElapsedSeconds);
+            }
+        }
+    }
+}
+#endif

@@ -2,8 +2,7 @@
     "name": "DOTweenModuleColorLayer",
     "rootNamespace": "JIN5EOK.Sprite.DOTween ",
     "references": [
-        "GUID:affcd23813e4c4ca29f1ef5cdebb1b01",
-        "GUID:9fcea2c526fc248ae9b2e72c371a484a"
+        "JIN5EOK"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

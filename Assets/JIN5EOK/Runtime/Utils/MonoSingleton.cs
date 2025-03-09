@@ -12,8 +12,11 @@ namespace Jin5eok.Utils
             {
                 if (_instance == null)
                 {
+#if UNITY_6000_0_OR_NEWER
+                    _instance = FindAnyObjectByType<T>();      
+#else
                     _instance = FindObjectOfType<T>();
-
+#endif
                     if (_instance == null)
                     {
                         GameObject singletonObject = new GameObject(typeof(T).Name);

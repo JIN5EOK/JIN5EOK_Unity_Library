@@ -1,32 +1,25 @@
+#if USE_AWAITABLE || USE_UNITASK // Awaitable is supported from Unity 2023.1 , use UniTask for older versions if available
 using System;
 
 namespace Jin5eok.Utils.Timer
 {
     /// <summary>
-    /// 목표 시간이 되면 종료되는 타이머
+    /// Timer that stops at the target time  
     /// </summary>
     public class ReverseTimer : ITimer
     {
-        public bool IsRunning => _stopwatch.IsRunning;
         public event Action<float> OnElapsed;
         public event Action<float> OnTimeover;
+        public bool IsRunning => _stopwatch.IsRunning;
+        public float ElapsedSeconds => _stopwatch.ElapsedSeconds;
         
         private Stopwatch _stopwatch = new Stopwatch();
-        public float ElapsedSeconds => _stopwatch.ElapsedSeconds;
-
-        private float _endSeconds = 0; // 타이머가 종료될 시간
+        private float _endSeconds = 0;
+        
         public ReverseTimer(float endSeconds)
         {
             this._endSeconds = endSeconds;
-            _stopwatch.OnElapsed += elapsed =>
-            {
-                OnElapsed?.Invoke(elapsed);
-                if (ElapsedSeconds > this._endSeconds)
-                {
-                    OnTimeover?.Invoke(this._endSeconds);
-                    _stopwatch.Stop();
-                }
-            };
+            _stopwatch.OnElapsed += Elapsed;
         }
         
         public void Start() => _stopwatch.Start();
@@ -35,9 +28,25 @@ namespace Jin5eok.Utils.Timer
 
         public void Stop() => _stopwatch.Stop();
 
+        public void Elapsed(float elapsed)
+        {
+            OnElapsed?.Invoke(elapsed);
+            if (ElapsedSeconds > this._endSeconds)
+            {
+                var tempElapsedSeconds = elapsed;
+                OnTimeover?.Invoke(tempElapsedSeconds);
+                _stopwatch.Stop();
+            }
+        }
         public void Reset()
         {
+            OnElapsed = null;
+            OnTimeover = null;
             _stopwatch.Reset();
+            _stopwatch.OnElapsed += Elapsed;
         }
+
+
     }
 }
+#endif
