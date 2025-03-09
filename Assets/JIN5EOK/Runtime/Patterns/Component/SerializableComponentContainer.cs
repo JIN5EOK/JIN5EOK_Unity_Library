@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Jin5eok.Patterns.Component
+namespace Jin5eok.Patterns
 {
     [Serializable]
     public class SerializableComponentContainer<T> : ComponentContainerBase<T> where T : SerializableComponent

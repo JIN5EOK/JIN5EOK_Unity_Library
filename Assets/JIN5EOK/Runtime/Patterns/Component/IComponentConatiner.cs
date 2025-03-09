@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Jin5eok.Patterns.Component
+namespace Jin5eok.Patterns
 {
     public interface IComponentContainer<T>
     {

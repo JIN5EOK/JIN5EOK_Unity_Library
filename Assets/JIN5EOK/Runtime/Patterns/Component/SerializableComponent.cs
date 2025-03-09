@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Jin5eok.Patterns.Component
+namespace Jin5eok.Patterns
 {
     [Serializable]
     public class SerializableComponentWrapper

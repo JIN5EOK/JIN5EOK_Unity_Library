@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Jin5eok.Patterns.Component
+namespace Jin5eok.Patterns
 {
     public abstract class ComponentContainerBase<T> : IComponentContainer<T>
     {

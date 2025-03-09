@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Jin5eok.Utils.Timer
+namespace Jin5eok.Timer
 {
     public class Stopwatch : ITimer
     {
@@ -75,7 +75,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-namespace Jin5eok.Utils.Timer
+namespace Jin5eok.Timer
 {
     public class Stopwatch : ITimer
     {

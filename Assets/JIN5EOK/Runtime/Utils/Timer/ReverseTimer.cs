@@ -1,7 +1,7 @@
 #if USE_AWAITABLE || USE_UNITASK // Awaitable is supported from Unity 2023.1 , use UniTask for older versions if available
 using System;
 
-namespace Jin5eok.Utils.Timer
+namespace Jin5eok.Timer
 {
     /// <summary>
     /// Timer that stops at the target time  

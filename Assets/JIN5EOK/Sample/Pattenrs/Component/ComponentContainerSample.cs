@@ -1,4 +1,4 @@
-using Jin5eok.Patterns.Component;
+using Jin5eok.Patterns;
 using UnityEngine;
 
 namespace Jin5eok.Samples

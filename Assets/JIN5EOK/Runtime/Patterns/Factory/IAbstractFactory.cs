@@ -1,4 +1,4 @@
-namespace Jin5eok.Patterns.Factory
+namespace Jin5eok.Patterns
 {
     public interface IAbstractFactory<T>
     {

@@ -1,4 +1,4 @@
-namespace Jin5eok.Utils.Timer
+namespace Jin5eok.Timer
 {
     public interface ITimer
     {

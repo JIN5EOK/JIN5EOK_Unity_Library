@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace Jin5eok.Utils
+namespace Jin5eok.Patterns
 {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
