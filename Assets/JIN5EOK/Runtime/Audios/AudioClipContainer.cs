@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+#if USE_ADDRESSABLES
 using UnityEngine.AddressableAssets;
+#endif
 
 namespace Jin5eok.Audios
 {
