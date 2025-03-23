@@ -1,7 +1,7 @@
 namespace Jin5eok.Patterns
 {
-    public interface ICommand
+    public interface ICommand<T>
     {
-        public void Execute(object target);
+        public void Execute(T target);
     }
 }
