@@ -164,6 +164,23 @@ namespace Jin5eok.Inputs
         }
     }
     
+    public class MousePositionInput : IInput<Vector3>
+    {
+        public event InputCallback<Vector3> InputValueChanged;
+        public Vector3 Value { get; private set; }
+        
+        public void UpdateState()
+        {
+            var currentInput = Input.mousePosition;
+            
+            if (currentInput != Value)
+            {
+                Value = currentInput;
+                InputValueChanged?.Invoke(currentInput);
+            }
+        }
+    }
+    
     public class CompositeInput<T> : IInput<T> where T : notnull
     {
         public event InputCallback<T> InputValueChanged;
