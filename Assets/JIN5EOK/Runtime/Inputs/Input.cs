@@ -109,7 +109,7 @@ namespace Jin5eok.Inputs
             UpdateState(currentValue);
         }
     }
-
+    
     public abstract class AxisInputBase : IInput<float>
     {
         public event InputCallback<float> InputValueChanged;
@@ -127,11 +127,11 @@ namespace Jin5eok.Inputs
         }
     }
     
-    public class AxisInputAxis : AxisInputBase
+    public class AxisInput : AxisInputBase
     {
         public string AxisName { get; set; }
         public bool IsUsingAxisRaw { get; set; }
-        public AxisInputAxis(string axisName, bool isUsingAxisRaw = false)
+        public AxisInput(string axisName, bool isUsingAxisRaw = false)
         {
             AxisName = axisName;
             IsUsingAxisRaw = isUsingAxisRaw;
@@ -163,7 +163,7 @@ namespace Jin5eok.Inputs
             UpdateState(currentValue);
         }
     }
-
+    
     public class CompositeInput<T> : IInput<T> where T : notnull
     {
         public event InputCallback<T> InputValueChanged;
@@ -208,17 +208,18 @@ namespace Jin5eok.Inputs
             
             // Cache a copy to prevent changes during iteration
             var inputGroup = _inputGroup.ToList();
-            
+
+            bool oneOfValuesChanged = false;
             foreach (var input in inputGroup)
             {
                 input.UpdateState();
-            }
 
-            var oneOfInputs = inputGroup.First();
-            if (oneOfInputs.Value.Equals(Value))
-            {
-                Value = oneOfInputs.Value;
-                InputValueChanged?.Invoke(Value);
+                if (oneOfValuesChanged == false && input.Value.Equals(Value) == false)
+                {
+                    oneOfValuesChanged = true;
+                    Value = input.Value;
+                    InputValueChanged?.Invoke(input.Value);
+                }
             }
         }
     }
