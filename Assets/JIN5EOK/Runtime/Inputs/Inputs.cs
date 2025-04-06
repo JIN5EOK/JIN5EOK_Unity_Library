@@ -16,27 +16,53 @@ namespace Jin5eok.Inputs
         public event InputCallback<T> InputValueChanged;
         public T Value { get; }
     }
-    
-    public class ButtonInputKey : IInput<bool>
+
+    public abstract class ButtonInputBase : IInput<bool>
     {
-        public KeyCode KeyCode { get; set; }
+        public abstract void UpdateState();
+
         public event InputCallback<bool> InputValueChanged;
         public bool Value { get; private set; }
-
-        public ButtonInputKey(KeyCode keyCode)
+        
+        protected void UpdateState(bool currentValue)
+        {
+            if (currentValue != Value)
+            {
+                Value = currentValue;
+                InputValueChanged?.Invoke(currentValue);
+            }
+        }
+    }
+    
+    public class ButtonInputKeyCode : ButtonInputBase
+    {
+        public KeyCode KeyCode { get; set; }
+        
+        public ButtonInputKeyCode(KeyCode keyCode)
         {
             KeyCode = keyCode;
         }
-        
-        public void UpdateState()
+
+        public override void UpdateState()
         {
             var currentInput = Input.GetKeyDown(KeyCode) == true || Input.GetKey(KeyCode) == true;
-            
-            if (Value != currentInput)
-            {
-                Value = currentInput;
-                InputValueChanged?.Invoke(currentInput);    
-            }
+            UpdateState(currentInput);
+        }
+    }
+    
+    public class ButtonInputOldInputSystem : ButtonInputBase
+    {
+        public string ButtonName { get; set; }
+        
+        public ButtonInputOldInputSystem(string buttonName)
+        {
+            ButtonName = buttonName;
+        }
+
+        public override void UpdateState()
+        {
+            var currentInput = Input.GetButtonDown(ButtonName) == true || Input.GetButton(ButtonName) == true;
+            UpdateState(currentInput);
         }
     }
     
@@ -57,14 +83,14 @@ namespace Jin5eok.Inputs
         }
     }
     
-    public class VectorInputKey : VectorInputBase
+    public class VectorInputKeyCode : VectorInputBase
     {
         public KeyCode Up { get; set; }
         public KeyCode Down { get; set; }
         public KeyCode Left { get; set; }
         public KeyCode Right { get; set; }
 
-        public VectorInputKey(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
+        public VectorInputKeyCode(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
         {
             Up = up;
             Down = down;
@@ -87,13 +113,13 @@ namespace Jin5eok.Inputs
         }
     }
   
-    public class VectorInputAxis : VectorInputBase
+    public class VectorInputOldInputSystem : VectorInputBase
     {
         public string HorizontalAxisName { get; set; }
         public string VerticalAxisName { get; set; }
         public bool IsUsingAxisRaw { get; set; }
         
-        public VectorInputAxis(string horizontalAxisName, string verticalAxisName, bool isUsingAxisRaw = false)
+        public VectorInputOldInputSystem(string horizontalAxisName, string verticalAxisName, bool isUsingAxisRaw = false)
         {
             HorizontalAxisName = horizontalAxisName;
             VerticalAxisName = verticalAxisName;
@@ -127,11 +153,11 @@ namespace Jin5eok.Inputs
         }
     }
     
-    public class AxisInput : AxisInputBase
+    public class AxisInputOldInputSystem : AxisInputBase
     {
         public string AxisName { get; set; }
         public bool IsUsingAxisRaw { get; set; }
-        public AxisInput(string axisName, bool isUsingAxisRaw = false)
+        public AxisInputOldInputSystem(string axisName, bool isUsingAxisRaw = false)
         {
             AxisName = axisName;
             IsUsingAxisRaw = isUsingAxisRaw;
@@ -144,12 +170,12 @@ namespace Jin5eok.Inputs
         }
     }
 
-    public class AxisInputKey : AxisInputBase
+    public class AxisInputKeyCode : AxisInputBase
     {
         public KeyCode PositiveKey { get; set; }
         public KeyCode NegativeKey { get; set; }
         
-        public AxisInputKey(KeyCode positiveKey, KeyCode negativeKey)
+        public AxisInputKeyCode(KeyCode positiveKey, KeyCode negativeKey)
         {
             PositiveKey = positiveKey;
             NegativeKey = negativeKey;
