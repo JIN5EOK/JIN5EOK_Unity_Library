@@ -66,8 +66,8 @@ namespace Jin5eok.Inputs
                 }
             }
 
-            var isInputBefore = Value.Equals(default) == false;
-            var isInputCurrent = changedValue != null && changedValue.Equals(default) == false;
+            var isInputBefore = Value.Equals(null) == false;
+            var isInputCurrent = changedValue != null && changedValue.Equals(null) == false;
             var isInputChanged = changedValue != null && changedValue.Equals(Value) == false;
             
             if (isInputBefore == false && isInputCurrent == false)

@@ -21,19 +21,19 @@ namespace Jin5eok.Inputs
     
     public class AxisInputHandlerKeyCode : AxisInputHandlerBase
     {
-        public KeyCode PositiveKey { get; set; }
-        public KeyCode NegativeKey { get; set; }
+        public KeyCode PositiveKeyCode { get; set; }
+        public KeyCode NegativeKeyCode { get; set; }
         
-        public AxisInputHandlerKeyCode(KeyCode positiveKey, KeyCode negativeKey)
+        public AxisInputHandlerKeyCode(KeyCode positiveKeyCode, KeyCode negativeKeyCode)
         {
-            PositiveKey = positiveKey;
-            NegativeKey = negativeKey;
+            PositiveKeyCode = positiveKeyCode;
+            NegativeKeyCode = negativeKeyCode;
         }
 
         public override void UpdateState()
         {
-            var isNegative = Input.GetKey(NegativeKey) == true && Input.GetKeyUp(NegativeKey) == false && Input.GetKey(PositiveKey) == false;
-            var isPositive = Input.GetKey(PositiveKey) == true && Input.GetKeyUp(PositiveKey) == false && Input.GetKey(NegativeKey) == false;
+            var isNegative = Input.GetKey(NegativeKeyCode) == true && Input.GetKeyUp(NegativeKeyCode) == false && Input.GetKey(PositiveKeyCode) == false;
+            var isPositive = Input.GetKey(PositiveKeyCode) == true && Input.GetKeyUp(PositiveKeyCode) == false && Input.GetKey(NegativeKeyCode) == false;
             var currentValue = isNegative ? -1 : isPositive ? 1 : 0;
             UpdateState(currentValue);
         }
@@ -43,6 +43,7 @@ namespace Jin5eok.Inputs
     {
         public string AxisName { get; set; }
         public bool IsUsingAxisRaw { get; set; }
+        
         public AxisInputHandlerOldInputSystem(string axisName, bool isUsingAxisRaw = false)
         {
             AxisName = axisName;

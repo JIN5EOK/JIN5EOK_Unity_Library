@@ -22,28 +22,44 @@ namespace Jin5eok.Inputs
     
     public class VectorInputHandlerKeyCode : VectorInputHandlerBase
     {
-        public KeyCode Up { get; set; }
-        public KeyCode Down { get; set; }
-        public KeyCode Left { get; set; }
-        public KeyCode Right { get; set; }
+        private readonly AxisInputHandlerKeyCode _axisInputX;
+        private readonly AxisInputHandlerKeyCode _axisInputY;
+        
+        public KeyCode UpKeyCode
+        {
+            get => _axisInputY.PositiveKeyCode;
+            set =>_axisInputY.PositiveKeyCode = value;
+        }
 
+        public KeyCode DownKeyCode
+        {
+            get => _axisInputY.NegativeKeyCode;
+            set =>_axisInputY.NegativeKeyCode = value;
+        }
+        public KeyCode LeftKeyCode
+        {
+            get => _axisInputX.NegativeKeyCode;
+            set =>_axisInputX.NegativeKeyCode = value;
+        }
+        public KeyCode RightKeyCode
+        {
+            get => _axisInputX.PositiveKeyCode;
+            set =>_axisInputX.PositiveKeyCode = value;
+        }
+        
         public VectorInputHandlerKeyCode(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
         {
-            Up = up;
-            Down = down;
-            Left = left;
-            Right = right;
+            _axisInputX = new AxisInputHandlerKeyCode(right, left);
+            _axisInputY = new AxisInputHandlerKeyCode(up, down);
         }
         
         public override void UpdateState()
         {
-            var isHorizontalPositive = Input.GetKey(Right) == true && Input.GetKeyUp(Right) == false && Input.GetKey(Left) == false;
-            var isHorizontalNegative = Input.GetKey(Left) == true  && Input.GetKeyUp(Left) == false && Input.GetKey(Right) == false;
-            var isVerticalPositive = Input.GetKey(Up) == true && Input.GetKeyUp(Up) == false  && Input.GetKey(Down) == false;
-            var isVerticalNegative = Input.GetKey(Down) == true && Input.GetKeyUp(Down) == false  && Input.GetKey(Up) == false;
+            _axisInputX.UpdateState();
+            _axisInputY.UpdateState();
             
-            float horizontal = isHorizontalPositive == true ? 1.0f : isHorizontalNegative == true ? -1.0f : 0.0f;
-            float vertical = isVerticalPositive == true ? 1.0f : isVerticalNegative == true ? -1.0f : 0.0f;
+            float horizontal = _axisInputX.Value;
+            float vertical = _axisInputY.Value;
             
             var currentValue = new Vector2(horizontal, vertical);
             UpdateState(currentValue);
@@ -52,21 +68,42 @@ namespace Jin5eok.Inputs
   
     public class VectorInputHandlerOldInputSystem : VectorInputHandlerBase
     {
-        public string HorizontalAxisName { get; set; }
-        public string VerticalAxisName { get; set; }
-        public bool IsUsingAxisRaw { get; set; }
+        private readonly AxisInputHandlerOldInputSystem _axisInputX;
+        private readonly AxisInputHandlerOldInputSystem _axisInputY;
         
-        public VectorInputHandlerOldInputSystem(string horizontalAxisName, string verticalAxisName, bool isUsingAxisRaw = false)
+        public string AxisNameX
         {
-            HorizontalAxisName = horizontalAxisName;
-            VerticalAxisName = verticalAxisName;
-            IsUsingAxisRaw = isUsingAxisRaw;
+            get => _axisInputX.AxisName;
+            set => _axisInputX.AxisName = value;
+        }
+        public string AxisNameY
+        {
+            get => _axisInputY.AxisName;
+            set => _axisInputY.AxisName = value;
+        }
+        public bool IsUsingAxisRaw
+        {
+            get => _axisInputX.IsUsingAxisRaw;
+            set
+            {
+                _axisInputX.IsUsingAxisRaw = value;
+                _axisInputY.IsUsingAxisRaw = value;
+            } 
+        }
+        
+        public VectorInputHandlerOldInputSystem(string axisNameX, string axisNameY, bool isUsingAxisRaw = false)
+        {
+            _axisInputX = new AxisInputHandlerOldInputSystem(axisNameX, isUsingAxisRaw);
+            _axisInputY = new AxisInputHandlerOldInputSystem(axisNameY, isUsingAxisRaw);
         }
         
         public override void UpdateState()
         {
-            var horizontal = IsUsingAxisRaw == true ? Input.GetAxisRaw(HorizontalAxisName) : Input.GetAxis(HorizontalAxisName);
-            var vertical = IsUsingAxisRaw == true ? Input.GetAxisRaw(VerticalAxisName) : Input.GetAxis(VerticalAxisName);
+            _axisInputX.UpdateState();
+            _axisInputY.UpdateState();
+            
+            var horizontal = _axisInputX.Value;
+            var vertical = _axisInputY.Value;
             
             var currentValue = new Vector2(horizontal, vertical);
             UpdateState(currentValue);
