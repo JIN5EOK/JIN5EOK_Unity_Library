@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using Jin5eok.Extension;
 namespace Jin5eok.Inputs
 {
     public delegate void InputCallback<T>(T input) where T : notnull;
@@ -45,7 +45,7 @@ namespace Jin5eok.Inputs
 
         public override void UpdateState()
         {
-            var currentInput = Input.GetKeyDown(KeyCode) == true || Input.GetKey(KeyCode) == true;
+            var currentInput = Input.GetKey(KeyCode) == true && Input.GetKeyUp(KeyCode) == false;
             UpdateState(currentInput);
         }
     }
@@ -61,7 +61,7 @@ namespace Jin5eok.Inputs
 
         public override void UpdateState()
         {
-            var currentInput = Input.GetButtonDown(ButtonName) == true || Input.GetButton(ButtonName) == true;
+            var currentInput = Input.GetButton(ButtonName) == true && Input.GetButtonUp(ButtonName) == false;
             UpdateState(currentInput);
         }
     }
@@ -75,7 +75,7 @@ namespace Jin5eok.Inputs
 
         protected void UpdateState(Vector2 currentValue)
         {
-            if (currentValue != Value)
+            if (Value.ApproximatelyEquals(currentValue) == false)
             {
                 Value = currentValue;
                 InputValueChanged?.Invoke(currentValue);
@@ -100,13 +100,13 @@ namespace Jin5eok.Inputs
         
         public override void UpdateState()
         {
-            var isHorizontalPositive = Input.GetKey(Right) == true && Input.GetKey(Left) == false;
-            var isHorizontalNegative = Input.GetKey(Left) == true && Input.GetKey(Right) == false;
-            var isVerticalPositive = Input.GetKey(Up) == true && Input.GetKey(Down) == false;
-            var isVerticalNegative = Input.GetKey(Down) == true && Input.GetKey(Up) == false;
+            var isHorizontalPositive = Input.GetKey(Right) == true && Input.GetKeyUp(Right) == false && Input.GetKey(Left) == false;
+            var isHorizontalNegative = Input.GetKey(Left) == true  && Input.GetKeyUp(Left) == false && Input.GetKey(Right) == false;
+            var isVerticalPositive = Input.GetKey(Up) == true && Input.GetKeyUp(Up) == false  && Input.GetKey(Down) == false;
+            var isVerticalNegative = Input.GetKey(Down) == true && Input.GetKeyUp(Down) == false  && Input.GetKey(Up) == false;
             
-            float horizontal = isHorizontalPositive == true ? 1.0f : isHorizontalNegative ? -1.0f : 0.0f;
-            float vertical = isVerticalPositive == true ? 1.0f : isVerticalNegative ? -1.0f : 0.0f;
+            float horizontal = isHorizontalPositive == true ? 1.0f : isHorizontalNegative == true ? -1.0f : 0.0f;
+            float vertical = isVerticalPositive == true ? 1.0f : isVerticalNegative == true ? -1.0f : 0.0f;
             
             var currentValue = new Vector2(horizontal, vertical);
             UpdateState(currentValue);
@@ -153,6 +153,26 @@ namespace Jin5eok.Inputs
         }
     }
     
+    public class AxisInputKeyCode : AxisInputBase
+    {
+        public KeyCode PositiveKey { get; set; }
+        public KeyCode NegativeKey { get; set; }
+        
+        public AxisInputKeyCode(KeyCode positiveKey, KeyCode negativeKey)
+        {
+            PositiveKey = positiveKey;
+            NegativeKey = negativeKey;
+        }
+
+        public override void UpdateState()
+        {
+            var isNegative = Input.GetKey(NegativeKey) == true && Input.GetKeyUp(NegativeKey) == false && Input.GetKey(PositiveKey) == false;
+            var isPositive = Input.GetKey(PositiveKey) == true && Input.GetKeyUp(PositiveKey) == false && Input.GetKey(NegativeKey) == false;
+            var currentValue = isNegative ? -1 : isPositive ? 1 : 0;
+            UpdateState(currentValue);
+        }
+    }
+    
     public class AxisInputOldInputSystem : AxisInputBase
     {
         public string AxisName { get; set; }
@@ -169,26 +189,6 @@ namespace Jin5eok.Inputs
             UpdateState(currentValue);
         }
     }
-
-    public class AxisInputKeyCode : AxisInputBase
-    {
-        public KeyCode PositiveKey { get; set; }
-        public KeyCode NegativeKey { get; set; }
-        
-        public AxisInputKeyCode(KeyCode positiveKey, KeyCode negativeKey)
-        {
-            PositiveKey = positiveKey;
-            NegativeKey = negativeKey;
-        }
-
-        public override void UpdateState()
-        {
-            var isNegative = Input.GetKey(NegativeKey) == true && Input.GetKey(PositiveKey) == false;
-            var isPositive = Input.GetKey(PositiveKey) == true && Input.GetKey(NegativeKey) == false;
-            var currentValue = isNegative ? -1 : isPositive ? 1 : 0;
-            UpdateState(currentValue);
-        }
-    }
     
     public class MousePositionInput : IInput<Vector3>
     {
@@ -197,21 +197,22 @@ namespace Jin5eok.Inputs
         
         public void UpdateState()
         {
-            var currentInput = Input.mousePosition;
+            var currentValue = Input.mousePosition;
             
-            if (currentInput != Value)
+            if (Value.ApproximatelyEquals(currentValue) == false)
             {
-                Value = currentInput;
-                InputValueChanged?.Invoke(currentInput);
+                Value = currentValue;
+                InputValueChanged?.Invoke(currentValue);
             }
         }
     }
     
-    public class CompositeInput<T> : IInput<T> where T : notnull
+    public abstract class CompositeInput<T> : IInput<T> where T : notnull
     {
         public event InputCallback<T> InputValueChanged;
-        public T Value { get; private set; }
+        public T Value { get; protected set; }
         private List<IInput<T>> _inputGroup = new();
+        private IInput<T> _currentActiveInput;
         
         public CompositeInput(params IInput<T>[] inputGroup)
         {
@@ -221,6 +222,11 @@ namespace Jin5eok.Inputs
             }
         }
 
+        public IInput<T>[] GetInputs()
+        {
+            return _inputGroup.ToArray();
+        }
+        
         public void AddInput(IInput<T> input)
         {
             if (_inputGroup.Contains(input) == false)
@@ -241,7 +247,7 @@ namespace Jin5eok.Inputs
         {
             _inputGroup.Clear();
         }
-        
+
         public void UpdateState()
         {
             if (_inputGroup == null || _inputGroup.Count == 0)
@@ -252,18 +258,80 @@ namespace Jin5eok.Inputs
             // Cache a copy to prevent changes during iteration
             var inputGroup = _inputGroup.ToList();
 
-            bool oneOfValuesChanged = false;
+            T changedValue = default;
             foreach (var input in inputGroup)
             {
                 input.UpdateState();
-
-                if (oneOfValuesChanged == false && input.Value.Equals(Value) == false)
+                if (IsEquals(input.Value, default) == false)
                 {
-                    oneOfValuesChanged = true;
-                    Value = input.Value;
-                    InputValueChanged?.Invoke(input.Value);
+                    changedValue = input.Value;
                 }
             }
+
+            var isNoInputCurrent = changedValue.Equals(default);
+            var isNoInputBefore = Value.Equals(default);
+            var isInputChanged = changedValue.Equals(Value) == false;
+            
+            if (isNoInputCurrent && isNoInputBefore)
+            {
+                return;
+            }
+            
+            if (isNoInputCurrent)
+            {
+                Value = default;
+                InputValueChanged?.Invoke(default);
+                return;
+            }
+            
+            if (isInputChanged)
+            {
+                Value = changedValue;
+                InputValueChanged?.Invoke(changedValue);
+                return;
+            }
+        }
+        
+        protected abstract bool IsEquals(T a, T b);
+    }
+    
+    public class CompositeInputBool : CompositeInput<bool>
+    {
+        public CompositeInputBool(params IInput<bool>[] inputGroup) : base(inputGroup) { }
+
+        protected override bool IsEquals(bool a, bool b)
+        {
+            return a == b;
+        }
+    }
+    
+    public class CompositeInputVector2 : CompositeInput<Vector2>
+    {
+        public CompositeInputVector2(params IInput<Vector2>[] inputGroup) : base(inputGroup) { }
+        
+        protected override bool IsEquals(Vector2 a, Vector2 b)
+        {
+            return a.ApproximatelyEquals(b);
+        }
+    }
+    
+    public class CompositeInputVector3 : CompositeInput<Vector3>
+    {
+        public CompositeInputVector3(params IInput<Vector3>[] inputGroup) : base(inputGroup) { }
+        
+        protected override bool IsEquals(Vector3 a, Vector3 b)
+        {
+            return a.ApproximatelyEquals(b);
+        }
+    }
+    
+    public class CompositeInputFloat : CompositeInput<float>
+    {
+        public CompositeInputFloat(params IInput<float>[] inputGroup) : base(inputGroup) { }
+        
+        protected override bool IsEquals(float a, float b)
+        {
+            return Mathf.Approximately(a, b);
         }
     }
 }
