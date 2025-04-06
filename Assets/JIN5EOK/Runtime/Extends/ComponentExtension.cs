@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Jin5eok.Extends
+namespace Jin5eok.Extension
 {
-    public static class ComponentExtends
+    public static class ComponentExtension
     {
         public static T AddOrGetComponent<T>(this GameObject gameObject) where T : Component
         {
