@@ -3,12 +3,10 @@ using UnityEngine;
 
 namespace Jin5eok.Inputs
 {
-    public abstract class VectorInputHandlerBase : IInputHandler<Vector2>
+    public abstract class VectorInputHandlerBase : InputHandler<Vector2>
     {
-        public event InputCallback<Vector2> InputValueChanged;
-        public Vector2 Value { get; private set; }
-
-        public abstract void UpdateState();
+        public override event InputCallback<Vector2> InputValueChanged;
+        public override Vector2 Value { get; protected set; }
 
         protected void UpdateState(Vector2 currentValue)
         {
@@ -50,7 +48,10 @@ namespace Jin5eok.Inputs
         public VectorInputHandlerKeyCode(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
         {
             _axisInputX = new AxisInputHandlerKeyCode(right, left);
+            _axisInputX.SetActiveAutoUpdate(false);
             _axisInputY = new AxisInputHandlerKeyCode(up, down);
+            _axisInputY.SetActiveAutoUpdate(false);
+            SetActiveAutoUpdate(true);
         }
         
         public override void UpdateState()
@@ -94,7 +95,10 @@ namespace Jin5eok.Inputs
         public VectorInputHandlerOldInputSystem(string axisNameX, string axisNameY, bool isUsingAxisRaw = false)
         {
             _axisInputX = new AxisInputHandlerOldInputSystem(axisNameX, isUsingAxisRaw);
+            _axisInputX.SetActiveAutoUpdate(false);
             _axisInputY = new AxisInputHandlerOldInputSystem(axisNameY, isUsingAxisRaw);
+            _axisInputY.SetActiveAutoUpdate(false);
+            SetActiveAutoUpdate(true);
         }
         
         public override void UpdateState()

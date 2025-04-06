@@ -2,12 +2,11 @@ using UnityEngine;
 
 namespace Jin5eok.Inputs
 {
-    public abstract class ButtonInputHandlerBase : IInputHandler<bool>
+    public abstract class ButtonInputHandlerBase : InputHandler<bool>
     {
-        public abstract void UpdateState();
 
-        public event InputCallback<bool> InputValueChanged;
-        public bool Value { get; private set; }
+        public override event InputCallback<bool> InputValueChanged;
+        public override bool Value { get; protected set; }
         
         protected void UpdateState(bool currentValue)
         {
@@ -26,6 +25,7 @@ namespace Jin5eok.Inputs
         public ButtonInputHandlerKeyCode(KeyCode keyCode)
         {
             KeyCode = keyCode;
+            SetActiveAutoUpdate(true);
         }
 
         public override void UpdateState()
@@ -42,6 +42,7 @@ namespace Jin5eok.Inputs
         public ButtonInputHandlerOldInputSystem(string buttonName)
         {
             ButtonName = buttonName;
+            SetActiveAutoUpdate(true);
         }
 
         public override void UpdateState()

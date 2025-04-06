@@ -1,13 +1,12 @@
+using System;
 using UnityEngine;
 
 namespace Jin5eok.Inputs
 {
-    public abstract class AxisInputHandlerBase : IInputHandler<float>
+    public abstract class AxisInputHandlerBase : InputHandler<float>
     {
-        public event InputCallback<float> InputValueChanged;
-        public float Value { get; private set; }
-        
-        public abstract void UpdateState();
+        public override event InputCallback<float> InputValueChanged;
+        public override float Value { get; protected set; }
         
         protected void UpdateState(float currentValue)
         {
@@ -28,6 +27,7 @@ namespace Jin5eok.Inputs
         {
             PositiveKeyCode = positiveKeyCode;
             NegativeKeyCode = negativeKeyCode;
+            SetActiveAutoUpdate(true);
         }
 
         public override void UpdateState()
@@ -48,6 +48,7 @@ namespace Jin5eok.Inputs
         {
             AxisName = axisName;
             IsUsingAxisRaw = isUsingAxisRaw;
+            SetActiveAutoUpdate(true);
         }
 
         public override void UpdateState()

@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Jin5eok.Inputs
 {
-    public abstract class CompositeInputHandlerBase<T> : IInputHandler<T> where T : notnull
+    public abstract class CompositeInputHandlerBase<T> : InputHandler<T> where T : notnull
     {
-        public event InputCallback<T> InputValueChanged;
-        public T Value { get; protected set; }
+        public override event InputCallback<T> InputValueChanged;
+        public override T Value { get; protected set; }
         private List<IInputHandler<T>> _inputGroup = new();
         private IInputHandler<T> _currentActiveInputHandler;
         
@@ -16,8 +16,9 @@ namespace Jin5eok.Inputs
         {
             foreach (var input in inputGroup)
             {
-                AddInput(input);    
+                AddInput(input);
             }
+            SetActiveAutoUpdate(true);
         }
 
         public IInputHandler<T>[] GetInputs()
@@ -30,6 +31,7 @@ namespace Jin5eok.Inputs
             if (_inputGroup.Contains(inputHandler) == false)
             {
                 _inputGroup.Add(inputHandler);    
+                inputHandler.SetActiveAutoUpdate(false);
             }
         }
         
@@ -37,7 +39,7 @@ namespace Jin5eok.Inputs
         {
             if (_inputGroup.Contains(inputHandler) == true)
             {
-                _inputGroup.Remove(inputHandler);    
+                _inputGroup.Remove(inputHandler);
             }
         }
 
@@ -46,7 +48,7 @@ namespace Jin5eok.Inputs
             _inputGroup.Clear();
         }
 
-        public void UpdateState()
+        public override void UpdateState()
         {
             if (_inputGroup == null || _inputGroup.Count == 0)
             {

@@ -3,12 +3,17 @@ using UnityEngine;
 
 namespace Jin5eok.Inputs
 {
-    public class MousePositionInputHandler : IInputHandler<Vector3>
+    public class MousePositionInputHandler : InputHandler<Vector3>
     {
-        public event InputCallback<Vector3> InputValueChanged;
-        public Vector3 Value { get; private set; }
+        public override event InputCallback<Vector3> InputValueChanged;
+        public override Vector3 Value { get; protected set; }
+
+        public MousePositionInputHandler()
+        {
+            SetActiveAutoUpdate(true);
+        }
         
-        public void UpdateState()
+        public override void UpdateState()
         {
             var currentValue = Input.mousePosition;
             
