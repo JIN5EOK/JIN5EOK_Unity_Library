@@ -18,7 +18,6 @@ namespace Jin5eok.Inputs
             {
                 AddInput(input);
             }
-            SetActiveAutoUpdate(true);
         }
 
         public IInputHandler<T>[] GetInputs()
@@ -31,7 +30,6 @@ namespace Jin5eok.Inputs
             if (_inputGroup.Contains(inputHandler) == false)
             {
                 _inputGroup.Add(inputHandler);    
-                inputHandler.SetActiveAutoUpdate(false);
             }
         }
         
@@ -95,9 +93,9 @@ namespace Jin5eok.Inputs
         protected abstract bool IsEquals(T a, T b);
     }
     
-    public class CompositeInputHandlerInt : CompositeInputHandlerBase<int>
+    public class IntCompositeInputHandler : CompositeInputHandlerBase<int>
     {
-        public CompositeInputHandlerInt(params IInputHandler<int>[] inputGroup) : base(inputGroup) { }
+        public IntCompositeInputHandler(params IInputHandler<int>[] inputGroup) : base(inputGroup) { }
 
         protected override bool IsEquals(int a, int b)
         {
@@ -105,9 +103,9 @@ namespace Jin5eok.Inputs
         }
     }
     
-    public class CompositeInputHandlerFloat : CompositeInputHandlerBase<float>
+    public class FloatCompositeInputHandler : CompositeInputHandlerBase<float>
     {
-        public CompositeInputHandlerFloat(params IInputHandler<float>[] inputGroup) : base(inputGroup) { }
+        public FloatCompositeInputHandler(params IInputHandler<float>[] inputGroup) : base(inputGroup) { }
         
         protected override bool IsEquals(float a, float b)
         {
@@ -115,9 +113,9 @@ namespace Jin5eok.Inputs
         }
     }
     
-    public class CompositeInputHandlerBool : CompositeInputHandlerBase<bool>
+    public class BoolCompositeInputHandler : CompositeInputHandlerBase<bool>
     {
-        public CompositeInputHandlerBool(params IInputHandler<bool>[] inputGroup) : base(inputGroup) { }
+        public BoolCompositeInputHandler(params IInputHandler<bool>[] inputGroup) : base(inputGroup) { }
 
         protected override bool IsEquals(bool a, bool b)
         {
@@ -125,9 +123,9 @@ namespace Jin5eok.Inputs
         }
     }
     
-    public class CompositeInputHandlerVector2 : CompositeInputHandlerBase<Vector2>
+    public class Vector2CompositeInputHandler : CompositeInputHandlerBase<Vector2>
     {
-        public CompositeInputHandlerVector2(params IInputHandler<Vector2>[] inputGroup) : base(inputGroup) { }
+        public Vector2CompositeInputHandler(params IInputHandler<Vector2>[] inputGroup) : base(inputGroup) { }
         
         protected override bool IsEquals(Vector2 a, Vector2 b)
         {
@@ -135,9 +133,9 @@ namespace Jin5eok.Inputs
         }
     }
     
-    public class CompositeInputHandlerVector3 : CompositeInputHandlerBase<Vector3>
+    public class Vector3CompositeInputHandler : CompositeInputHandlerBase<Vector3>
     {
-        public CompositeInputHandlerVector3(params IInputHandler<Vector3>[] inputGroup) : base(inputGroup) { }
+        public Vector3CompositeInputHandler(params IInputHandler<Vector3>[] inputGroup) : base(inputGroup) { }
         
         protected override bool IsEquals(Vector3 a, Vector3 b)
         {

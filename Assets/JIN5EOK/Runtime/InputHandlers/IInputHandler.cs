@@ -19,9 +19,11 @@ namespace Jin5eok.Inputs
     
     public abstract class InputHandler<T> : IInputHandler<T> where T : notnull
     {
+        private static InputHandlerUpdater InputHandlerUpdater => InputHandlerUpdater.Instance;
+        
         public abstract event InputCallback<T> InputValueChanged;
         public abstract T Value { get; protected set; }
-        public bool IsActiveAutoUpdate => InputHandlerUpdater.Instance.ContainsInputHandler(this);
+        public bool IsActiveAutoUpdate => InputHandlerUpdater.ContainsInputHandler(this);
         
         public abstract void UpdateState();
         
@@ -29,11 +31,11 @@ namespace Jin5eok.Inputs
         {
             if (isActive == true)
             {
-                InputHandlerUpdater.Instance.AddInputHandler(this);
+                InputHandlerUpdater.AddInputHandler(this);
             }
             else
             {
-                InputHandlerUpdater.Instance.RemoveInputHandler(this);
+                InputHandlerUpdater.RemoveInputHandler(this);
             }
         }
 

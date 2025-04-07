@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Jin5eok.Inputs
 {
-    public abstract class VectorInputHandlerBase : InputHandler<Vector2>
+    public abstract class Vector2InputHandlerBase : InputHandler<Vector2>
     {
         public override event InputCallback<Vector2> InputValueChanged;
         public override Vector2 Value { get; protected set; }
@@ -18,7 +18,7 @@ namespace Jin5eok.Inputs
         }
     }
     
-    public class VectorInputHandlerKeyCode : VectorInputHandlerBase
+    public class Vector2InputHandlerKeyCode : Vector2InputHandlerBase
     {
         private readonly AxisInputHandlerKeyCode _axisInputX;
         private readonly AxisInputHandlerKeyCode _axisInputY;
@@ -45,13 +45,10 @@ namespace Jin5eok.Inputs
             set =>_axisInputX.PositiveKeyCode = value;
         }
         
-        public VectorInputHandlerKeyCode(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
+        public Vector2InputHandlerKeyCode(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
         {
             _axisInputX = new AxisInputHandlerKeyCode(right, left);
-            _axisInputX.SetActiveAutoUpdate(false);
             _axisInputY = new AxisInputHandlerKeyCode(up, down);
-            _axisInputY.SetActiveAutoUpdate(false);
-            SetActiveAutoUpdate(true);
         }
         
         public override void UpdateState()
@@ -67,7 +64,7 @@ namespace Jin5eok.Inputs
         }
     }
   
-    public class VectorInputHandlerOldInputSystem : VectorInputHandlerBase
+    public class Vector2InputHandlerOldInputSystem : Vector2InputHandlerBase
     {
         private readonly AxisInputHandlerOldInputSystem _axisInputX;
         private readonly AxisInputHandlerOldInputSystem _axisInputY;
@@ -92,13 +89,10 @@ namespace Jin5eok.Inputs
             } 
         }
         
-        public VectorInputHandlerOldInputSystem(string axisNameX, string axisNameY, bool isUsingAxisRaw = false)
+        public Vector2InputHandlerOldInputSystem(string axisNameX, string axisNameY, bool isUsingAxisRaw = false)
         {
             _axisInputX = new AxisInputHandlerOldInputSystem(axisNameX, isUsingAxisRaw);
-            _axisInputX.SetActiveAutoUpdate(false);
             _axisInputY = new AxisInputHandlerOldInputSystem(axisNameY, isUsingAxisRaw);
-            _axisInputY.SetActiveAutoUpdate(false);
-            SetActiveAutoUpdate(true);
         }
         
         public override void UpdateState()
