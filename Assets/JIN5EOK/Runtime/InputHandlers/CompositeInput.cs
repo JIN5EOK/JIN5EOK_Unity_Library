@@ -18,6 +18,7 @@ namespace Jin5eok.Inputs
             {
                 AddInput(input);
             }
+            SetActiveAutoUpdate(true);
         }
 
         public IInputHandler<T>[] GetInputs()
@@ -29,7 +30,8 @@ namespace Jin5eok.Inputs
         {
             if (_inputGroup.Contains(inputHandler) == false)
             {
-                _inputGroup.Add(inputHandler);    
+                _inputGroup.Add(inputHandler);   
+                inputHandler.SetActiveAutoUpdate(false);
             }
         }
         

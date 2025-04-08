@@ -38,7 +38,7 @@ namespace Jin5eok.Inputs
                 InputHandlerUpdater.RemoveInputHandler(this);
             }
         }
-
+        
         public virtual void Dispose()
         {
             SetActiveAutoUpdate(false);

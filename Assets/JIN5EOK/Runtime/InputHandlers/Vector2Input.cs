@@ -49,6 +49,7 @@ namespace Jin5eok.Inputs
         {
             _axisInputX = new AxisInputHandlerKeyCode(right, left);
             _axisInputY = new AxisInputHandlerKeyCode(up, down);
+            SetActiveAutoUpdate(true);
         }
         
         public override void UpdateState()
@@ -93,6 +94,7 @@ namespace Jin5eok.Inputs
         {
             _axisInputX = new AxisInputHandlerOldInputSystem(axisNameX, isUsingAxisRaw);
             _axisInputY = new AxisInputHandlerOldInputSystem(axisNameY, isUsingAxisRaw);
+            SetActiveAutoUpdate(true);
         }
         
         public override void UpdateState()

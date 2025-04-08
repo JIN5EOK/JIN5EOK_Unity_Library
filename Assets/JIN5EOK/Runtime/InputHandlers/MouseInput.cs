@@ -7,6 +7,11 @@ namespace Jin5eok.Inputs
     {
         public override event InputCallback<Vector3> InputValueChanged;
         public override Vector3 Value { get; protected set; }
+
+        public MousePositionInputHandler()
+        {
+            SetActiveAutoUpdate(true);
+        }
         
         public override void UpdateState()
         {

@@ -4,35 +4,64 @@ using UnityEngine;
 
 namespace Jin5eok.Inputs
 {
-    public class InputHandlerUpdater : MonoSingleton<InputHandlerUpdater>
+    internal class InputHandlerUpdater : MonoSingleton<InputHandlerUpdater>
     {
-        private readonly List<IInputHandlerBase> _inputHandlers = new();
+        private static readonly List<IInputHandlerBase> InputHandlers = new();
         
-        public void AddInputHandler(IInputHandlerBase handler)
+        private static bool IsNeedInstance => _isInitializedRuntime == true && _isInstantiatedSingleton == false;
+        private static bool _isInitializedRuntime = false;
+        private static bool _isInstantiatedSingleton = false;
+        
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void OnRuntimeInitialize()
+        {
+            _isInitializedRuntime = true;
+            
+            if (InputHandlers.Count != 0)
+            {
+                EnsureUpdaterInstance();
+            }
+        }
+        
+        private static void EnsureUpdaterInstance()
+        {
+            if (IsNeedInstance == false)
+            {
+                return;
+            }
+            
+            if (Instance != null) // Create singleton
+            {
+                _isInstantiatedSingleton = true;
+            }
+        }
+        
+        public static void AddInputHandler(IInputHandlerBase handler)
         {
             if (ContainsInputHandler(handler) == false)
             {
-                _inputHandlers.Add(handler);    
+                EnsureUpdaterInstance();
+                InputHandlers.Add(handler);    
             }
         }
         
-        public void RemoveInputHandler(IInputHandlerBase handler)
+        public static void RemoveInputHandler(IInputHandlerBase handler)
         {
             if (ContainsInputHandler(handler) == true)
             {
-                _inputHandlers.Remove(handler);    
+                InputHandlers.Remove(handler);    
             }
         }
         
-        public bool ContainsInputHandler(IInputHandlerBase handler)
+        public static bool ContainsInputHandler(IInputHandlerBase handler)
         {
-            return _inputHandlers.Contains(handler);
+            return InputHandlers.Contains(handler);
         }
         
         private void Update()
         {
             // Cache a copy to prevent changes during iteration
-            var inputHandlers = _inputHandlers.ToArray();
+            var inputHandlers = InputHandlers.ToArray();
 
             foreach (var input in inputHandlers)
             {
