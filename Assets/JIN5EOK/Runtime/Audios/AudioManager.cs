@@ -43,7 +43,6 @@ namespace Jin5eok.Audios
             
             var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
             playerInstance.Initialize(audioClip, _audioModels[typeof(T)], GetGlobalAudioModel());
-            
             return playerInstance;
         }
 

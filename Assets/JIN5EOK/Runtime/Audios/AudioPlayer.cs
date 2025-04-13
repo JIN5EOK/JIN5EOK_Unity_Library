@@ -5,14 +5,32 @@ namespace Jin5eok.Audios
 {
     public class AudioPlayer : MonoBehaviour
     {
-        public AudioClip AudioClip => _audioSource.clip;
+        public AudioClip AudioClip
+        {
+            get => _audioSource.clip;
+            set => _audioSource.clip = value;
+        }
+        public AudioModel AudioModelOfPlayer { get; } = new GlobalAudio();
+        public bool Loop
+        {
+            get => _audioSource.loop;
+            set => _audioSource.loop = value;
+        }
         public bool IsPlaying => _audioSource.isPlaying;
-        public AudioModel AudioPlayerModel { get; set; } = new GlobalAudio();
+        public float PlayTime => _audioSource.time;
+        public float Length => _audioSource.clip.length;
         
         private AudioModel _baseAudioModel;
         private GlobalAudio _globalAudio;
         private AudioSource _audioSource;
-        private Coroutine _fadeCoroutine;
+        private Coroutine _fadeVolumeCoroutine;
+        private Coroutine _fadePitchCoroutine; 
+        
+        private enum ScaleType
+        {
+            Volume,
+            Pitch,
+        }
         
         public void Initialize(AudioClip audioClip, AudioModel baseAudioModel, GlobalAudio globalAudio)
         {
@@ -31,13 +49,21 @@ namespace Jin5eok.Audios
         {
             _globalAudio.OnVolumeChanged += OnVolumeChanged;
             _globalAudio.OnMuteChanged += OnMuteChanged;
+            _globalAudio.OnPitchChanged += OnPitchChanged;
             _baseAudioModel.OnVolumeChanged += OnVolumeChanged;
             _baseAudioModel.OnMuteChanged += OnMuteChanged;
-            AudioPlayerModel.OnVolumeChanged += OnVolumeChanged;
-            AudioPlayerModel.OnMuteChanged += OnMuteChanged;
+            _baseAudioModel.OnPitchChanged += OnPitchChanged;
+            AudioModelOfPlayer.OnVolumeChanged += OnVolumeChanged;
+            AudioModelOfPlayer.OnMuteChanged += OnMuteChanged;
+            AudioModelOfPlayer.OnPitchChanged += OnPitchChanged;
         }
 
-        private void OnVolumeChanged(float defaultVolume)
+        private void OnVolumeChanged(float volume)
+        {
+            OnAudioModelsChanged();
+        }
+        
+        private void OnPitchChanged(float pitch)
         {
             OnAudioModelsChanged();
         }
@@ -67,35 +93,58 @@ namespace Jin5eok.Audios
         {
             _audioSource.Stop();
         }
-        
-        public void FadeVolumeScale(float from, float to, float duration)
+
+        public void FadeVolume(float from, float to, float duration)
         {
-            if (_fadeCoroutine != null)
+            if (_fadeVolumeCoroutine != null)
             {
-                StopCoroutine(_fadeCoroutine);
+                StopCoroutine(_fadeVolumeCoroutine);
             }
-            _fadeCoroutine = StartCoroutine(FadeVolumeScaleCoroutine(from, to, duration));
+            _fadeVolumeCoroutine = StartCoroutine(FadeScaleCoroutine(from, to, duration, ScaleType.Volume));
         }
         
-        private IEnumerator FadeVolumeScaleCoroutine(float from, float to, float targetDuration)
+        public void FadePitch(float from, float to, float duration)
+        {
+            if (_fadeVolumeCoroutine != null)
+            {
+                StopCoroutine(_fadePitchCoroutine);
+            }
+            _fadePitchCoroutine = StartCoroutine(FadeScaleCoroutine(from, to, duration, ScaleType.Pitch));
+        }
+        
+        private IEnumerator FadeScaleCoroutine(float from, float to, float duration, ScaleType scaleType)
         {
             var time = 0.0f;
-            while (time < targetDuration)
+            while (time < duration)
             {
                 time += Time.deltaTime;
-                AudioPlayerModel.Volume = (Mathf.Lerp(from, to, time / targetDuration)); 
+                ScaleChange(Mathf.Lerp(from, to, time / duration), scaleType);
                 yield return null;
             }
-            AudioPlayerModel.Volume = to;
+            ScaleChange(to, scaleType);
+
+            void ScaleChange(float scale, ScaleType typeOfScale)
+            {
+                switch (typeOfScale)
+                {
+                    case ScaleType.Volume:
+                        AudioModelOfPlayer.Volume = scale;
+                        break;
+                    case ScaleType.Pitch:
+                        AudioModelOfPlayer.Pitch = scale;
+                        break;
+                }
+            }
         }
         
         private void OnAudioModelsChanged()
         {
-            _audioSource.mute = AudioPlayerModel.Mute || _baseAudioModel.Mute || _globalAudio.Mute;
-            _audioSource.volume = AudioPlayerModel.Volume * _baseAudioModel.Volume * _globalAudio.Volume;
+            _audioSource.mute = AudioModelOfPlayer.Mute || _baseAudioModel.Mute || _globalAudio.Mute;
+            _audioSource.volume = AudioModelOfPlayer.Volume * _baseAudioModel.Volume * _globalAudio.Volume;
+            _audioSource.pitch = AudioModelOfPlayer.Pitch * _baseAudioModel.Pitch * _globalAudio.Pitch;
         }
         
-        public void OnDestroy()
+        private void OnDestroy()
         {
             Stop();
             RemoveVolumeChangeEvent();
@@ -107,8 +156,8 @@ namespace Jin5eok.Audios
             _globalAudio.OnMuteChanged -= OnMuteChanged;
             _baseAudioModel.OnVolumeChanged -= OnVolumeChanged;
             _baseAudioModel.OnMuteChanged -= OnMuteChanged;
-            AudioPlayerModel.OnVolumeChanged -= OnVolumeChanged;
-            AudioPlayerModel.OnMuteChanged -= OnMuteChanged;
+            AudioModelOfPlayer.OnVolumeChanged -= OnVolumeChanged;
+            AudioModelOfPlayer.OnMuteChanged -= OnMuteChanged;
         }
     }
 }

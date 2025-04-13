@@ -6,6 +6,7 @@ namespace Jin5eok.Audios
     public abstract class AudioModel
     {
         public event Action<float> OnVolumeChanged;
+        public event Action<float> OnPitchChanged;
         public event Action<bool> OnMuteChanged;
         
         public bool Mute
@@ -28,6 +29,17 @@ namespace Jin5eok.Audios
             }
         }
         private float _volume  = 1f;
+        
+        public float Pitch
+        {
+            get => _pitch;
+            set
+            {
+                _pitch = Mathf.Clamp(value,0.0f, float.MaxValue);
+                OnPitchChanged?.Invoke(_volume);
+            }
+        }
+        private float _pitch  = 1f;
     }
 
     public class GlobalAudio : AudioModel { }
