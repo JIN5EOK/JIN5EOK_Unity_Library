@@ -10,55 +10,78 @@ namespace Jin5eok.Audios
 {
     public class AudioManager : MonoSingleton<AudioManager>
     {
-        private GlobalAudio _globalAudio;
-        private Dictionary<Type, AudioModel> _audioModels = new ();
-        private Dictionary<Type, OneShotAudioPlayer> _oneShotAudioPlayers = new ();
-        
+        public readonly string GlobalAudioKey = "Global";
+        private Dictionary<string, AudioModel> _audioModels = new ();
+        private Dictionary<string, OneShotAudioPlayer> _oneShotAudioPlayers = new ();
+
         protected override void Awake()
         {
             base.Awake();
-            var subclasses = ReflectionHelper.GetSubclasses<AudioModel>();
-            
-            foreach (var sub in subclasses)
-            {
-                var audioModel = Activator.CreateInstance(sub) as AudioModel;
-                _audioModels.Add(sub, audioModel);
-            }
-            
-            foreach (var sub in subclasses)
-            {
-                var oneShotPlayerGameObject = new GameObject($"{nameof(OneShotAudioPlayer)}:{sub.Name}");
-                oneShotPlayerGameObject.transform.SetParent(transform);
-                
-                var oneShotPlayer = oneShotPlayerGameObject.AddComponent<OneShotAudioPlayer>();
-                oneShotPlayer.Initialize(_audioModels[sub], GetGlobalAudioModel());
-                _oneShotAudioPlayers.Add(sub, oneShotPlayer);
-            }
+            TryAddAudioType(GlobalAudioKey);
         }
         
-        public AudioPlayer InstantiateAudioPlayer<T>(AudioClip audioClip) where T : AudioModel
+        public bool TryAddAudioType(string key)
         {
-            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}/{audioClip.name}");
+            if (_audioModels.ContainsKey(key) || _oneShotAudioPlayers.ContainsKey(key))
+                return false;
+            
+            var audioModel = new AudioModel();
+            _audioModels.Add(key, audioModel);
+            
+            var oneShotPlayerGameObject = new GameObject($"{nameof(OneShotAudioPlayer)}:{key}");
+            oneShotPlayerGameObject.transform.SetParent(transform);
+                
+            var oneShotPlayer = oneShotPlayerGameObject.AddComponent<OneShotAudioPlayer>();
+            oneShotPlayer.Initialize(_audioModels[key], GetAudioModelGlobal());
+            _oneShotAudioPlayers.Add(key, oneShotPlayer);
+
+            return true;
+        }
+        
+        public AudioPlayer InstantiateAudioPlayerGlobal(AudioClip audioClip)
+        {
+            return InstantiateAudioPlayer(audioClip, GlobalAudioKey);
+        }
+        
+        public AudioPlayer InstantiateAudioPlayer(AudioClip audioClip, string audioType)
+        {
+            if (_audioModels.ContainsKey(audioType) == false)
+                return null;
+            
+            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}:{audioType}/{audioClip.name}");
             playerGameObject.transform.SetParent(transform);
             
             var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
-            playerInstance.Initialize(audioClip, _audioModels[typeof(T)], GetGlobalAudioModel());
+            playerInstance.Initialize(audioClip, _audioModels[audioType], _audioModels[GlobalAudioKey]);
             return playerInstance;
         }
 
-        public AudioPlayResult PlayOneShot<T>(AudioClip sfxClip) where T : AudioModel
+        public AudioPlayResult PlayOneShotGlobal(AudioClip sfxClip)
         {
-            return _oneShotAudioPlayers[typeof(T)].Play(sfxClip);
+            return PlayOneShot(sfxClip, GlobalAudioKey);
         }
         
-        public GlobalAudio GetGlobalAudioModel()
+        public AudioPlayResult PlayOneShot(AudioClip sfxClip, string audioType)
         {
-            return GetAudioModel<GlobalAudio>();
+            if (_oneShotAudioPlayers.ContainsKey(audioType) == true)
+            {
+                return _oneShotAudioPlayers[audioType].Play(sfxClip);    
+            }
+            return AudioPlayResult.GetFailedResult();
         }
         
-        public T GetAudioModel<T>() where T : AudioModel
+        public AudioModel GetAudioModelGlobal()
         {
-            return (T)_audioModels[typeof(T)];
+            return _audioModels[GlobalAudioKey];
+        }
+
+        public AudioModel GetAudioModel(string key)
+        {
+            if (_audioModels.TryGetValue(key, out var model))
+            {
+                return model;
+            }
+            return null;
         }
     }   
 }

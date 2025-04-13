@@ -4,30 +4,31 @@ namespace Jin5eok.Audios
 {
     internal class OneShotAudioPlayer : MonoBehaviour
     {
+        public AudioModel PlayerAudioModel { get; private set; }
+        
         private AudioSource _audioSource;
-        private GlobalAudio _globalAudio;
-        public AudioModel AudioModel { get; private set; }
-
+        private AudioModel _globalAudioModel;
         private bool _isInit;
         
-        public void Initialize(AudioModel audioModel, GlobalAudio globalAudio)
+        public void Initialize(AudioModel playerAudioModel, AudioModel globalAudioModel)
         {
             if (_isInit == true)
             {
                 return;
             }
-            _isInit = true;
-            AudioModel = audioModel;
-            _globalAudio = globalAudio;
-            _audioSource = gameObject.AddComponent<AudioSource>();
-            AudioModel = audioModel;
             
-            _globalAudio.OnVolumeChanged += OnVolumeChanged;
-            _globalAudio.OnMuteChanged += OnMuteChanged;
-            _globalAudio.OnPitchChanged += OnPitchChanged;
-            AudioModel.OnVolumeChanged += OnVolumeChanged;
-            AudioModel.OnMuteChanged += OnMuteChanged;
-            AudioModel.OnPitchChanged += OnPitchChanged;
+            _isInit = true;
+            
+            PlayerAudioModel = playerAudioModel;
+            _globalAudioModel = globalAudioModel;
+            _audioSource = gameObject.AddComponent<AudioSource>();
+            
+            _globalAudioModel.OnVolumeChanged += OnVolumeChanged;
+            _globalAudioModel.OnMuteChanged += OnMuteChanged;
+            _globalAudioModel.OnPitchChanged += OnPitchChanged;
+            PlayerAudioModel.OnVolumeChanged += OnVolumeChanged;
+            PlayerAudioModel.OnMuteChanged += OnMuteChanged;
+            PlayerAudioModel.OnPitchChanged += OnPitchChanged;
             
             OnVolumeChanged();
         }
@@ -40,9 +41,9 @@ namespace Jin5eok.Audios
 
         private void OnVolumeChanged()
         {
-            _audioSource.volume = AudioModel.Volume * _globalAudio.Volume;
-            _audioSource.pitch = AudioModel.Pitch * _globalAudio.Pitch;
-            _audioSource.mute = AudioModel.Mute || _globalAudio.Mute;
+            _audioSource.volume = PlayerAudioModel.Volume * _globalAudioModel.Volume;
+            _audioSource.pitch = PlayerAudioModel.Pitch * _globalAudioModel.Pitch;
+            _audioSource.mute = PlayerAudioModel.Mute || _globalAudioModel.Mute;
         }
         
         private void OnVolumeChanged(float volume)
@@ -62,10 +63,10 @@ namespace Jin5eok.Audios
 
         private void OnDestroy()
         {
-            _globalAudio.OnVolumeChanged -= OnVolumeChanged;
-            _globalAudio.OnMuteChanged -= OnMuteChanged;
-            AudioModel.OnVolumeChanged -= OnVolumeChanged;
-            AudioModel.OnMuteChanged -= OnMuteChanged;
+            _globalAudioModel.OnVolumeChanged -= OnVolumeChanged;
+            _globalAudioModel.OnMuteChanged -= OnMuteChanged;
+            PlayerAudioModel.OnVolumeChanged -= OnVolumeChanged;
+            PlayerAudioModel.OnMuteChanged -= OnMuteChanged;
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Jin5eok.Audios
 {
-    public abstract class AudioModel
+    public class AudioModel
     {
         public event Action<float> OnVolumeChanged;
         public event Action<float> OnPitchChanged;
@@ -41,6 +41,4 @@ namespace Jin5eok.Audios
         }
         private float _pitch  = 1f;
     }
-
-    public class GlobalAudio : AudioModel { }
 }
