@@ -1,8 +1,10 @@
 {
-    "name": "Audios",
+    "name": "ResourcesManagement",
     "rootNamespace": "Jin5eok",
     "references": [
-        "GUID:affcd23813e4c4ca29f1ef5cdebb1b01"
+        "JIN5EOK",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
