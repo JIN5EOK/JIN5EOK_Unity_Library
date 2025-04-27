@@ -4,7 +4,6 @@ namespace Jin5eok.Inputs
 {
     public abstract class AxisInputHandlerBase : InputHandler<float>
     {
-        public override event InputCallback<float> InputValueChanged;
         public override float Value { get; protected set; }
         
         protected void UpdateState(float currentValue)
@@ -12,7 +11,7 @@ namespace Jin5eok.Inputs
             if (Mathf.Approximately(Value, currentValue) == false)
             {
                 Value = currentValue;
-                InputValueChanged?.Invoke(currentValue);   
+                InputDetected(currentValue);   
             }
         }
     }

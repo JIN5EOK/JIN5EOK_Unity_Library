@@ -5,7 +5,6 @@ namespace Jin5eok.Inputs
     public abstract class ButtonInputHandlerBase : InputHandler<bool>
     {
 
-        public override event InputCallback<bool> InputValueChanged;
         public override bool Value { get; protected set; }
         
         protected void UpdateState(bool currentValue)
@@ -13,7 +12,7 @@ namespace Jin5eok.Inputs
             if (currentValue != Value)
             {
                 Value = currentValue;
-                InputValueChanged?.Invoke(currentValue);
+                InputDetected(currentValue);
             }
         }
     }

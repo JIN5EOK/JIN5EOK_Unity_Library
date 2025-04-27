@@ -5,7 +5,6 @@ namespace Jin5eok.Inputs
 {
     public class MousePositionInputHandler : InputHandler<Vector3>
     {
-        public override event InputCallback<Vector3> InputValueChanged;
         public override Vector3 Value { get; protected set; }
         
         public override void UpdateState()
@@ -15,7 +14,7 @@ namespace Jin5eok.Inputs
             if (Value.ApproximatelyEquals(currentValue) == false)
             {
                 Value = currentValue;
-                InputValueChanged?.Invoke(currentValue);
+                InputDetected(currentValue);
             }
         }
     }

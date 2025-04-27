@@ -5,7 +5,6 @@ namespace Jin5eok.Inputs
 {
     public abstract class Vector2InputHandlerBase : InputHandler<Vector2>
     {
-        public override event InputCallback<Vector2> InputValueChanged;
         public override Vector2 Value { get; protected set; }
 
         protected void UpdateState(Vector2 currentValue)
@@ -13,7 +12,7 @@ namespace Jin5eok.Inputs
             if (Value.ApproximatelyEquals(currentValue) == false)
             {
                 Value = currentValue;
-                InputValueChanged?.Invoke(currentValue);
+                InputDetected(currentValue);
             }
         }
     }

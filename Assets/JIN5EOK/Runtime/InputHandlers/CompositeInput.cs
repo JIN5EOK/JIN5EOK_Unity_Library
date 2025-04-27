@@ -7,10 +7,24 @@ namespace Jin5eok.Inputs
 {
     public abstract class CompositeInputHandlerBase<T> : InputHandler<T> where T : notnull
     {
-        public override event InputCallback<T> InputValueChanged;
         public override T Value { get; protected set; }
+
+        private List<IInputHandler<T>> _childInputs = new();
+
+        private List<IInputHandler<T>> ChildInputs
+        {
+            get
+            {
+                ThrowIfDisposed();
+                return _childInputs;
+            }
+            set
+            {
+                ThrowIfDisposed();
+                _childInputs = value;
+            }
+        }
         
-        private readonly List<IInputHandler<T>> _childInputs = new();
         
         public CompositeInputHandlerBase(params IInputHandler<T>[] inputGroup)
         {
@@ -22,39 +36,39 @@ namespace Jin5eok.Inputs
 
         public IInputHandler<T>[] GetInputs()
         {
-            return _childInputs.ToArray();
+            return ChildInputs.ToArray();
         }
         
         public void AddInput(IInputHandler<T> inputHandler)
         {
-            if (_childInputs.Contains(inputHandler) == false)
+            if (ChildInputs.Contains(inputHandler) == false)
             {
-                _childInputs.Add(inputHandler);   
+                ChildInputs.Add(inputHandler);   
             }
         }
         
         public void RemoveInput(IInputHandler<T> inputHandler)
         {
-            if (_childInputs.Contains(inputHandler) == true)
+            if (ChildInputs.Contains(inputHandler) == true)
             {
-                _childInputs.Remove(inputHandler);
+                ChildInputs.Remove(inputHandler);
             }
         }
 
         public void RemoveAllInputs()
         {
-            _childInputs.Clear();
+            ChildInputs.Clear();
         }
 
         public override void UpdateState()
         {
-            if (_childInputs == null || _childInputs.Count == 0)
+            if (ChildInputs == null || ChildInputs.Count == 0)
             {
                 return;
             }
             
             // Cache a copy to prevent changes during iteration
-            var inputGroup = _childInputs.ToList();
+            var inputGroup = ChildInputs.ToList();
 
             T changedValue = default;
             foreach (var input in inputGroup)
@@ -78,14 +92,14 @@ namespace Jin5eok.Inputs
             if (isInputBefore == true && isInputCurrent == false)
             {
                 Value = default;
-                InputValueChanged?.Invoke(Value);
+                InputDetected(Value);
                 return;
             }
             
             if (isInputChanged)
             {
                 Value = changedValue;
-                InputValueChanged?.Invoke(changedValue);
+                InputDetected(changedValue);
                 return;
             }
         }
@@ -94,11 +108,15 @@ namespace Jin5eok.Inputs
 
         public override void Dispose()
         {
-            base.Dispose();
-            foreach (var child in _childInputs)
+            if (Disposed == true)
+                return;
+            
+            foreach (var child in ChildInputs)
             {
                 child.Dispose();
             }
+            RemoveAllInputs();
+            base.Dispose();
         }
     }
     
