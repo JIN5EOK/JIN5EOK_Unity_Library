@@ -25,7 +25,6 @@ namespace Jin5eok.Inputs
         public ButtonInputHandlerKeyCode(KeyCode keyCode)
         {
             KeyCode = keyCode;
-            SetActiveAutoUpdate(true);
         }
 
         public override void UpdateState()
@@ -42,7 +41,6 @@ namespace Jin5eok.Inputs
         public ButtonInputHandlerOldInputSystem(string buttonName)
         {
             ButtonName = buttonName;
-            SetActiveAutoUpdate(true);
         }
 
         public override void UpdateState()

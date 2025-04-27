@@ -8,14 +8,13 @@ namespace Jin5eok.Inputs
     {
         private static readonly List<IInputHandlerBase> InputHandlers = new();
         
-        private static bool IsNeedInstance => _isInitializedRuntime == true && _isInstantiatedSingleton == false;
-        private static bool _isInitializedRuntime = false;
-        private static bool _isInstantiatedSingleton = false;
+        private static bool _runtimeInitialized = false;
+        private static bool _updaterInstantiated = false;
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnRuntimeInitialize()
         {
-            _isInitializedRuntime = true;
+            _runtimeInitialized = true;
             
             if (InputHandlers.Count != 0)
             {
@@ -25,35 +24,31 @@ namespace Jin5eok.Inputs
         
         private static void EnsureUpdaterInstance()
         {
-            if (IsNeedInstance == false)
+            if (_runtimeInitialized == true && _updaterInstantiated == false)
             {
-                return;
-            }
-            
-            if (Instance != null) // Create singleton
-            {
-                _isInstantiatedSingleton = true;
+                var instance = Instance; // Create MonoSingleton
+                _updaterInstantiated = true;
             }
         }
         
-        public static void AddInputHandler(IInputHandlerBase handler)
+        public static void Add(IInputHandlerBase handler)
         {
-            if (ContainsInputHandler(handler) == false)
+            if (Contains(handler) == false)
             {
                 EnsureUpdaterInstance();
                 InputHandlers.Add(handler);    
             }
         }
         
-        public static void RemoveInputHandler(IInputHandlerBase handler)
+        public static void Remove(IInputHandlerBase handler)
         {
-            if (ContainsInputHandler(handler) == true)
+            if (Contains(handler) == true)
             {
                 InputHandlers.Remove(handler);    
             }
         }
         
-        public static bool ContainsInputHandler(IInputHandlerBase handler)
+        public static bool Contains(IInputHandlerBase handler)
         {
             return InputHandlers.Contains(handler);
         }

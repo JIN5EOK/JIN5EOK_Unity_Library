@@ -26,7 +26,6 @@ namespace Jin5eok.Inputs
         {
             PositiveKeyCode = positiveKeyCode;
             NegativeKeyCode = negativeKeyCode;
-            SetActiveAutoUpdate(true);
         }
 
         public override void UpdateState()
@@ -47,7 +46,6 @@ namespace Jin5eok.Inputs
         {
             AxisName = axisName;
             IsUsingAxisRaw = isUsingAxisRaw;
-            SetActiveAutoUpdate(true);
         }
 
         public override void UpdateState()

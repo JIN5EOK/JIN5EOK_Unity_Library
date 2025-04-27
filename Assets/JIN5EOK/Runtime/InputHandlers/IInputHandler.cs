@@ -4,10 +4,8 @@ namespace Jin5eok.Inputs
 {
     public delegate void InputCallback<T>(T input) where T : notnull;
 
-    public interface IInputHandlerBase
+    public interface IInputHandlerBase : IDisposable
     {
-        public bool IsActiveAutoUpdate { get; }
-        public void SetActiveAutoUpdate(bool isActive);
         public void UpdateState();
     }
     
@@ -23,25 +21,26 @@ namespace Jin5eok.Inputs
         
         public abstract event InputCallback<T> InputValueChanged;
         public abstract T Value { get; protected set; }
-        public bool IsActiveAutoUpdate => InputHandlerUpdater.ContainsInputHandler(this);
+        public bool IsActiveAutoUpdate => InputHandlerUpdater.Contains(this);
+
+        private bool _disposed;
         
         public abstract void UpdateState();
         
-        public void SetActiveAutoUpdate(bool isActive)
+        public InputHandler()
         {
-            if (isActive == true)
-            {
-                InputHandlerUpdater.AddInputHandler(this);
-            }
-            else
-            {
-                InputHandlerUpdater.RemoveInputHandler(this);
-            }
+            InputHandlerUpdater.Add(this);
         }
         
         public virtual void Dispose()
         {
-            SetActiveAutoUpdate(false);
+            if (_disposed == true)
+            {
+                return;
+            }
+            _disposed = true;
+            
+            InputHandlerUpdater.Remove(this);
             GC.SuppressFinalize(this);
         }
 

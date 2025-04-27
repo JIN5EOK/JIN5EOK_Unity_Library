@@ -9,8 +9,8 @@ namespace Jin5eok.Inputs
     {
         public override event InputCallback<T> InputValueChanged;
         public override T Value { get; protected set; }
-        private List<IInputHandler<T>> _inputGroup = new();
-        private IInputHandler<T> _currentActiveInputHandler;
+        
+        private readonly List<IInputHandler<T>> _childInputs = new();
         
         public CompositeInputHandlerBase(params IInputHandler<T>[] inputGroup)
         {
@@ -18,45 +18,43 @@ namespace Jin5eok.Inputs
             {
                 AddInput(input);
             }
-            SetActiveAutoUpdate(true);
         }
 
         public IInputHandler<T>[] GetInputs()
         {
-            return _inputGroup.ToArray();
+            return _childInputs.ToArray();
         }
         
         public void AddInput(IInputHandler<T> inputHandler)
         {
-            if (_inputGroup.Contains(inputHandler) == false)
+            if (_childInputs.Contains(inputHandler) == false)
             {
-                _inputGroup.Add(inputHandler);   
-                inputHandler.SetActiveAutoUpdate(false);
+                _childInputs.Add(inputHandler);   
             }
         }
         
         public void RemoveInput(IInputHandler<T> inputHandler)
         {
-            if (_inputGroup.Contains(inputHandler) == true)
+            if (_childInputs.Contains(inputHandler) == true)
             {
-                _inputGroup.Remove(inputHandler);
+                _childInputs.Remove(inputHandler);
             }
         }
 
         public void RemoveAllInputs()
         {
-            _inputGroup.Clear();
+            _childInputs.Clear();
         }
 
         public override void UpdateState()
         {
-            if (_inputGroup == null || _inputGroup.Count == 0)
+            if (_childInputs == null || _childInputs.Count == 0)
             {
                 return;
             }
             
             // Cache a copy to prevent changes during iteration
-            var inputGroup = _inputGroup.ToList();
+            var inputGroup = _childInputs.ToList();
 
             T changedValue = default;
             foreach (var input in inputGroup)
@@ -93,6 +91,15 @@ namespace Jin5eok.Inputs
         }
         
         protected abstract bool IsEquals(T a, T b);
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            foreach (var child in _childInputs)
+            {
+                child.Dispose();
+            }
+        }
     }
     
     public class IntCompositeInputHandler : CompositeInputHandlerBase<int>
