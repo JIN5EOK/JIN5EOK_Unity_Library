@@ -1,5 +1,6 @@
 #if USE_ADDRESSABLES
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -82,14 +83,16 @@ namespace Jin5eok.ResourceManagements
             AsyncOperationHandleMap<T>.HandleToAddressMap.Clear();
         }
         
-        public static int GetCount<T>() where T : Object
+        public static int GetHandleCount<T>() where T : Object
         {
-            return AsyncOperationHandleMap<T>.AddressToHandleMap.Count;
+            ClearInvalidHandles<T>();
+            return AsyncOperationHandleMap<T>.AddressToHandleMap.Values.Count;
         }
-        
-        public static void ClearInvalidRequest<T>() where T : Object
+
+        private static void ClearInvalidHandles<T>() where T : Object
         {
-            foreach (var handle in AsyncOperationHandleMap<T>.AddressToHandleMap.Values)
+            var handles = AsyncOperationHandleMap<T>.AddressToHandleMap.Values.ToArray();
+            foreach (var handle in handles)
             {
                 if (handle.IsValid() == false)
                 {
