@@ -4,7 +4,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Jin5eok.ResourceManagements
 {
-    public class AddressablesInstanceReleaser : MonoBehaviour
+    internal class AddressablesInstanceReleaser : MonoBehaviour
     {
         private bool _initialized = false;
         private AsyncOperationHandle<GameObject> _handle;
