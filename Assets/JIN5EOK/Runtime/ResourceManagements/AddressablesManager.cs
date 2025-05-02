@@ -1,6 +1,7 @@
 #if USE_ADDRESSABLES
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -61,20 +62,30 @@ namespace Jin5eok.ResourceManagements
             {
                 if (AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out var handle) == true)
                 {
-                    if (handle.IsValid() && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
-                    {
-                        Addressables.Release(handle);    
-                    }
-                    AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
-                    AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);
-                    return true;
+                    return ReleaseAssetInternal(handle);
                 }
-            
                 return false;
             }
         }
         
         public static bool ReleaseAsset<T>(AsyncOperationHandle<T> handle) where T : Object
+        {
+            return ReleaseAssetInternal(handle);
+        }
+
+        public static void ReleaseAssetAll<T>() where T : Object
+        {
+            lock (_lock)
+            {
+                var handles = AsyncOperationHandleMap<T>.AddressToHandleMap.Values.ToArray();
+                foreach (var handle in handles)
+                {
+                    ReleaseAssetInternal(handle);
+                }
+            }
+        }
+        
+        private static bool ReleaseAssetInternal<T>(AsyncOperationHandle<T> handle) where T : Object
         {
             lock (_lock)
             {
@@ -89,23 +100,8 @@ namespace Jin5eok.ResourceManagements
                     AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);
                     return true;
                 }
+
                 return false;
-            }
-        }
-        
-        public static void ReleaseAssetAll<T>() where T : Object
-        {
-            lock (_lock)
-            {
-                foreach (var handle in AsyncOperationHandleMap<T>.AddressToHandleMap.Values)
-                {
-                    if (handle.IsValid() && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
-                    {
-                        Addressables.Release(handle);    
-                    }
-                }
-                AsyncOperationHandleMap<T>.AddressToHandleMap.Clear();
-                AsyncOperationHandleMap<T>.HandleToAddressMap.Clear(); 
             }
         }
         
