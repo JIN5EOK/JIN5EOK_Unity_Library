@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+#if USE_UNITASK
 using Cysharp.Threading.Tasks;
+#endif
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -24,37 +26,14 @@ namespace Jin5eok.ResourceManagements
         public static void LoadAsyncCoroutine<T>(string address, Action<T> onResult) where T : Object 
         {
             var handle = GetHandle<T>(address);
-            if (handle.IsValid() == false || handle.Status == AsyncOperationStatus.Failed)
-            {
-                onResult?.Invoke(null);
-            }
-            else if (handle.IsDone && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
-            {
-                onResult?.Invoke(handle.Result);
-            }
-            else
-            {
-                AddressablesCoroutineLoader.Instance.LoadAsyncCoroutine(handle, onResult);
-            }
+            AddressablesHandleProcessor.ProcessAsyncCoroutine(handle, onResult);
         }
         
 #if USE_UNITASK
         public static async UniTask<T> LoadAsyncUniTask<T>(string address) where T : Object
         {
             var handle = GetHandle<T>(address);
-            if (handle.IsValid() == false || handle.Status == AsyncOperationStatus.Failed)
-            {
-                return null;
-            }
-
-            if (handle.IsDone && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
-            {
-                return handle.Result;
-            }
-
-            await UniTask.SwitchToMainThread();
-            await handle.Task;
-            return handle.Result;
+            return await AddressablesHandleProcessor.ProcessAsyncUniTask(handle);
         }
 #endif
         
@@ -62,27 +41,14 @@ namespace Jin5eok.ResourceManagements
         public static async Awaitable<T> LoadAsyncAwaitable<T>(string address) where T : Object
         {
             var handle = GetHandle<T>(address);
-            if (handle.IsValid() == false || handle.Status == AsyncOperationStatus.Failed)
-            {
-                return null;
-            }
-            
-            if (handle.IsDone && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
-            {
-                return handle.Result;
-            }
-            
-            await Awaitable.MainThreadAsync();
-            await handle.Task;
-            return handle.Result;
+            return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
         }
 #endif
         
         public static async Task<T> LoadAsyncTask<T>(string address) where T : Object
         {
             var handle = GetHandle<T>(address);
-            await handle.Task;
-            return handle.Result;
+            return await AddressablesHandleProcessor.ProcessAsyncTask(handle);
         }
         
         private static AsyncOperationHandle<T> GetHandle<T>(string address) where T : Object
@@ -147,7 +113,7 @@ namespace Jin5eok.ResourceManagements
             }
         }
 
-        public static int GetLoadedCount<T>() where T : Object
+        public static int GetLoadedTypeCount<T>() where T : Object
         {
             lock (_lock)
             {
