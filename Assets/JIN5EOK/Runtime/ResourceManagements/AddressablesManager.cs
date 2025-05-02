@@ -1,11 +1,9 @@
 #if USE_ADDRESSABLES
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Jin5eok.Patterns;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -13,7 +11,7 @@ using Object = UnityEngine.Object;
 
 namespace Jin5eok.ResourceManagements
 {
-    public class AddressablesManager : MonoSingleton<AddressablesManager>
+    public class AddressablesManager
     {
         private static class AsyncOperationHandleMap<T> where T : Object
         {
@@ -36,14 +34,8 @@ namespace Jin5eok.ResourceManagements
             }
             else
             {
-                Instance.StartCoroutine(LoadAsyncCoroutineInternal(handle, onResult));
+                AddressablesCoroutineLoader.Instance.LoadAsyncCoroutine(handle, onResult);
             }
-        }
-        
-        private static IEnumerator LoadAsyncCoroutineInternal<T>(AsyncOperationHandle<T> handle, Action<T> onResult) where T : Object
-        {
-            yield return new WaitUntil(() => handle.IsDone);
-            onResult?.Invoke(handle.Result);
         }
         
 #if USE_UNITASK
