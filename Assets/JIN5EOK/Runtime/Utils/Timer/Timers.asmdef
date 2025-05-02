@@ -2,8 +2,7 @@
     "name": "Timers",
     "rootNamespace": "Jin5eok",
     "references": [
-        "UniTask",
-        "UnityShared"
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
