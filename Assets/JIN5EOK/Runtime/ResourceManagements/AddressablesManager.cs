@@ -24,11 +24,11 @@ namespace Jin5eok.ResourceManagements
         public static void LoadAsyncCoroutine<T>(string address, Action<T> onResult) where T : Object 
         {
             var handle = GetHandle<T>(address);
-            if (handle.IsValid() == false)
+            if (handle.IsValid() == false || handle.Status == AsyncOperationStatus.Failed)
             {
                 onResult?.Invoke(null);
             }
-            else if (handle.Status == AsyncOperationStatus.Succeeded)
+            else if (handle.IsDone && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
             {
                 onResult?.Invoke(handle.Result);
             }
@@ -41,8 +41,18 @@ namespace Jin5eok.ResourceManagements
 #if USE_UNITASK
         public static async UniTask<T> LoadAsyncUniTask<T>(string address) where T : Object
         {
-            await UniTask.SwitchToMainThread();
             var handle = GetHandle<T>(address);
+            if (handle.IsValid() == false || handle.Status == AsyncOperationStatus.Failed)
+            {
+                return null;
+            }
+
+            if (handle.IsDone && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
+            {
+                return handle.Result;
+            }
+
+            await UniTask.SwitchToMainThread();
             await handle.Task;
             return handle.Result;
         }
@@ -51,8 +61,18 @@ namespace Jin5eok.ResourceManagements
 #if USE_AWAITABLE
         public static async Awaitable<T> LoadAsyncAwaitable<T>(string address) where T : Object
         {
-            await Awaitable.MainThreadAsync();
             var handle = GetHandle<T>(address);
+            if (handle.IsValid() == false || handle.Status == AsyncOperationStatus.Failed)
+            {
+                return null;
+            }
+            
+            if (handle.IsDone && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
+            {
+                return handle.Result;
+            }
+            
+            await Awaitable.MainThreadAsync();
             await handle.Task;
             return handle.Result;
         }
