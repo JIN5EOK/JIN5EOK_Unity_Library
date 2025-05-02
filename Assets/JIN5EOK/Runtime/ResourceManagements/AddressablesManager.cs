@@ -1,6 +1,6 @@
 #if USE_ADDRESSABLES
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -14,92 +14,106 @@ namespace Jin5eok.ResourceManagements
             public static Dictionary<AsyncOperationHandle<T>, string> HandleToAddressMap { get; private set; } = new ();
             public static Dictionary<string, AsyncOperationHandle<T>> AddressToHandleMap { get; private set; } = new ();
         }
+        private static object _lock = new ();
         
         public static T LoadAsset<T>(string address) where T : Object => LoadAssetAsync<T>(address).WaitForCompletion();
         
         public static AsyncOperationHandle<T> LoadAssetAsync<T>(string address) where T : Object
         {
-            if (AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out var handle) == false || handle.IsValid() == false)
+            lock (_lock)
             {
-                if (handle.IsValid() == false)
+                if(AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out var handle) == true)
                 {
-                    AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
-                    AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);
+                    if(handle.IsValid() == true && handle.Status != AsyncOperationStatus.Failed)
+                    {
+                        return handle;
+                    }
+                    else
+                    {
+                        AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
+                        AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);    
+                    }
                 }
                 
                 handle = Addressables.LoadAssetAsync<T>(address);
+                handle.Destroyed += _ =>
+                {
+                    lock (_lock)
+                    {
+                        if (AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out var currentHandle) == true
+                            && currentHandle.Equals(handle) == true)
+                        {
+                            AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
+                            AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);    
+                        }
+                    }
+                };
                 AsyncOperationHandleMap<T>.AddressToHandleMap.Add(address, handle);
                 AsyncOperationHandleMap<T>.HandleToAddressMap.Add(handle, address);
+                
+                return handle;
             }
-            else
-            {
-                handle = AsyncOperationHandleMap<T>.AddressToHandleMap[address];
-            }
-            return handle;
         }
-
+        
         public static bool ReleaseAsset<T>(string address) where T : Object
         {
-            if (AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out var handle) == true)
+            lock (_lock)
             {
-                if (handle.IsValid() == true)
+                if (AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out var handle) == true)
                 {
-                    Addressables.Release(handle);    
+                    if (handle.IsValid() && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
+                    {
+                        Addressables.Release(handle);    
+                    }
+                    AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
+                    AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);
+                    return true;
                 }
-                AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
-                AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);
-                return true;
-            }
             
-            return false;
+                return false;
+            }
         }
         
         public static bool ReleaseAsset<T>(AsyncOperationHandle<T> handle) where T : Object
         {
-            if (AsyncOperationHandleMap<T>.HandleToAddressMap.TryGetValue(handle, out var address) == true)
+            lock (_lock)
             {
-                if (handle.IsValid() == true)
+                if (AsyncOperationHandleMap<T>.HandleToAddressMap.TryGetValue(handle, out var address) == true)
                 {
-                    Addressables.Release(handle);    
-                }
+                    if (handle.IsValid() && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
+                    {
+                        Addressables.Release(handle);    
+                    }
                 
-                AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
-                AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);
-                return true;
+                    AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
+                    AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
         
         public static void ReleaseAssetAll<T>() where T : Object
         {
-            foreach (var handle in AsyncOperationHandleMap<T>.AddressToHandleMap.Values)
+            lock (_lock)
             {
-                if (handle.IsValid() == true)
+                foreach (var handle in AsyncOperationHandleMap<T>.AddressToHandleMap.Values)
                 {
-                    Addressables.Release(handle);    
+                    if (handle.IsValid() && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
+                    {
+                        Addressables.Release(handle);    
+                    }
                 }
+                AsyncOperationHandleMap<T>.AddressToHandleMap.Clear();
+                AsyncOperationHandleMap<T>.HandleToAddressMap.Clear(); 
             }
-            AsyncOperationHandleMap<T>.AddressToHandleMap.Clear();
-            AsyncOperationHandleMap<T>.HandleToAddressMap.Clear();
         }
         
         public static int GetHandleCount<T>() where T : Object
         {
-            ClearInvalidHandles<T>();
-            return AsyncOperationHandleMap<T>.AddressToHandleMap.Values.Count;
-        }
-
-        private static void ClearInvalidHandles<T>() where T : Object
-        {
-            var handles = AsyncOperationHandleMap<T>.AddressToHandleMap.Values.ToArray();
-            foreach (var handle in handles)
+            lock (_lock)
             {
-                if (handle.IsValid() == false)
-                {
-                    var address = AsyncOperationHandleMap<T>.HandleToAddressMap[handle];
-                    AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
-                    AsyncOperationHandleMap<T>.HandleToAddressMap.Remove(handle);
-                }
+                return AsyncOperationHandleMap<T>.AddressToHandleMap.Values.Count;    
             }
         }
     }
