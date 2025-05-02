@@ -118,7 +118,15 @@ namespace Jin5eok.ResourceManagements
                 }
             }
         }
-        
+
+        public static bool IsLoaded<T> (string address) where T : Object
+        {
+            lock (_lock)
+            {
+                return AsyncOperationHandleMap<T>.AddressToHandleMap.ContainsKey(address);
+            }
+        }
+
         public static int GetLoadedCount<T>() where T : Object
         {
             lock (_lock)
