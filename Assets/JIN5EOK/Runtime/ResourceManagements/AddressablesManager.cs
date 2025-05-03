@@ -21,37 +21,7 @@ namespace Jin5eok.ResourceManagements
         }
         private static object _lock = new ();
         
-        public static T LoadSync<T>(string address) where T : Object => GetHandle<T>(address).WaitForCompletion();
-        
-        public static void LoadAsyncCoroutine<T>(string address, Action<T> onResult) where T : Object 
-        {
-            var handle = GetHandle<T>(address);
-            AddressablesHandleProcessor.ProcessAsyncCoroutine(handle, onResult);
-        }
-        
-#if USE_UNITASK
-        public static async UniTask<T> LoadAsyncUniTask<T>(string address) where T : Object
-        {
-            var handle = GetHandle<T>(address);
-            return await AddressablesHandleProcessor.ProcessAsyncUniTask(handle);
-        }
-#endif
-        
-#if USE_AWAITABLE
-        public static async Awaitable<T> LoadAsyncAwaitable<T>(string address) where T : Object
-        {
-            var handle = GetHandle<T>(address);
-            return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
-        }
-#endif
-        
-        public static async Task<T> LoadAsyncTask<T>(string address) where T : Object
-        {
-            var handle = GetHandle<T>(address);
-            return await AddressablesHandleProcessor.ProcessAsyncTask(handle);
-        }
-        
-        private static AsyncOperationHandle<T> GetHandle<T>(string address) where T : Object
+        public static AsyncOperationHandle<T> LoadHandle<T>(string address) where T : Object
         {
             lock (_lock)
             {
@@ -72,6 +42,44 @@ namespace Jin5eok.ResourceManagements
                 
                 return handle;
             }
+        }
+        
+        public static List<AsyncOperationHandle<T>> GetLoadedHandleAll<T>() where T : Object
+        {
+            lock (_lock)
+            {
+                return AsyncOperationHandleMap<T>.AddressToHandleMap.Values.ToList();    
+            }
+        }
+        
+        public static T LoadWaitForCompletion<T>(string address) where T : Object => LoadHandle<T>(address).WaitForCompletion();
+        
+        public static void LoadAssetCoroutine<T>(string address, Action<T> onResult) where T : Object 
+        {
+            var handle = LoadHandle<T>(address);
+            AddressablesHandleProcessor.ProcessAsyncCoroutine(handle, onResult);
+        }
+        
+#if USE_UNITASK
+        public static async UniTask<T> LoadAssetUniTask<T>(string address) where T : Object
+        {
+            var handle = LoadHandle<T>(address);
+            return await AddressablesHandleProcessor.ProcessAsyncUniTask(handle);
+        }
+#endif
+        
+#if USE_AWAITABLE
+        public static async Awaitable<T> LoadAssetAwaitable<T>(string address) where T : Object
+        {
+            var handle = LoadHandle<T>(address);
+            return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
+        }
+#endif
+        
+        public static async Task<T> LoadAssetTask<T>(string address) where T : Object
+        {
+            var handle = LoadHandle<T>(address);
+            return await AddressablesHandleProcessor.ProcessAsyncTask(handle);
         }
         
         public static bool Release<T>(string address) where T : Object
@@ -113,11 +121,11 @@ namespace Jin5eok.ResourceManagements
             }
         }
 
-        public static int GetLoadedTypeCount<T>() where T : Object
+        public static List<string> GetLoadedAddressAll<T>() where T : Object
         {
             lock (_lock)
             {
-                return AsyncOperationHandleMap<T>.AddressToHandleMap.Values.Count;    
+                return AsyncOperationHandleMap<T>.AddressToHandleMap.Keys.ToList();    
             }
         }
     }

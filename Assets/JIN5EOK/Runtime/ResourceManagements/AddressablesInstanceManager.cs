@@ -15,43 +15,13 @@ namespace Jin5eok.ResourceManagements
     public class AddressablesInstanceManager
     {
         private static Dictionary<string, List<AsyncOperationHandle<GameObject>>> AddressToInstanceCollectionMap { get; set; } = new ();
-        
-        public static GameObject InstantiateSync(string address) => GetHandle(address).WaitForCompletion();
-        
-        public static void InstantiateAsyncCoroutine(string address, Action<GameObject> onResult) 
-        {
-            var handle = GetHandle(address);
-            AddressablesHandleProcessor.ProcessAsyncCoroutine(handle, onResult);
-        }
-        
-#if USE_UNITASK
-        public static async UniTask<GameObject> InstantiateAsyncUniTask(string address)
-        {
-            var handle = GetHandle(address);
-            return await AddressablesHandleProcessor.ProcessAsyncUniTask(handle);
-        }
-#endif
-        
-#if USE_AWAITABLE
-        public static async Awaitable<GameObject> InstantiateAsyncAwaitable(string address)
-        {
-            var handle = GetHandle(address);
-            return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
-        }
-#endif
-        
-        public static async Task<GameObject> InstantiateAsyncTask(string address)
-        {
-            var handle = GetHandle(address);
-            return await AddressablesHandleProcessor.ProcessAsyncTask(handle);
-        }
-        
-        private static AsyncOperationHandle<GameObject> GetHandle(string address)
+     
+        public static AsyncOperationHandle<GameObject> LoadHandle(string address)
         {
             if (AddressToInstanceCollectionMap.TryGetValue(address, out var handles) == false)
             {
-               AddressToInstanceCollectionMap.Add(address, new List<AsyncOperationHandle<GameObject>>());
-               handles = AddressToInstanceCollectionMap[address];
+                AddressToInstanceCollectionMap.Add(address, new List<AsyncOperationHandle<GameObject>>());
+                handles = AddressToInstanceCollectionMap[address];
             }
             
             var handle = Addressables.InstantiateAsync(address);
@@ -71,7 +41,40 @@ namespace Jin5eok.ResourceManagements
             
             return handle;
         }
-
+        
+        public static List<AsyncOperationHandle<GameObject>> GetLoadedHandleAll(string address)
+        {
+            if (AddressToInstanceCollectionMap.TryGetValue(address, out var list))
+            {
+                return list;
+            }
+            return null;
+        }
+        
+        public static GameObject InstantiateWaitForCompletion(string address) => LoadHandle(address).WaitForCompletion();
+        
+        public static void InstantiateAsyncCoroutine(string address, Action<GameObject> onResult) 
+        {
+            var handle = LoadHandle(address);
+            AddressablesHandleProcessor.ProcessAsyncCoroutine(handle, onResult);
+        }
+        
+#if USE_UNITASK
+        public static async UniTask<GameObject> InstantiateAsyncUniTask(string address)
+        {
+            var handle = LoadHandle(address);
+            return await AddressablesHandleProcessor.ProcessAsyncUniTask(handle);
+        }
+#endif
+        
+#if USE_AWAITABLE
+        public static async Awaitable<GameObject> InstantiateAsyncAwaitable(string address)
+        {
+            var handle = LoadHandle(address);
+            return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
+        }
+#endif
+        
         public static void ReleaseInstances(string address)
         {
             if (AddressToInstanceCollectionMap.TryGetValue(address, out var list))
@@ -88,28 +91,7 @@ namespace Jin5eok.ResourceManagements
             }
         }
         
-        public static void ReleaseInvalidInstances(string address)
-        {
-            if (AddressToInstanceCollectionMap.TryGetValue(address, out var list))
-            {
-                var removeTargets = new List<AsyncOperationHandle<GameObject>>();
-                foreach (var handle in list.ToList())
-                {
-                    if (handle.IsDone && handle.Result == null)
-                    {
-                        removeTargets.Add(handle);
-                        handle.Release();
-                    }
-                }
-
-                foreach (var removeTarget in removeTargets)
-                {
-                    list.Remove(removeTarget);
-                }
-            }
-        }
-        
-        public static void ReleaseInstanceAll()
+        public static void ReleaseInstanceHandleAll()
         {
             foreach (var list in AddressToInstanceCollectionMap.Values)
             {
@@ -120,16 +102,6 @@ namespace Jin5eok.ResourceManagements
                     list.Remove(handle);
                 }
             }
-        }
-
-        public static int GetLoadedInstanceCount(string address)
-        {
-            var count = 0;
-            if (AddressToInstanceCollectionMap.TryGetValue(address, out var list))
-            {
-                count = list.Count;
-            }
-            return count;
         }
     }
 }
