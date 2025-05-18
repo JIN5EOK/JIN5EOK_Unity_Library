@@ -1,3 +1,4 @@
+#if USE_ADDRESSABLES
 using System;
 using System.Collections;
 using System.Threading.Tasks;
@@ -80,3 +81,4 @@ namespace Jin5eok.ResourceManagements
         }
     }
 }
+#endif

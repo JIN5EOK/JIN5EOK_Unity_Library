@@ -1,3 +1,4 @@
+#if USE_ADDRESSABLES
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -103,3 +104,4 @@ namespace Jin5eok.ResourceManagements
         }
     }
 }
+#endif
