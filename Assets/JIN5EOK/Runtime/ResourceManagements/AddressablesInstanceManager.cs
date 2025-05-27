@@ -92,14 +92,9 @@ namespace Jin5eok.ResourceManagements
         
         public static void ReleaseInstanceHandleAll()
         {
-            foreach (var list in AddressToInstanceCollectionMap.Values)
+            foreach (var address in AddressToInstanceCollectionMap.Keys)
             {
-                for (int i = list.Count - 1; i >= 0; i--)
-                {
-                    var handle = list[i];
-                    handle.Release();
-                    list.Remove(handle);
-                }
+                ReleaseInstances(address);
             }
         }
     }

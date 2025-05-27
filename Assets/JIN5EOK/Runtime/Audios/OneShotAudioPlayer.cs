@@ -65,8 +65,10 @@ namespace Jin5eok.Audios
         {
             _globalAudioModel.OnVolumeChanged -= OnVolumeChanged;
             _globalAudioModel.OnMuteChanged -= OnMuteChanged;
+            _globalAudioModel.OnPitchChanged -= OnPitchChanged;
             PlayerAudioModel.OnVolumeChanged -= OnVolumeChanged;
             PlayerAudioModel.OnMuteChanged -= OnMuteChanged;
+            PlayerAudioModel.OnPitchChanged -= OnPitchChanged;
         }
     }
 }

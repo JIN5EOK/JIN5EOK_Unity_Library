@@ -112,7 +112,7 @@ namespace Jin5eok.Audios
         
         public void FadePitch(float from, float to, float duration)
         {
-            if (_fadeVolumeCoroutine != null)
+            if (_fadePitchCoroutine != null)
             {
                 StopCoroutine(_fadePitchCoroutine);
             }
@@ -161,10 +161,13 @@ namespace Jin5eok.Audios
         {
             _globalAudioModel.OnVolumeChanged -= OnVolumeChanged;
             _globalAudioModel.OnMuteChanged -= OnMuteChanged;
+            _globalAudioModel.OnPitchChanged -= OnPitchChanged;
             _baseAudioModel.OnVolumeChanged -= OnVolumeChanged;
             _baseAudioModel.OnMuteChanged -= OnMuteChanged;
+            _baseAudioModel.OnPitchChanged -= OnPitchChanged;
             PlayerAudioModel.OnVolumeChanged -= OnVolumeChanged;
             PlayerAudioModel.OnMuteChanged -= OnMuteChanged;
+            PlayerAudioModel.OnPitchChanged -= OnPitchChanged;
         }
     }
 }

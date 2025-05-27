@@ -36,7 +36,7 @@ namespace Jin5eok.Audios
             set
             {
                 _pitch = Mathf.Clamp(value,0.0f, float.MaxValue);
-                OnPitchChanged?.Invoke(_volume);
+                OnPitchChanged?.Invoke(_pitch);
             }
         }
         private float _pitch  = 1f;
