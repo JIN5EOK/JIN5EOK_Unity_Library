@@ -10,15 +10,9 @@ namespace Jin5eok.Audios
 {
     public class AudioManager : MonoSingleton<AudioManager>
     {
-        public readonly string GlobalAudioKey = "Global";
+        public AudioModel GlobalAudioModel { get; private set; } = new AudioModel();
         private Dictionary<string, AudioModel> _audioModels = new ();
         private Dictionary<string, OneShotAudioPlayer> _oneShotAudioPlayers = new ();
-
-        protected override void Awake()
-        {
-            base.Awake();
-            TryAddAudioType(GlobalAudioKey);
-        }
         
         public bool TryAddAudioType(string key)
         {
@@ -32,15 +26,10 @@ namespace Jin5eok.Audios
             oneShotPlayerGameObject.transform.SetParent(transform);
                 
             var oneShotPlayer = oneShotPlayerGameObject.AddComponent<OneShotAudioPlayer>();
-            oneShotPlayer.Initialize(_audioModels[key], GetAudioModelGlobal());
+            oneShotPlayer.Initialize(_audioModels[key], GlobalAudioModel);
             _oneShotAudioPlayers.Add(key, oneShotPlayer);
 
             return true;
-        }
-        
-        public AudioPlayer InstantiateAudioPlayerGlobal(AudioClip audioClip)
-        {
-            return InstantiateAudioPlayer(audioClip, GlobalAudioKey);
         }
         
         public AudioPlayer InstantiateAudioPlayer(AudioClip audioClip, string audioType)
@@ -52,13 +41,8 @@ namespace Jin5eok.Audios
             playerGameObject.transform.SetParent(transform);
             
             var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
-            playerInstance.Initialize(audioClip, _audioModels[audioType], _audioModels[GlobalAudioKey]);
+            playerInstance.Initialize(audioClip, _audioModels[audioType], GlobalAudioModel);
             return playerInstance;
-        }
-
-        public AudioPlayResult PlayOneShotGlobal(AudioClip sfxClip)
-        {
-            return PlayOneShot(sfxClip, GlobalAudioKey);
         }
         
         public AudioPlayResult PlayOneShot(AudioClip sfxClip, string audioType)
@@ -68,11 +52,6 @@ namespace Jin5eok.Audios
                 return _oneShotAudioPlayers[audioType].Play(sfxClip);    
             }
             return AudioPlayResult.GetFailedResult();
-        }
-        
-        public AudioModel GetAudioModelGlobal()
-        {
-            return _audioModels[GlobalAudioKey];
         }
 
         public AudioModel GetAudioModel(string key)

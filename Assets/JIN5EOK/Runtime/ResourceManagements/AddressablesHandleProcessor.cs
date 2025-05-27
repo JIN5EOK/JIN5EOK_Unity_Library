@@ -76,6 +76,16 @@ namespace Jin5eok.ResourceManagements
         
         public static async Task<T> ProcessAsyncTask<T>(AsyncOperationHandle<T> handle) where T : Object
         {
+            if (handle.IsValid() == false || handle.Status == AsyncOperationStatus.Failed)
+            {
+                return null;
+            }
+            
+            if (handle.IsDone && handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
+            {
+                return handle.Result;
+            }
+            
             await handle.Task;
             return handle.Result;
         }

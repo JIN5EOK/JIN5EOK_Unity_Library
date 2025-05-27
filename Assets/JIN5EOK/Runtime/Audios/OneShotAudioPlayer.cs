@@ -41,8 +41,8 @@ namespace Jin5eok.Audios
 
         private void OnVolumeChanged()
         {
-            _audioSource.volume = PlayerAudioModel.Volume * _globalAudioModel.Volume;
-            _audioSource.pitch = PlayerAudioModel.Pitch * _globalAudioModel.Pitch;
+            _audioSource.volume = Mathf.Clamp01(PlayerAudioModel.Volume * _globalAudioModel.Volume);
+            _audioSource.pitch = Mathf.Clamp(PlayerAudioModel.Pitch * _globalAudioModel.Pitch, 0.1f, 3f);;
             _audioSource.mute = PlayerAudioModel.Mute || _globalAudioModel.Mute;
         }
         
@@ -63,6 +63,11 @@ namespace Jin5eok.Audios
 
         private void OnDestroy()
         {
+            if (_isInit == false)
+            {
+                return;
+            }
+            
             _globalAudioModel.OnVolumeChanged -= OnVolumeChanged;
             _globalAudioModel.OnMuteChanged -= OnMuteChanged;
             _globalAudioModel.OnPitchChanged -= OnPitchChanged;

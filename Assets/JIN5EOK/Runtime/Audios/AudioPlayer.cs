@@ -147,8 +147,8 @@ namespace Jin5eok.Audios
         private void OnAudioModelsChanged()
         {
             _audioSource.mute = PlayerAudioModel.Mute || _baseAudioModel.Mute || _globalAudioModel.Mute;
-            _audioSource.volume = PlayerAudioModel.Volume * _baseAudioModel.Volume * _globalAudioModel.Volume;
-            _audioSource.pitch = PlayerAudioModel.Pitch * _baseAudioModel.Pitch * _globalAudioModel.Pitch;
+            _audioSource.volume = Mathf.Clamp01(PlayerAudioModel.Volume * _baseAudioModel.Volume * _globalAudioModel.Volume);
+            _audioSource.pitch  = Mathf.Clamp(PlayerAudioModel.Pitch  * _baseAudioModel.Pitch  * _globalAudioModel.Pitch, 0.1f, 3f);
         }
         
         private void OnDestroy()
