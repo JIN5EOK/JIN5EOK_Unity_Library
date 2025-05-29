@@ -37,7 +37,7 @@ namespace Jin5eok.Audios
             if (_audioModels.ContainsKey(audioType) == false)
                 return null;
             
-            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}:{audioType}/{audioClip.name}");
+            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}:{audioType}");
             playerGameObject.transform.SetParent(transform);
             
             var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
