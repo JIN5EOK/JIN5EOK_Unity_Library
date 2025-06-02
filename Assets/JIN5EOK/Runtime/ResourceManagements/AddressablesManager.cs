@@ -23,24 +23,55 @@ namespace Jin5eok.ResourceManagements
         
         public static AsyncOperationHandle<T> LoadHandle<T>(string address) where T : Object
         {
+            AsyncOperationHandle<T> handle;
+
             lock (_lock)
             {
-                if(AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out var handle) == true)
+                if (AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out handle) == true)
                 {
-                    if(handle.IsValid() == true && handle.Status != AsyncOperationStatus.Failed)
+                    if (handle.IsValid() == true && handle.Status != AsyncOperationStatus.Failed)
                     {
                         return handle;
                     }
                     else
                     {
-                        AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);    
+                        Debug.LogWarning($"{nameof(AddressablesManager)} Instantiation failed for address: {address}");
+                        AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
                     }
                 }
+            }
+            
+            handle = Addressables.LoadAssetAsync<T>(address);
+
+            lock (_lock)
+            {
+                if (AsyncOperationHandleMap<T>.AddressToHandleMap.ContainsKey(address) == false)
+                {
+                    AsyncOperationHandleMap<T>.AddressToHandleMap.Add(address, handle);
+                }
+            }
                 
-                handle = Addressables.LoadAssetAsync<T>(address);
-                AsyncOperationHandleMap<T>.AddressToHandleMap.Add(address, handle);
-                
-                return handle;
+            handle.Completed += (completedHandle) =>
+            {
+                // 실패한 경우에만 딕셔너리에서 자동 제거
+                if (completedHandle.Status == AsyncOperationStatus.Failed)
+                {
+                    lock (_lock)
+                    {
+                        AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
+                    }
+                }
+            };
+            handle.Destroyed += _ => OnRelease<T>(address);
+            
+            return handle;
+        }
+        
+        private static void OnRelease<T>(string address) where T : Object
+        {
+            lock (_lock)
+            {
+                AsyncOperationHandleMap<T>.AddressToHandleMap.Remove(address);
             }
         }
         
@@ -117,7 +148,8 @@ namespace Jin5eok.ResourceManagements
         {
             lock (_lock)
             {
-                return AsyncOperationHandleMap<T>.AddressToHandleMap.ContainsKey(address);
+                return AsyncOperationHandleMap<T>.AddressToHandleMap.TryGetValue(address, out var handle) &&
+                       handle.IsValid() && handle.Status == AsyncOperationStatus.Succeeded;
             }
         }
 

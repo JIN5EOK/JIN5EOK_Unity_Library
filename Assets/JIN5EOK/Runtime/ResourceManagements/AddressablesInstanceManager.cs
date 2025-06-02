@@ -19,16 +19,22 @@ namespace Jin5eok.ResourceManagements
         {
             if (AddressToInstanceCollectionMap.TryGetValue(address, out var handles) == false)
             {
-                AddressToInstanceCollectionMap.Add(address, new List<AsyncOperationHandle<GameObject>>());
-                handles = AddressToInstanceCollectionMap[address];
+                handles = new List<AsyncOperationHandle<GameObject>>();
+                AddressToInstanceCollectionMap.Add(address, handles);
             }
-            
+
             var handle = Addressables.InstantiateAsync(address);
-            handle.Completed += _ =>
+
+            handle.Completed += op =>
             {
-                if (handle.Result != null)
+                if (op.Status == AsyncOperationStatus.Succeeded && op.Result != null)
                 {
-                    handle.Result.AddComponent<AddressablesInstanceReleaser>().Initialize(handle);
+                    op.Result.AddComponent<AddressablesInstanceReleaser>().Initialize(op);
+                }
+                else
+                {
+                    Debug.LogWarning($"{nameof(AddressablesInstanceManager)} Instantiation failed for address: {address}");
+                    handles.Remove(op);
                 }
             };
 
@@ -36,10 +42,12 @@ namespace Jin5eok.ResourceManagements
             {
                 handles.Remove(handle);
             };
+
             handles.Add(handle);
-            
+
             return handle;
         }
+
         
         public static List<AsyncOperationHandle<GameObject>> GetLoadedHandleAll(string address)
         {
