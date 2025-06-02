@@ -22,10 +22,14 @@ namespace Jin5eok.Audios
             PlayerAudioModel = playerAudioModel;
             _globalAudioModel = globalAudioModel;
             _audioSource = gameObject.AddComponent<AudioSource>();
+
+            if (_globalAudioModel != null)
+            {
+                _globalAudioModel.OnVolumeChanged += OnVolumeChanged;
+                _globalAudioModel.OnMuteChanged += OnMuteChanged;
+                _globalAudioModel.OnPitchChanged += OnPitchChanged;    
+            }
             
-            _globalAudioModel.OnVolumeChanged += OnVolumeChanged;
-            _globalAudioModel.OnMuteChanged += OnMuteChanged;
-            _globalAudioModel.OnPitchChanged += OnPitchChanged;
             PlayerAudioModel.OnVolumeChanged += OnVolumeChanged;
             PlayerAudioModel.OnMuteChanged += OnMuteChanged;
             PlayerAudioModel.OnPitchChanged += OnPitchChanged;
@@ -67,10 +71,14 @@ namespace Jin5eok.Audios
             {
                 return;
             }
+
+            if (_globalAudioModel != null)
+            {
+                _globalAudioModel.OnVolumeChanged -= OnVolumeChanged;
+                _globalAudioModel.OnMuteChanged -= OnMuteChanged;
+                _globalAudioModel.OnPitchChanged -= OnPitchChanged;    
+            }
             
-            _globalAudioModel.OnVolumeChanged -= OnVolumeChanged;
-            _globalAudioModel.OnMuteChanged -= OnMuteChanged;
-            _globalAudioModel.OnPitchChanged -= OnPitchChanged;
             PlayerAudioModel.OnVolumeChanged -= OnVolumeChanged;
             PlayerAudioModel.OnMuteChanged -= OnMuteChanged;
             PlayerAudioModel.OnPitchChanged -= OnPitchChanged;
