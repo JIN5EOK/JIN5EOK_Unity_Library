@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Jin5eok.Editor.Helper
+namespace Jin5eok.Editor
 {
     public class AssetHelper
     {
