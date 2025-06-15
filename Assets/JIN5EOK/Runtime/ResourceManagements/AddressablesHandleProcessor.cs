@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace Jin5eok.ResourceManagements
 {
-    internal class AddressablesHandleProcessor : MonoSingleton<AddressablesHandleProcessor>
+    internal static class AddressablesHandleProcessor
     {
         public static void ProcessAsyncCoroutine<T>(AsyncOperationHandle<T> handle, Action<T> onResult) where T : Object
         {
@@ -26,7 +26,7 @@ namespace Jin5eok.ResourceManagements
             }
             else
             {
-                Instance.StartCoroutine(ProcessAsyncCoroutineInternal(handle, onResult));
+                CoroutineRunner.Instance.StartCoroutine(ProcessAsyncCoroutineInternal(handle, onResult));
             }
         }
 
