@@ -14,7 +14,7 @@ namespace Jin5eok.Patterns.Component
         private ReorderableList _reorderableList;
         private SerializedProperty _serializedComponents;
 
-        private string _componentFieldName = "TypeElements";
+        private readonly string _elementFieldName = "TypeElements";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -30,7 +30,7 @@ namespace Jin5eok.Patterns.Component
         protected virtual void Initialize(Rect position, SerializedProperty property, GUIContent label)
         {
             var group = property.managedReferenceValue as SerializableTypeElementWrapper;
-            _serializedComponents = property.FindPropertyRelative(_componentFieldName);
+            _serializedComponents = property.FindPropertyRelative(_elementFieldName);
             _reorderableList = new ReorderableList(property.serializedObject, _serializedComponents, true, true, true, true);
             _reorderableList.drawHeaderCallback += OnDrawHaeaderCallback;
             _reorderableList.onAddDropdownCallback = OnAddDropDownCallback;

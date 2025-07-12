@@ -16,14 +16,7 @@ namespace Jin5eok.Patterns
         
         public virtual TKey GetInherited<TKey>() where TKey : T
         {
-            foreach (var key in TypeMap.Values)
-            {
-                if (key is TKey typeKey)
-                {
-                    return typeKey;
-                }
-            }
-            return default;
+            return TypeMap.Values.OfType<TKey>().FirstOrDefault();
         }
 
         public virtual List<TKey> GetInheritedAll<TKey>() where TKey : T
