@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Jin5eok.Patterns
 {
-    public interface IComponentContainer<T>
+    public interface ITypeContainer<T>
     {
         /// <returns> Count of Components </returns>
         public int Count { get; }

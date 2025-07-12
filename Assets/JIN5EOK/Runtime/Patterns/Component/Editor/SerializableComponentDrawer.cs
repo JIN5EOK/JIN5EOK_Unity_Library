@@ -6,7 +6,7 @@ using UnityEditorInternal;
 using UnityEngine;
 namespace Jin5eok.Patterns.Component
 {
-    [CustomPropertyDrawer(typeof(SerializableComponentWrapper))]
+    [CustomPropertyDrawer(typeof(SerializableTypeElementWrapper))]
     public class SerializableComponentDrawer<T> : PropertyDrawer
     {
         protected string HeaderField { get; set; } = typeof(T).Name;
@@ -29,7 +29,7 @@ namespace Jin5eok.Patterns.Component
         
         protected virtual void Initialize(Rect position, SerializedProperty property, GUIContent label)
         {
-            var group = property.managedReferenceValue as SerializableComponentWrapper;
+            var group = property.managedReferenceValue as SerializableTypeElementWrapper;
             _serializedComponents = property.FindPropertyRelative(_componentFieldName);
             _reorderableList = new ReorderableList(property.serializedObject, _serializedComponents, true, true, true, true);
             _reorderableList.drawHeaderCallback += OnDrawHaeaderCallback;
@@ -51,7 +51,7 @@ namespace Jin5eok.Patterns.Component
             for (int i = 0; i < list.serializedProperty.arraySize; i++)
             {
                 var managedReference = list.serializedProperty.GetArrayElementAtIndex(i).managedReferenceValue;
-                if (managedReference is SerializableComponent serializable)
+                if (managedReference is SerializableTypeElement serializable)
                 {
                     subclassTypes.Remove(serializable.GetType());
                     menu.AddDisabledItem(new GUIContent(serializable.GetType().ToString()), true);

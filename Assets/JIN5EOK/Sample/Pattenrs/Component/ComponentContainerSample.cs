@@ -44,13 +44,13 @@ namespace Jin5eok.Samples
         }
         
         
-        private ComponentContainer<BaseFoo> _fooContainer = new ComponentContainer<BaseFoo>();        
+        private TypeContainer<BaseFoo> _fooContainer = new TypeContainer<BaseFoo>();        
         void Start()
         {
             StartTest(_fooContainer);
         }
     
-        public void StartTest(ComponentContainer<BaseFoo> fooContainer)
+        public void StartTest(TypeContainer<BaseFoo> fooContainer)
         {
             AddAndGetItem(fooContainer);
             GetInherited(fooContainer);
@@ -58,7 +58,7 @@ namespace Jin5eok.Samples
             Debug.Log("-----------------------------------------------------------------------");
         }
     
-        public void AddAndGetItem(ComponentContainer<BaseFoo> fooContainer)
+        public void AddAndGetItem(TypeContainer<BaseFoo> fooContainer)
         {
             
             fooContainer.Add(new SubFoo1("I'm SubFoo1",true));
@@ -77,7 +77,7 @@ namespace Jin5eok.Samples
             Debug.Log($"Add {nameof(BaseFoo)} : {baseFoo.say}");
         }
     
-        public void GetInherited(ComponentContainer<BaseFoo> fooContainer)
+        public void GetInherited(TypeContainer<BaseFoo> fooContainer)
         {
             var inherited = fooContainer.GetInherited<BaseFoo>();
             Debug.Log($"Get one of inherited from {nameof(BaseFoo)} : {inherited.say}");
@@ -86,7 +86,7 @@ namespace Jin5eok.Samples
             Debug.Log($"Get all items inherited from {nameof(BaseFoo)} : Count => {inheritedAll.Count}");
         }
         
-        public void Remove(ComponentContainer<BaseFoo> fooContainer)
+        public void Remove(TypeContainer<BaseFoo> fooContainer)
         {
             fooContainer.Remove<SubFoo1>();
             Debug.Log($"Remove {nameof(SubFoo1)} : current Count => {fooContainer.Count}");
