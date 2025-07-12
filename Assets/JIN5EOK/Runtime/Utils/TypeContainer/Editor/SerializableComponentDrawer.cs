@@ -14,7 +14,7 @@ namespace Jin5eok.Patterns.Component
         private ReorderableList _reorderableList;
         private SerializedProperty _serializedComponents;
 
-        private string _componentFieldName = "Components";
+        private string _componentFieldName = "TypeElements";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
