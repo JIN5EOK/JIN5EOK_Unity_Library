@@ -2,7 +2,8 @@
     "name": "Audios",
     "rootNamespace": "Jin5eok",
     "references": [
-        "GUID:affcd23813e4c4ca29f1ef5cdebb1b01"
+        "GUID:affcd23813e4c4ca29f1ef5cdebb1b01",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -15,9 +16,9 @@
     "defineConstraints": [],
     "versionDefines": [
         {
-            "name": "com.unity.addressables",
+            "name": "com.cysharp.unitask",
             "expression": "",
-            "define": "USE_ADDRESSABLES"
+            "define": "USE_UNITASK"
         }
     ],
     "noEngineReferences": false

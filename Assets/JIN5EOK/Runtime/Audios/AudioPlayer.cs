@@ -1,50 +1,93 @@
 using System;
+using System.Collections;
+using Jin5eok.Extension;
 using UnityEngine;
 
 namespace Jin5eok.Audios
 {
+    [RequireComponent(typeof(AudioSource))]
     public class AudioPlayer : MonoBehaviour
     {
-        public event Action OnPlay;
-        
-        /// <summary>
-        /// Avoid using play, pause, and stop whenever possible!
-        /// </summary>
+        public enum PlayResult
+        {
+            Succeed, // Playback ended without any problems
+            Stopped, // Paused or Stopped
+            Failed
+        }
         public AudioSource AudioSource { get; private set; }
-
+        
+        private Coroutine _monitorRoutine;
+        
         private void Awake()
         {
-            if (AudioSource != null)
+            AudioSource = gameObject.AddOrGetComponent<AudioSource>();
+        }
+        
+        public void Play(Action<PlayResult> onPlayFinished = null)
+        {
+            if (AudioSource.clip == null)
             {
-                AudioSource = gameObject.AddComponent<AudioSource>();    
+                onPlayFinished?.Invoke(PlayResult.Failed);
+            }
+            else
+            {
+                if (_monitorRoutine != null)
+                {
+                    StopCoroutine(_monitorRoutine);
+                    onPlayFinished?.Invoke(PlayResult.Stopped);
+                }
+                
+                _monitorRoutine = StartCoroutine(MonitorPlayback(onPlayFinished));    
             }
         }
         
-        public AudioPlayResult Play()
+        private IEnumerator MonitorPlayback(Action<PlayResult> onPlayFinished = null)
         {
-            try
+            float playTime = 0f;
+            AudioClip playedClip = AudioSource.clip;
+            
+            AudioSource.Play();
+            
+            while (AudioSource.isPlaying == true)
             {
-                AudioSource.Play();
-                return AudioPlayResult.GetSucceedResult(AudioSource.clip);
+                var isPlaybackTargetChanged = playTime > AudioSource.time || playedClip != AudioSource.clip; 
+                if (isPlaybackTargetChanged == true)
+                {
+                    break;
+                }
+                
+                playTime = AudioSource.time;
+                yield return null;
             }
-            catch (Exception e)
+            
+            if (AudioSource.loop == false && playedClip == AudioSource.clip)
             {
-                Debug.LogError(e);
-                return AudioPlayResult.GetFailedResult();
+                if (playTime >= playedClip.length - 0.05f)
+                {
+                    onPlayFinished?.Invoke(PlayResult.Succeed);
+                }
+                else
+                {
+                    onPlayFinished?.Invoke(PlayResult.Stopped);
+                }
             }
-        }
+            else
+            {
+                onPlayFinished?.Invoke(PlayResult.Stopped);
+            }
 
-        public AudioPlayResult PlayOneShot(AudioClip audioClip)
+            _monitorRoutine = null;
+        }
+        
+        public void PlayOneShot(AudioClip audioClip)
         {
             try
             {
                 AudioSource.PlayOneShot(audioClip);
-                return AudioPlayResult.GetSucceedResult(audioClip);
             }
             catch (Exception e)
             {
                 Debug.LogError(e);
-                return AudioPlayResult.GetFailedResult();
             }
         }
         

@@ -7,13 +7,13 @@ using UnityEngine.Audio;
 
 namespace Jin5eok.Audios
 {
-    public class AudioManager : MonoSingleton<AudioManager>
+    public class AudioPlayerManager : MonoSingleton<AudioPlayerManager>
     {
         private Dictionary<AudioMixerGroup, AudioPlayer> _oneShotAudioPlayers = new ();
         
-        public AudioPlayer InstantiateAudioPlayer(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null)
+        public AudioPlayer InstantiateAudioPlayer(AudioClip audioClip = null, AudioMixerGroup audioMixerGroup = null)
         {
-            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}:{audioMixerGroup.name}");
+            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}:{audioMixerGroup?.name ?? "NoMixer"}");
             playerGameObject.transform.SetParent(transform);
             
             var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
@@ -24,7 +24,7 @@ namespace Jin5eok.Audios
             return playerInstance;
         }
         
-        public AudioPlayResult PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null)
+        public void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null)
         {
             if (_oneShotAudioPlayers.ContainsKey(audioMixerGroup) == false)
             {
@@ -39,7 +39,7 @@ namespace Jin5eok.Audios
                 _oneShotAudioPlayers.Add(audioMixerGroup, oneShotPlayer);
             }
             
-            return _oneShotAudioPlayers[audioMixerGroup].PlayOneShot(audioClip);
+            _oneShotAudioPlayers[audioMixerGroup].PlayOneShot(audioClip);
         }
     }   
 }
