@@ -9,37 +9,38 @@ namespace Jin5eok.Audios
 {
     public class AudioPlayerManager : MonoSingleton<AudioPlayerManager>
     {
-        private Dictionary<AudioMixerGroup, AudioPlayer> _oneShotAudioPlayers = new ();
+        private Dictionary<string, AudioPlayer> _oneShotAudioPlayers = new ();
         
-        public AudioPlayer InstantiateAudioPlayer(AudioClip audioClip = null, AudioMixerGroup audioMixerGroup = null)
+        private AudioPlayerBuilder _audioPlayerBuilder;
+        
+        AudioMixerGroup _emptyAudioMixerGroup;
+        public AudioPlayer InstantiateAudioPlayer(AudioClip audioClip = null, AudioMixerGroup audioMixerGroup = null, Transform parent = null)
         {
-            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}:{audioMixerGroup?.name ?? "NoMixer"}");
-            playerGameObject.transform.SetParent(transform);
+            if (_audioPlayerBuilder == null)
+            {
+                _audioPlayerBuilder = new AudioPlayerBuilder();
+            }
             
-            var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
+            _audioPlayerBuilder
+                .SetAudioClip(audioClip)
+                .SetAudioMixerGroup(audioMixerGroup)
+                .SetTransformParent(parent);
             
-            playerInstance.AudioSource.clip = audioClip;
-            playerInstance.AudioSource.outputAudioMixerGroup = audioMixerGroup;
-            
-            return playerInstance;
+            return _audioPlayerBuilder.Build();
         }
         
         public void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null)
         {
-            if (_oneShotAudioPlayers.ContainsKey(audioMixerGroup) == false)
+            // if No AudioMixerGroup, Use Empty String Key
+            string key = audioMixerGroup == null ? string.Empty : audioMixerGroup.name;
+            
+            if (_oneShotAudioPlayers.ContainsKey(key) == false)
             {
-                var oneShotPlayerGameObject = new GameObject($"GlobalOneShotAudioPlayer:{audioMixerGroup?.name ?? "NoMixer"}");
-                oneShotPlayerGameObject.transform.SetParent(transform);
-                
-                var oneShotPlayer = oneShotPlayerGameObject.AddComponent<AudioPlayer>();
-                
-                oneShotPlayer.AudioSource.clip = audioClip;
-                oneShotPlayer.AudioSource.outputAudioMixerGroup = audioMixerGroup;
-                
-                _oneShotAudioPlayers.Add(audioMixerGroup, oneShotPlayer);
+                var oneShotPlayer = InstantiateAudioPlayer(audioClip, audioMixerGroup, transform);
+                _oneShotAudioPlayers.Add(key, oneShotPlayer);
             }
             
-            _oneShotAudioPlayers[audioMixerGroup].PlayOneShot(audioClip);
+            _oneShotAudioPlayers[key].PlayOneShot(audioClip);
         }
     }   
 }
