@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b97995a6-7a2d-418c-90f9-941f2c3464cd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.JIN5EOK_Framework/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JIN5EOK_Framework/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Sample/AudioPlayerSample/AudioPlayerSample.unity" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Sample/AudioPlayerSample/AudioPlayerSample.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/TMP Settings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/TMP Settings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,10 +18,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/ITypeConatiner.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/ITypeConatiner.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElementContainer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainerBase.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Sample/AudioPlayerSample/Scripts/AudioPlayerSample.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -103,6 +101,7 @@
       <updated>1753493565541</updated>
       <workItem from="1753493567040" duration="1025000" />
       <workItem from="1753494915761" duration="368000" />
+      <workItem from="1753495430778" duration="311000" />
     </task>
     <servers />
   </component>
@@ -115,6 +114,7 @@
     <option name="unityProject" value="true" />
     <option name="unityProjectFolder" value="true" />
   </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
