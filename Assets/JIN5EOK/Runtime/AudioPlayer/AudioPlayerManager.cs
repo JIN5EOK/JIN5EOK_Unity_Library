@@ -11,16 +11,9 @@ namespace Jin5eok.Audios
     {
         private Dictionary<string, AudioPlayer> _oneShotAudioPlayers = new ();
         
-        private AudioPlayerBuilder _audioPlayerBuilder;
-        
-        AudioMixerGroup _emptyAudioMixerGroup;
+        private AudioPlayerBuilder _audioPlayerBuilder = new();
         public AudioPlayer InstantiateAudioPlayer(AudioClip audioClip = null, AudioMixerGroup audioMixerGroup = null, Transform parent = null)
         {
-            if (_audioPlayerBuilder == null)
-            {
-                _audioPlayerBuilder = new AudioPlayerBuilder();
-            }
-            
             _audioPlayerBuilder
                 .SetAudioClip(audioClip)
                 .SetAudioMixerGroup(audioMixerGroup)
@@ -34,13 +27,13 @@ namespace Jin5eok.Audios
             // if No AudioMixerGroup, Use Empty String Key
             string key = audioMixerGroup == null ? string.Empty : audioMixerGroup.name;
             
-            if (_oneShotAudioPlayers.ContainsKey(key) == false)
+            if (_oneShotAudioPlayers.TryGetValue(key, out var oneShotPlayer) == false)
             {
-                var oneShotPlayer = InstantiateAudioPlayer(audioClip, audioMixerGroup, transform);
-                oneShotPlayer.name = oneShotPlayer.name + "(OneShotPlayer)";
+                oneShotPlayer = InstantiateAudioPlayer(audioClip, audioMixerGroup, transform);
+                oneShotPlayer.name += "(OneShotPlayer)";
                 _oneShotAudioPlayers.Add(key, oneShotPlayer);
             }
-            _oneShotAudioPlayers[key].PlayOneShot(audioClip);
+            oneShotPlayer.PlayOneShot(audioClip);
         }
     }   
 }

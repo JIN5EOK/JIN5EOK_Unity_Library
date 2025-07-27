@@ -17,6 +17,7 @@ namespace Jin5eok.Audios
         public AudioSource AudioSource { get; private set; }
         
         private Coroutine _monitorRoutine;
+        private Action<PlayResult> _onPlayFinished;
         
         private void Awake()
         {
@@ -33,10 +34,11 @@ namespace Jin5eok.Audios
             {
                 if (_monitorRoutine != null)
                 {
+                    _onPlayFinished?.Invoke(PlayResult.Stopped);
                     StopCoroutine(_monitorRoutine);
-                    onPlayFinished?.Invoke(PlayResult.Stopped);
                 }
                 
+                _onPlayFinished = onPlayFinished;
                 _monitorRoutine = StartCoroutine(MonitorPlayback(onPlayFinished));    
             }
         }
@@ -81,14 +83,12 @@ namespace Jin5eok.Audios
         
         public void PlayOneShot(AudioClip audioClip)
         {
-            try
+            if (audioClip == null)
             {
-                AudioSource.PlayOneShot(audioClip);
+                Debug.LogWarning("Cannot play a null audio clip.", this);
+                return;
             }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
+            AudioSource.PlayOneShot(audioClip);
         }
         
         public void Pause()
