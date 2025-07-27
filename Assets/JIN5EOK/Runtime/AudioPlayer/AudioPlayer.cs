@@ -38,7 +38,7 @@ namespace Jin5eok.Audios
             return playerInstance;
         }
         
-        public static void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup, Action<PlayResult> onPlayFinished = null)
+        public static void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null, Action<PlayResult> onPlayFinished = null)
         {
             // if No AudioMixerGroup, Use 0
             int hashCodeKey = audioMixerGroup?.GetHashCode() ?? 0;
@@ -63,7 +63,7 @@ namespace Jin5eok.Audios
             else
             {
                 oneShotPlayer.AudioSource.PlayOneShot(audioClip);
-                CoroutineHelper.Delay(audioClip.length, () => onPlayFinished?.Invoke(PlayResult.Succeed), oneShotPlayer);    
+                CoroutineHelper.DelayRealtime(audioClip.length, () => onPlayFinished?.Invoke(PlayResult.Succeed), oneShotPlayer);    
             }
         }
         
