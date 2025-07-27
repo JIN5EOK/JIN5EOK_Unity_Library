@@ -18,6 +18,8 @@ namespace Jin5eok.Audios
         
         private Coroutine _monitorRoutine;
         private Action<PlayResult> _onPlayFinished;
+
+        private const float PlaybackCompletionTolerance = 0.05f;
         
         private void Awake()
         {
@@ -32,12 +34,6 @@ namespace Jin5eok.Audios
             }
             else
             {
-                if (_monitorRoutine != null)
-                {
-                    _onPlayFinished?.Invoke(PlayResult.Stopped);
-                    StopCoroutine(_monitorRoutine);
-                }
-                
                 _onPlayFinished = onPlayFinished;
                 _monitorRoutine = StartCoroutine(MonitorPlayback(onPlayFinished));    
             }
@@ -64,7 +60,8 @@ namespace Jin5eok.Audios
             
             if (AudioSource.loop == false && playedClip == AudioSource.clip)
             {
-                if (playTime >= playedClip.length - 0.05f)
+                var playBackCompletion = playedClip.length - PlaybackCompletionTolerance;
+                if (playTime >= playBackCompletion)
                 {
                     onPlayFinished?.Invoke(PlayResult.Succeed);
                 }
