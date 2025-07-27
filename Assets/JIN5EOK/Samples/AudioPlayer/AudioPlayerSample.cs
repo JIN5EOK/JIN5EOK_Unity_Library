@@ -54,7 +54,7 @@ namespace Jin5eok.Samples
         
         public void PlayOneShot(AudioClip clip)
         {
-            AudioPlayer.PlayOneShot(clip, null);
+            AudioPlayer.PlayOneShot(clip, null, (result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
         }
     }
 }

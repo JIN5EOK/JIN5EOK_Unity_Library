@@ -38,7 +38,7 @@ namespace Jin5eok.Audios
             return playerInstance;
         }
         
-        public static void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null)
+        public static void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup, Action<PlayResult> onPlayFinished = null)
         {
             // if No AudioMixerGroup, Use 0
             int hashCodeKey = audioMixerGroup?.GetHashCode() ?? 0;
@@ -51,11 +51,20 @@ namespace Jin5eok.Audios
                     DontDestroyOnLoad(_oneShotPlayerParent);
                 }
                 
-                oneShotPlayer = Create(audioClip, audioMixerGroup, _oneShotPlayerParent.transform);
+                oneShotPlayer = Create(null, audioMixerGroup, _oneShotPlayerParent.transform);
                 oneShotPlayer.name += "(OneShotPlayer)";
                 _oneShotAudioPlayers.Add(hashCodeKey, oneShotPlayer);
             }
-            oneShotPlayer.AudioSource.PlayOneShot(audioClip);
+
+            if (audioClip == null)
+            {
+                onPlayFinished?.Invoke(PlayResult.Failed);   
+            }
+            else
+            {
+                oneShotPlayer.AudioSource.PlayOneShot(audioClip);
+                CoroutineHelper.Delay(audioClip.length, () => onPlayFinished?.Invoke(PlayResult.Succeed), oneShotPlayer);    
+            }
         }
         
         private void Awake()
