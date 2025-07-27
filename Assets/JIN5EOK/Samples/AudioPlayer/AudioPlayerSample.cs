@@ -13,14 +13,12 @@ namespace Jin5eok.Samples
         private AudioPlayer _bgmPlayer;
         private AudioPlayer _sfxPlayer;
         
-        private AudioPlayerBuilder _audioPlayerBuilder = new ();
-
         public void CreateBgmPlayer()
         {
             if (_bgmPlayer != null)
                 return;
 
-            _bgmPlayer = AudioPlayerManager.Instance.InstantiateAudioPlayer(null, _bgmMixer, transform);
+            _bgmPlayer = AudioPlayer.Create(null, _bgmMixer, transform);
             _bgmPlayer.AudioSource.loop = true;
         }
         
@@ -29,37 +27,34 @@ namespace Jin5eok.Samples
             if (_sfxPlayer != null)
                 return;
 
-            _sfxPlayer = _audioPlayerBuilder
-                .SetAudioMixerGroup(_sfxMixer)
-                .SetTransformParent(transform)
-                .Build();
+            _sfxPlayer = AudioPlayer.Create(null, _sfxMixer, transform);
         }
         
         public void PlayBgm(AudioClip clip)
         {
             _bgmPlayer.AudioSource.clip = clip;
-            _bgmPlayer.Play((result) => Debug.Log($"Bgm PlayResult : { result.ToString()}" ));
+            _bgmPlayer.PlayWithCallback((result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
         }
         
         public void StopBgm()
         {
-            _bgmPlayer.Stop();
+            _bgmPlayer.AudioSource.Stop();
         }
         
         public void PlaySfx(AudioClip clip)
         {
             _sfxPlayer.AudioSource.clip = clip;
-            _sfxPlayer.Play((result) => Debug.Log($"Sfx PlayResult : { result.ToString()}" ));
+            _sfxPlayer.PlayWithCallback((result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
         }
         
         public void StopSfx()
         {
-            _sfxPlayer.Stop();
+            _sfxPlayer.AudioSource.Stop();
         }
         
         public void PlayOneShot(AudioClip clip)
         {
-            AudioPlayerManager.Instance.PlayOneShot(clip, _sfxMixer);
+            AudioPlayer.PlayOneShot(clip, null);
         }
     }
 }
