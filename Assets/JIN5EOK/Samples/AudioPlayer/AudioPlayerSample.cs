@@ -33,7 +33,7 @@ namespace Jin5eok.Samples
         public void PlayBgm(AudioClip clip)
         {
             _bgmPlayer.AudioSource.clip = clip;
-            _bgmPlayer.PlayWithCallback((result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
+            _bgmPlayer.Play((result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
         }
         
         public void StopBgm()
@@ -44,7 +44,7 @@ namespace Jin5eok.Samples
         public void PlaySfx(AudioClip clip)
         {
             _sfxPlayer.AudioSource.clip = clip;
-            _sfxPlayer.PlayWithCallback((result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
+            _sfxPlayer.Play((result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
         }
         
         public void StopSfx()
@@ -54,7 +54,7 @@ namespace Jin5eok.Samples
         
         public void PlayOneShot(AudioClip clip)
         {
-            AudioPlayer.PlayOneShot(clip, null);
+            AudioPlayer.PlayOneShot(clip, null, (result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
         }
     }
 }

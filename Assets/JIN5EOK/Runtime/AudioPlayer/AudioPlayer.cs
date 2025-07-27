@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Jin5eok.Extension;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -10,9 +9,6 @@ namespace Jin5eok.Audios
     [RequireComponent(typeof(AudioSource))]
     public class AudioPlayer : MonoBehaviour
     {
-        private static GameObject _oneShotPlayerParent;
-        private static Dictionary<int, AudioPlayer> _oneShotAudioPlayers = new ();
-        
         private const float PlaybackCompletionTolerance = 0.05f;
         
         public enum PlayResult
@@ -22,40 +18,33 @@ namespace Jin5eok.Audios
             Failed
         }
         public AudioSource AudioSource { get; private set; }
+        
         public static AudioPlayer Create(AudioClip audioClip = null, AudioMixerGroup audioMixerGroup = null, Transform parent = null)
         {
-            // if No AudioMixerGroup, Use Empty string
-            string mixerName = audioMixerGroup == null ? String.Empty : $"{audioMixerGroup.name}";
-            
-            var playerGameObject = new GameObject($"{nameof(AudioPlayer)}:{mixerName}");
-            playerGameObject.transform.SetParent(parent);
-            
+            var playerGameObject = new GameObject(nameof(AudioPlayer));
             var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
             
             playerInstance.AudioSource.clip = audioClip;
             playerInstance.AudioSource.outputAudioMixerGroup = audioMixerGroup;
-
+            playerInstance.transform.SetParent(parent);
+            
             return playerInstance;
         }
         
-        public static void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null)
+        public static void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null, Action<PlayResult> onPlayFinished = null)
         {
-            // if No AudioMixerGroup, Use 0
-            int hashCodeKey = audioMixerGroup?.GetHashCode() ?? 0;
-            
-            if (_oneShotAudioPlayers.TryGetValue(hashCodeKey, out var oneShotPlayer) == false)
+            if (audioClip == null)
             {
-                if (_oneShotPlayerParent == null)
-                {
-                    _oneShotPlayerParent = new GameObject("OneShotAudioPlayers");
-                    DontDestroyOnLoad(_oneShotPlayerParent);
-                }
-                
-                oneShotPlayer = Create(audioClip, audioMixerGroup, _oneShotPlayerParent.transform);
-                oneShotPlayer.name += "(OneShotPlayer)";
-                _oneShotAudioPlayers.Add(hashCodeKey, oneShotPlayer);
+                onPlayFinished?.Invoke(PlayResult.Failed);   
             }
-            oneShotPlayer.AudioSource.PlayOneShot(audioClip);
+            
+            var oneShotPlayer = AudioPlayerPool.Instance.Pool.Get();
+            oneShotPlayer.AudioSource.clip = audioClip;
+            oneShotPlayer.AudioSource.outputAudioMixerGroup = audioMixerGroup;
+
+            onPlayFinished += _ => { AudioPlayerPool.Instance.Pool.Release(oneShotPlayer); };
+            
+            oneShotPlayer.Play(onPlayFinished);
         }
         
         private void Awake()
@@ -63,7 +52,7 @@ namespace Jin5eok.Audios
             AudioSource = gameObject.AddOrGetComponent<AudioSource>();
         }
         
-        public void PlayWithCallback(Action<PlayResult> onPlayFinished = null)
+        public void Play(Action<PlayResult> onPlayFinished = null)
         {
             if (AudioSource.clip == null)
             {
