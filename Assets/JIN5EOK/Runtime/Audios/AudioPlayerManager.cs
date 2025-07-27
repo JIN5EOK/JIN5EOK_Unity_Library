@@ -37,9 +37,9 @@ namespace Jin5eok.Audios
             if (_oneShotAudioPlayers.ContainsKey(key) == false)
             {
                 var oneShotPlayer = InstantiateAudioPlayer(audioClip, audioMixerGroup, transform);
+                oneShotPlayer.name = oneShotPlayer.name + "(OneShotPlayer)";
                 _oneShotAudioPlayers.Add(key, oneShotPlayer);
             }
-            
             _oneShotAudioPlayers[key].PlayOneShot(audioClip);
         }
     }   
