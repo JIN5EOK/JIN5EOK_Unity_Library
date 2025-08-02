@@ -21,6 +21,16 @@ namespace Jin5eok
             CoroutineRunner.Instance.StartCoroutine(RequestRoutine(UnityWebRequestTexture.GetTexture(url), onSuccess, onError, DownloadHandlerTexture.GetContent));
         }
         
+        public static void GetAudioClip(string url, AudioType audioType, Action<AudioClip> onSuccess, Action<UnityWebRequestException> onError = null)
+        {
+            CoroutineRunner.Instance.StartCoroutine(RequestRoutine(UnityWebRequestMultimedia.GetAudioClip(url, audioType), onSuccess, onError, DownloadHandlerAudioClip.GetContent));
+        }
+
+        public static void GetAssetBundle(string url, Action<AssetBundle> onSuccess, Action<UnityWebRequestException> onError = null)
+        {
+            CoroutineRunner.Instance.StartCoroutine(RequestRoutine(UnityWebRequestAssetBundle.GetAssetBundle(url), onSuccess, onError, DownloadHandlerAssetBundle.GetContent));
+        }
+        
         private static IEnumerator RequestRoutine<T>(UnityWebRequest request, Action<T> onSuccess, Action<UnityWebRequestException> onError, Func<UnityWebRequest, T> contentExtractor)
         {
             using (request)
@@ -48,6 +58,16 @@ namespace Jin5eok
             return RequestAsync(UnityWebRequestTexture.GetTexture(url), DownloadHandlerTexture.GetContent);
         }
         
+        public static Task<AudioClip> GetAudioClipAsync(string url, AudioType audioType)
+        {
+            return RequestAsync(UnityWebRequestMultimedia.GetAudioClip(url, audioType), DownloadHandlerAudioClip.GetContent);
+        }
+
+        public static Task<AssetBundle> GetAssetBundleAsync(string url)
+        {
+            return RequestAsync(UnityWebRequestAssetBundle.GetAssetBundle(url), DownloadHandlerAssetBundle.GetContent);
+        }
+        
         private static async Task<T> RequestAsync<T>(UnityWebRequest request, Func<UnityWebRequest, T> contentExtractor)
         {
             using (request)
@@ -68,6 +88,16 @@ namespace Jin5eok
         public static UniTask<Texture2D> GetTextureUniTaskAsync(string url)
         {
             return RequestUniTaskAsync(UnityWebRequestTexture.GetTexture(url), DownloadHandlerTexture.GetContent);
+        }
+        
+        public static UniTask<AudioClip> GetAudioClipUniTaskAsync(string url, AudioType audioType)
+        {
+            return RequestUniTaskAsync(UnityWebRequestMultimedia.GetAudioClip(url, audioType), DownloadHandlerAudioClip.GetContent);
+        }
+
+        public static UniTask<AssetBundle> GetAssetBundleUniTaskAsync(string url)
+        {
+            return RequestUniTaskAsync(UnityWebRequestAssetBundle.GetAssetBundle(url), DownloadHandlerAssetBundle.GetContent);
         }
         
         private static async UniTask<T> RequestUniTaskAsync<T>(UnityWebRequest request, Func<UnityWebRequest, T> contentExtractor)
@@ -91,6 +121,16 @@ namespace Jin5eok
         public static Awaitable<Texture2D> GetTextureAwaitableAsync(string url)
         {
             return RequestAwaitableAsync(UnityWebRequestTexture.GetTexture(url), DownloadHandlerTexture.GetContent);
+        }
+        
+        public static Awaitable<AudioClip> GetAudioClipAwaitableAsync(string url, AudioType audioType)
+        {
+            return RequestAwaitableAsync(UnityWebRequestMultimedia.GetAudioClip(url, audioType), DownloadHandlerAudioClip.GetContent);
+        }
+
+        public static Awaitable<AssetBundle> GetAssetBundleAwaitableAsync(string url)
+        {
+            return RequestAwaitableAsync(UnityWebRequestAssetBundle.GetAssetBundle(url), DownloadHandlerAssetBundle.GetContent);
         }
         
         private static async Awaitable<T> RequestAwaitableAsync<T>(UnityWebRequest request, Func<UnityWebRequest, T> contentExtractor)
