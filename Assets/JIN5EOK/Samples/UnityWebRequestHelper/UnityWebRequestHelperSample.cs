@@ -39,12 +39,6 @@ namespace Jin5eok
             UnityWebRequestHelper.Get(_textURL, SetText, OnError, _cancellationToken.Token);
         }
 
-        public async void GetTextAsync()
-        {
-            StartLoadProcess(typeof(string), "Async Task");
-            SetText(await UnityWebRequestHelper.GetAsync(_textURL, _cancellationToken.Token));
-        }
-        
         public async void GetTextAwaitableAsync()
         {
             StartLoadProcess(typeof(string), "Async Awaitable");
@@ -61,12 +55,6 @@ namespace Jin5eok
         {
             StartLoadProcess(typeof(AudioClip), "Coroutine");
             UnityWebRequestHelper.GetAudioClip(_audioURL,_audioType, SetAudio, OnError, _cancellationToken.Token);
-        }
-
-        public async void GetAudioAsync()
-        {
-            StartLoadProcess(typeof(AudioClip), "Async Task");
-            SetAudio(await UnityWebRequestHelper.GetAudioClipAsync(_audioURL, _audioType, _cancellationToken.Token));
         }
         
         public async void GetAudioUniTaskAsync()
@@ -85,12 +73,6 @@ namespace Jin5eok
         {
             StartLoadProcess(typeof(Texture2D), "Coroutine");
             UnityWebRequestHelper.GetTexture(_textureURL, SetTexture, OnError, _cancellationToken.Token);
-        }
-
-        public async void GetTextureAsync()
-        {
-            StartLoadProcess(typeof(Texture2D), "Async Task");
-            SetTexture(await UnityWebRequestHelper.GetTextureAsync(_textureURL, _cancellationToken.Token));
         }
         
         public async void GetTextureAwaitableAsync()

@@ -61,37 +61,6 @@ namespace Jin5eok
                 }
             }
         }
-        public static Task<string> GetAsync(string url, CancellationToken cancellationToken = default)
-        {
-            return RequestAsync(UnityWebRequest.Get(url), r => r.downloadHandler.text, cancellationToken);
-        }
-        
-        public static Task<Texture2D> GetTextureAsync(string url, CancellationToken cancellationToken = default)
-        {
-            return RequestAsync(UnityWebRequestTexture.GetTexture(url), DownloadHandlerTexture.GetContent, cancellationToken);
-        }
-        
-        public static Task<AudioClip> GetAudioClipAsync(string url, AudioType audioType, CancellationToken cancellationToken = default)
-        {
-            return RequestAsync(UnityWebRequestMultimedia.GetAudioClip(url, audioType), DownloadHandlerAudioClip.GetContent, cancellationToken);
-        }
-
-        public static Task<AssetBundle> GetAssetBundleAsync(string url, CancellationToken cancellationToken = default)
-        {
-            return RequestAsync(UnityWebRequestAssetBundle.GetAssetBundle(url), DownloadHandlerAssetBundle.GetContent, cancellationToken);
-        }
-        
-        private static async Task<T> RequestAsync<T>(UnityWebRequest request, Func<UnityWebRequest, T> contentExtractor, CancellationToken cancellationToken = default)
-        {
-            using (request)
-            {
-                await using (cancellationToken.Register(() => request?.Abort()))
-                {
-                    await request.SendWebRequest();
-                    return ProcessUnityWebRequestResult(request, contentExtractor);
-                }
-            }
-        }
         
 #if USE_UNITASK
         public static UniTask<string> GetUniTaskAsync(string url, CancellationToken cancellationToken = default)
