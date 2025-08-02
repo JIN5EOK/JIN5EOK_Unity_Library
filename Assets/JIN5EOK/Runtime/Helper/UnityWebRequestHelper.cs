@@ -37,11 +37,12 @@ namespace Jin5eok
             {
                 yield return request.SendWebRequest();
 
-                if (request.result == UnityWebRequest.Result.Success)
+                try
                 {
-                    onSuccess?.Invoke(contentExtractor(request));
+                    var result = ProcessUnityWebRequestResult(request, contentExtractor);
+                    onSuccess?.Invoke(result);
                 }
-                else
+                catch (Exception e)
                 {
                     onError?.Invoke(new UnityWebRequestException(request));
                 }
@@ -73,9 +74,7 @@ namespace Jin5eok
             using (request)
             {
                 await request.SendWebRequest();
-                if (request.result != UnityWebRequest.Result.Success) 
-                    throw new UnityWebRequestException(request);
-                return contentExtractor(request);
+                return ProcessUnityWebRequestResult(request, contentExtractor);
             }
         }
         
@@ -105,9 +104,7 @@ namespace Jin5eok
             using (request)
             {
                 await request.SendWebRequest();
-                if (request.result != UnityWebRequest.Result.Success) 
-                    throw new UnityWebRequestException(request);
-                return contentExtractor(request);
+                return ProcessUnityWebRequestResult(request, contentExtractor);
             }
         }
 #endif
@@ -138,11 +135,18 @@ namespace Jin5eok
             using (request)
             {
                 await request.SendWebRequest();
-                if (request.result != UnityWebRequest.Result.Success)
-                    throw new UnityWebRequestException(request);
-                return contentExtractor(request);
+                return ProcessUnityWebRequestResult(request, contentExtractor);
             }
         }
 #endif
+        
+        private static T ProcessUnityWebRequestResult<T>(UnityWebRequest request, Func<UnityWebRequest, T> contentExtractor)
+        {
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                throw new UnityWebRequestException(request);
+            }
+            return contentExtractor(request);
+        }
     }
 }

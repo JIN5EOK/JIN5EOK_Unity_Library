@@ -13,11 +13,11 @@ namespace Jin5eok
     {
         [Header("Load URL")]
         [SerializeField]
-        private string _textURL = "https://file-examples.com/wp-content/storage/2017/02/file_example_JSON_1kb.json";
+        private string _textURL;
         [SerializeField]
-        private string _textureURL = "https://file-examples.com/wp-content/storage/2017/10/file_example_JPG_100kB.jpg"; 
+        private string _textureURL; 
         [SerializeField]
-        private string _audioURL = "https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_700KB.mp3";
+        private string _audioURL;
         [SerializeField]
         private AudioType _audioType;
         [Space(10)]
