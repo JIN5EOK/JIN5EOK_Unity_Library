@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Jin5eok.Helper
+namespace Jin5eok
 {
     public class GameActionHelper2D
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Jin5eok.Helper
+namespace Jin5eok
 {
     public class ReflectionHelper
     {
