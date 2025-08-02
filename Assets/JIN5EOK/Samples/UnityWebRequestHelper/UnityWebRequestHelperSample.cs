@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,81 +30,91 @@ namespace Jin5eok
         private Image _targetImage;
         [SerializeField]
         private AudioSource _targetAudioSource;
+
+        private CancellationTokenSource _cancellationToken;
         
         public void GetText()
         {
             StartLoadProcess(typeof(string), "Coroutine");
-            UnityWebRequestHelper.Get(_textURL, SetText, OnError);
+            UnityWebRequestHelper.Get(_textURL, SetText, OnError, _cancellationToken.Token);
         }
 
         public async void GetTextAsync()
         {
             StartLoadProcess(typeof(string), "Async Task");
-            SetText(await UnityWebRequestHelper.GetAsync(_textURL));
+            SetText(await UnityWebRequestHelper.GetAsync(_textURL, _cancellationToken.Token));
         }
         
         public async void GetTextAwaitableAsync()
         {
             StartLoadProcess(typeof(string), "Async Awaitable");
-            SetText(await UnityWebRequestHelper.GetAwaitableAsync(_textURL));
+            SetText(await UnityWebRequestHelper.GetAwaitableAsync(_textURL, _cancellationToken.Token));
         }
         
         public async void GetTextUniTaskAsync()
         {
             StartLoadProcess(typeof(string), "Async UniTask");
-            SetText(await UnityWebRequestHelper.GetUniTaskAsync(_textURL));
+            SetText(await UnityWebRequestHelper.GetUniTaskAsync(_textURL, _cancellationToken.Token));
         }
         
         public void GetAudio()
         {
             StartLoadProcess(typeof(AudioClip), "Coroutine");
-            UnityWebRequestHelper.GetAudioClip(_audioURL,_audioType, SetAudio, OnError);
+            UnityWebRequestHelper.GetAudioClip(_audioURL,_audioType, SetAudio, OnError, _cancellationToken.Token);
         }
 
         public async void GetAudioAsync()
         {
             StartLoadProcess(typeof(AudioClip), "Async Task");
-            SetAudio(await UnityWebRequestHelper.GetAudioClipAsync(_audioURL, _audioType));
+            SetAudio(await UnityWebRequestHelper.GetAudioClipAsync(_audioURL, _audioType, _cancellationToken.Token));
         }
         
         public async void GetAudioUniTaskAsync()
         {
             StartLoadProcess(typeof(AudioClip), "Async Awaitable");
-            SetAudio(await UnityWebRequestHelper.GetAudioClipUniTaskAsync(_audioURL, _audioType));
+            SetAudio(await UnityWebRequestHelper.GetAudioClipUniTaskAsync(_audioURL, _audioType, _cancellationToken.Token));
         }
         
         public async void GetAudioAwaitableAsync()
         {
             StartLoadProcess(typeof(AudioClip), "Async UniTask");
-            SetAudio(await UnityWebRequestHelper.GetAudioClipAwaitableAsync(_audioURL, _audioType));
+            SetAudio(await UnityWebRequestHelper.GetAudioClipAwaitableAsync(_audioURL, _audioType, _cancellationToken.Token));
         }
         
         public void GetTexture()
         {
             StartLoadProcess(typeof(Texture2D), "Coroutine");
-            UnityWebRequestHelper.GetTexture(_textureURL, SetTexture, OnError);
+            UnityWebRequestHelper.GetTexture(_textureURL, SetTexture, OnError, _cancellationToken.Token);
         }
 
         public async void GetTextureAsync()
         {
             StartLoadProcess(typeof(Texture2D), "Async Task");
-            SetTexture(await UnityWebRequestHelper.GetTextureAsync(_textureURL));
+            SetTexture(await UnityWebRequestHelper.GetTextureAsync(_textureURL, _cancellationToken.Token));
         }
         
         public async void GetTextureAwaitableAsync()
         {
             StartLoadProcess(typeof(Texture2D), "Async Awaitable");
-            SetTexture(await UnityWebRequestHelper.GetTextureAwaitableAsync(_textureURL));
+            SetTexture(await UnityWebRequestHelper.GetTextureAwaitableAsync(_textureURL, _cancellationToken.Token));
         }
         
         public async void GetTextureUniTaskAsync()
         {
             StartLoadProcess(typeof(Texture2D), "Async UniTask");
-            SetTexture(await UnityWebRequestHelper.GetTextureUniTaskAsync(_textureURL));
+            SetTexture(await UnityWebRequestHelper.GetTextureUniTaskAsync(_textureURL, _cancellationToken.Token));
         }
 
         private void StartLoadProcess(Type loadType, string method)
         {
+            if (_cancellationToken != null)
+            {
+                Debug.Log($"Request Cancel!");
+                _cancellationToken.Cancel();
+                _cancellationToken.Dispose();
+            }
+            _cancellationToken = new CancellationTokenSource();
+            
             _targetImage.gameObject.SetActive(false);
             _targetText.gameObject.SetActive(false);
             _targetAudioSource.Stop();
@@ -134,7 +145,7 @@ namespace Jin5eok
         
         private void OnError(UnityWebRequestException exception)
         {
-            throw exception;
+            Debug.LogError(exception.Message);
         }
     }
 }
