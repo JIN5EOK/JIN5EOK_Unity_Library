@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Jin5eok.Patterns
+namespace Jin5eok
 {
     public interface IBehaviourTreeNode
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Jin5eok.Patterns
+namespace Jin5eok
 {
     [Serializable]
     public class SerializableTypeElementWrapper

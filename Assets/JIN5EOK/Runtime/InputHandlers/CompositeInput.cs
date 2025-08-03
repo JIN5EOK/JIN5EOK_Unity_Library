@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Jin5eok.Extension;
 using UnityEngine;
 
-namespace Jin5eok.Inputs
+namespace Jin5eok
 {
     public abstract class CompositeInputHandlerBase<T> : InputHandler<T> where T : notnull
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Jin5eok.Patterns
+namespace Jin5eok
 {
     public abstract class ScriptableCommand<T> : ScriptableObject, ICommand<T>
     {

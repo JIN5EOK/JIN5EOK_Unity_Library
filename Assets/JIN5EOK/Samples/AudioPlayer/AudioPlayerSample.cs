@@ -1,7 +1,5 @@
-using Jin5eok.Audios;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Serialization;
 
 namespace Jin5eok.Samples
 {

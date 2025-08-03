@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 using Cysharp.Threading.Tasks;
 #endif
 
-namespace Jin5eok.ResourceManagements
+namespace Jin5eok
 {
     public class AddressablesInstanceManager
     {

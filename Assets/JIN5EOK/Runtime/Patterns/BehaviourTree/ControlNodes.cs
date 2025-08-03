@@ -1,4 +1,4 @@
-namespace Jin5eok.Patterns
+namespace Jin5eok
 {
     public class SequencerNode : BehaviourTreeNode
     {

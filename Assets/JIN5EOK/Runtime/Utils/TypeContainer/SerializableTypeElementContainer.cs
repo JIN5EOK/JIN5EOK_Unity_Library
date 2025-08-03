@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Jin5eok.Patterns
+namespace Jin5eok
 {
     [Serializable]
     public class SerializableTypeContainer<T> : TypeContainerBase<T> where T : SerializableTypeElement

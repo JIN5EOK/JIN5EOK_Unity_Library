@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
-namespace Jin5eok.ResourceManagements
+namespace Jin5eok
 {
     internal static class AddressablesHandleProcessor
     {

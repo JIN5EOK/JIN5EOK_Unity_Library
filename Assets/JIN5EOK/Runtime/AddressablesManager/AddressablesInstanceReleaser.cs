@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace Jin5eok.ResourceManagements
+namespace Jin5eok
 {
     internal class AddressablesInstanceReleaser : MonoBehaviour
     {

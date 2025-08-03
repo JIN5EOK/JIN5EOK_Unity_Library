@@ -1,8 +1,7 @@
-using Jin5eok.Patterns;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Jin5eok.Audios
+namespace Jin5eok
 {
     public class AudioPlayerPool : MonoSingleton<AudioPlayerPool>
     {

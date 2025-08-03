@@ -1,6 +1,6 @@
 using System;
 
-namespace Jin5eok.Inputs
+namespace Jin5eok
 {
     public delegate void InputCallback<T>(T input) where T : notnull;
 

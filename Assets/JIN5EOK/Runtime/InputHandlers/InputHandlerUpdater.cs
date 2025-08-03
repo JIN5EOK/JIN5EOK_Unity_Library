@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Jin5eok.Patterns;
 using UnityEngine;
 
-namespace Jin5eok.Inputs
+namespace Jin5eok
 {
     internal class InputHandlerUpdater : MonoSingleton<InputHandlerUpdater>
     {

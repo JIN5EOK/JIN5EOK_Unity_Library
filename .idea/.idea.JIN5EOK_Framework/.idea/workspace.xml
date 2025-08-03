@@ -6,8 +6,49 @@
   <component name="ChangeListManager">
     <list default="true" id="b97995a6-7a2d-418c-90f9-941f2c3464cd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JIN5EOK_Framework/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JIN5EOK_Framework/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Sample/AudioPlayerSample/AudioPlayerSample.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Sample/AudioPlayerSample/AudioPlayerSample.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/JIN5EOK.asmdef" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/JIN5EOK.asmdef" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AudioPlayer/AudioPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AudioPlayer/AudioPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AudioPlayer/AudioPlayerPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AudioPlayer/AudioPlayerPool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Extends/ComponentExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Extends/ComponentExtension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Extends/VectorExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Extends/VectorExtension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/AxisInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/AxisInput.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/ButtonInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/ButtonInput.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/CompositeInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/CompositeInput.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/IInputHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/IInputHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/InputHandlerUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/InputHandlerUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/MouseInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/MouseInput.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/Vector2Input.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/InputHandlers/Vector2Input.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/BehaviourTree/BehaviourTreeNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/BehaviourTree/BehaviourTreeNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/BehaviourTree/ControlNodes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/BehaviourTree/ControlNodes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/Command/ICommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/Command/ICommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/Command/ScriptableCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/Command/ScriptableCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/Factory/IAbstractFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/Factory/IAbstractFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/Singleton/MonoSingleton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Patterns/Singleton/MonoSingleton.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/AddressablesHandleProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/AddressablesHandleProcessor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/AddressablesHandleProcessor.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/AddressablesHandleProcessor.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/AddressablesInstanceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/AddressablesInstanceManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/AddressablesInstanceManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/AddressablesInstanceManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/AddressablesInstanceReleaser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/AddressablesInstanceReleaser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/AddressablesInstanceReleaser.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/AddressablesInstanceReleaser.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/AddressablesManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/AddressablesManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/AddressablesManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/AddressablesManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/Jin5eok.ResourceManagements.asmdef" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/Jin5eok.ResourceManagements.asmdef.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/README.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/README.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/README/AddressablesInstanceManager_KR.md" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/README/AddressablesInstanceManager_KR.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/README/AddressablesInstanceManager_KR.md.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/README/AddressablesInstanceManager_KR.md.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/README/AddressablesManager_KR.md" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/README/AddressablesManager_KR.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/README/AddressablesManager_KR.md.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/README/AddressablesManager_KR.md.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/README/README_KR.md" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/README/README_KR.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/ResourceManagements/README/README_KR.md.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/AddressablesManager/README/README_KR.md.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/ITypeConatiner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/ITypeConatiner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElementContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElementContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainerBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainerBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/Samples/AudioPlayer/AudioPlayerSample.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/Samples/AudioPlayer/AudioPlayerSample.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JIN5EOK/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JIN5EOK/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,12 +59,42 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0acbf9c7a3654ef79dad5260f00d16b04200/2a/43874529/DownloadHandlerTexture.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0e721c4172bf4d63953ac319de4139f518600/c1/2a6d5322/AudioMixerGroup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5cb26abf68e64d72b4d443b22f3e3c8ea600/3e/042462ae/AccessibilityManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/73e5054334e241c2af6394624a1773974400/63/9ebee002/UnityWebRequestMultimedia.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/10/2b5fb3ad/InvokableCall.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/10/b15c4c61/IObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/34/49fd465f/AudioType.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/3d/a3346362/MonoBehaviour.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/49/a9003bb0/AsyncOperation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/a0/66d4fdd8/Awaitable`1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/d6/1c376a7d/Awaitable.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/ed/cfd47587/UnityEvent.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/87c38cf875804a0cbcc2bd5e75635dd41dda00/f6/8e44050e/UnitySynchronizationContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/894efdbc32a34131980fd7710aa6580ce600/d4/930ae36e/UnityWebRequest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/92c02462a1e44581988bf9143a3569329b6600/2f/dae840f3/EditorApplication.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/92c02462a1e44581988bf9143a3569329b6600/57/e7c71430/SerializedProperty.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a6d715f5ce8c4754a140b50ff638878a469400/1d/befa700c/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a6d715f5ce8c4754a140b50ff638878a469400/29/f3cab4ff/AwaitTaskContinuation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a6d715f5ce8c4754a140b50ff638878a469400/2e/af61ee40/RuntimeType.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a6d715f5ce8c4754a140b50ff638878a469400/33/de3fe2c3/AsyncMethodBuilderCore.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a6d715f5ce8c4754a140b50ff638878a469400/74/ad6598e1/AsyncTaskMethodBuilder`1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a6d715f5ce8c4754a140b50ff638878a469400/8f/4f4f17b8/Type.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dd8918c193794978819f4dcf6a38151d4400/66/d72fa98d/NativeInputSystem.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8a522b806eac9bb894e6e4c5fe87f353457535e769447e79c6b396beecb5d0/System.Threading.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/ITypeConatiner.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElement.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElementContainer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElement.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/SerializableTypeElementContainer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainer.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainerBase.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Sample/AudioPlayerSample/Scripts/AudioPlayerSample.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/JIN5EOK/Runtime/Utils/TypeContainer/TypeContainerBase.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask/Runtime/Internal/ContinuationQueue.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask/Runtime/Internal/PlayerLoopRunner.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask/Runtime/Internal/PooledDelegate.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask/Runtime/UniTaskSynchronizationContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask/Runtime/UnityAsyncExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask/Runtime/UnityWebRequestException.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui/Runtime/UGUI/UI/Core/Button.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -34,19 +105,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/audio-player-fix&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/MacOS/Unity" />

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jin5eok.Patterns
+namespace Jin5eok
 {
     public abstract class TypeContainerBase<T> : ITypeContainer<T>
     {

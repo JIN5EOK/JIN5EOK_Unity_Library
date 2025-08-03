@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Jin5eok.Inputs
+namespace Jin5eok
 {
     public abstract class ButtonInputHandlerBase : InputHandler<bool>
     {

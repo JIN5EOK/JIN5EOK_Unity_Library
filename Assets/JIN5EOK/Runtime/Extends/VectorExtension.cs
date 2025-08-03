@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Jin5eok.Extension
+namespace Jin5eok
 {
     public static class VectorExtension
     {

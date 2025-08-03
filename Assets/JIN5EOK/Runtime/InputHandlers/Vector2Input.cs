@@ -1,7 +1,6 @@
-using Jin5eok.Extension;
 using UnityEngine;
 
-namespace Jin5eok.Inputs
+namespace Jin5eok
 {
     public abstract class Vector2InputHandlerBase : InputHandler<Vector2>
     {

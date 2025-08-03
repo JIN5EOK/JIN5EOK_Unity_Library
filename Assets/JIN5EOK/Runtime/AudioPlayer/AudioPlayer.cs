@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
-using Jin5eok.Extension;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace Jin5eok.Audios
+namespace Jin5eok
 {
     [RequireComponent(typeof(AudioSource))]
     public class AudioPlayer : MonoBehaviour
