@@ -1,7 +1,7 @@
 # AddressablesManager
 ## 개요
 * 어드레서블 에셋 로드 및 릴리즈를 도와주는 매니저 클래스입니다.
-* UniTask, Awaiatable, Task, Coroutine등 다양한 방식으로 로드할 수 있습니다.
+* UniTask, Awaiatable, Coroutine등 다양한 방식으로 로드할 수 있습니다.
 * 이 클래스를 통해 에셋을 로드할 경우
   * 주소와 핸들을 내부에 캐시하고 관리할 수 있습니다.
   * 처음 로드시 내부 컬렉션에 핸들을 캐싱하여 추후 로드시에도 하나의 핸들만 반환합니다.
