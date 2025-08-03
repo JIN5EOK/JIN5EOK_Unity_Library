@@ -1,11 +1,10 @@
 #if USE_ADDRESSABLES
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #if USE_UNITASK
 using Cysharp.Threading.Tasks;
 #endif
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -106,12 +105,6 @@ namespace Jin5eok.ResourceManagements
             return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
         }
 #endif
-        
-        public static async Task<T> LoadAssetTask<T>(string address) where T : Object
-        {
-            var handle = LoadHandle<T>(address);
-            return await AddressablesHandleProcessor.ProcessAsyncTask(handle);
-        }
         
         public static bool Release<T>(string address) where T : Object
         {

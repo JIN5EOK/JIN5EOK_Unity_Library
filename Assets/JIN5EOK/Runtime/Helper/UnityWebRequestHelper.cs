@@ -14,22 +14,22 @@ namespace Jin5eok
     {
         public static void Get(string url, Action<string> onSuccess, Action<UnityWebRequestException> onError = null, CancellationToken cancellationToken = default)
         {
-            CoroutineRunner.Instance.StartCoroutine(RequestRoutine(UnityWebRequest.Get(url), onSuccess, onError, r => r.downloadHandler.text, cancellationToken));
+            CoroutineManager.Instance.StartCoroutine(RequestRoutine(UnityWebRequest.Get(url), onSuccess, onError, r => r.downloadHandler.text, cancellationToken));
         }
         
         public static void GetTexture(string url, Action<Texture2D> onSuccess, Action<UnityWebRequestException> onError = null, CancellationToken cancellationToken = default)
         {
-            CoroutineRunner.Instance.StartCoroutine(RequestRoutine(UnityWebRequestTexture.GetTexture(url), onSuccess, onError, DownloadHandlerTexture.GetContent, cancellationToken));
+            CoroutineManager.Instance.StartCoroutine(RequestRoutine(UnityWebRequestTexture.GetTexture(url), onSuccess, onError, DownloadHandlerTexture.GetContent, cancellationToken));
         }
         
         public static void GetAudioClip(string url, AudioType audioType, Action<AudioClip> onSuccess, Action<UnityWebRequestException> onError = null, CancellationToken cancellationToken = default)
         {
-            CoroutineRunner.Instance.StartCoroutine(RequestRoutine(UnityWebRequestMultimedia.GetAudioClip(url, audioType), onSuccess, onError, DownloadHandlerAudioClip.GetContent, cancellationToken));
+            CoroutineManager.Instance.StartCoroutine(RequestRoutine(UnityWebRequestMultimedia.GetAudioClip(url, audioType), onSuccess, onError, DownloadHandlerAudioClip.GetContent, cancellationToken));
         }
 
         public static void GetAssetBundle(string url, Action<AssetBundle> onSuccess, Action<UnityWebRequestException> onError = null, CancellationToken cancellationToken = default)
         {
-            CoroutineRunner.Instance.StartCoroutine(RequestRoutine(UnityWebRequestAssetBundle.GetAssetBundle(url), onSuccess, onError, DownloadHandlerAssetBundle.GetContent, cancellationToken));
+            CoroutineManager.Instance.StartCoroutine(RequestRoutine(UnityWebRequestAssetBundle.GetAssetBundle(url), onSuccess, onError, DownloadHandlerAssetBundle.GetContent, cancellationToken));
         }
         
         private static IEnumerator RequestRoutine<T>(UnityWebRequest request, Action<T> onSuccess, Action<UnityWebRequestException> onError, Func<UnityWebRequest, T> contentExtractor, CancellationToken cancellationToken = default)
