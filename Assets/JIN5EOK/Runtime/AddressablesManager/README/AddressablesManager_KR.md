@@ -38,10 +38,6 @@
 * 에셋을 Awaitable을 통해 로드하여 반환합니다.
 * Task를 메인스레드로 전환 후 에셋 로드를 대기하는 처리가 있습니다.
 
-> public static async Task\<T> LoadAssetTask\<T>(string address) where T : Object
-
-* 에셋을 Task를 통해 로드하여 반환합니다.
-
 ### 핸들 릴리즈
 
 > public static bool Release\<T>(string address) where T : Object
