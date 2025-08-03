@@ -31,7 +31,8 @@ namespace Jin5eok
         
         public static Coroutine Sequence(IEnumerable<IEnumerator> coroutines, MonoBehaviour coroutineHost = null)
         {
-            return GetValidCoroutineHost(coroutineHost).StartCoroutine(SequenceRoutine(coroutines, coroutineHost));
+            var host = GetValidCoroutineHost(coroutineHost);
+            return host.StartCoroutine(SequenceRoutine(coroutines, host));
         }
 
         private static IEnumerator SequenceRoutine(IEnumerable<IEnumerator> coroutines, MonoBehaviour coroutineHost)
