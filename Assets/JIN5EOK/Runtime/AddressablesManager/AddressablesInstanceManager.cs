@@ -60,7 +60,7 @@ namespace Jin5eok
         
         public static GameObject InstantiateWaitForCompletion(string address) => LoadHandle(address).WaitForCompletion();
         
-        public static void InstantiateAsyncCoroutine(string address, Action<GameObject> onResult) 
+        public static void InstantiateCoroutine(string address, Action<GameObject> onResult) 
         {
             var handle = LoadHandle(address);
             AddressablesHandleProcessor.ProcessAsyncCoroutine(handle, onResult);
@@ -69,6 +69,7 @@ namespace Jin5eok
 #if USE_UNITASK
         public static async UniTask<GameObject> InstantiateAsyncUniTask(string address)
         {
+            await UniTask.SwitchToMainThread();
             var handle = LoadHandle(address);
             return await AddressablesHandleProcessor.ProcessAsyncUniTask(handle);
         }
@@ -77,6 +78,7 @@ namespace Jin5eok
 #if USE_AWAITABLE
         public static async Awaitable<GameObject> InstantiateAsyncAwaitable(string address)
         {
+            await Awaitable.MainThreadAsync();
             var handle = LoadHandle(address);
             return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
         }

@@ -52,7 +52,6 @@ namespace Jin5eok
                 
             handle.Completed += (completedHandle) =>
             {
-                // 실패한 경우에만 딕셔너리에서 자동 제거
                 if (completedHandle.Status == AsyncOperationStatus.Failed)
                 {
                     lock (_lock)

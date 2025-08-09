@@ -40,7 +40,6 @@ namespace Jin5eok
                 return handle.Result;
             }
 
-            await UniTask.SwitchToMainThread();
             await handle.Task;
             return handle.Result;
         }
@@ -59,7 +58,6 @@ namespace Jin5eok
                 return handle.Result;
             }
             
-            await Awaitable.MainThreadAsync();
             await handle.Task;
             return handle.Result;
         }

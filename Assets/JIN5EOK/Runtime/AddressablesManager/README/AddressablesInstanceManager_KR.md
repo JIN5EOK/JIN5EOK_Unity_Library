@@ -23,7 +23,7 @@
 * 프리펩을 동기적으로 인스턴스화 하여 반환합니다
 * 내부적으로 WaitForCompletion를 호출하므로 첫 호출에 한해 메인스레드가 블로킹 될 수 있습니다.
 
-> public static void InstantiateAsyncCoroutine(string address, Action\<GameObject> onResult)
+> public static void InstantiateCoroutine(string address, Action\<GameObject> onResult)
 
 * 프리펩을 Coroutine으로 인스턴스화, 콜백을 통해 인스턴스화 된 프리펩을 전달합니다.
 * 처음 사용시 Coroutine 실행을 위한 DontDestroyOnLoad 상태의 싱글톤 게임오브젝트가 생성됩니다.
