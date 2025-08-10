@@ -1,6 +1,7 @@
 #if USE_ADDRESSABLES
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -14,7 +15,7 @@ namespace Jin5eok
     public class AddressablesInstanceManager
     {
         private static Dictionary<string, List<AsyncOperationHandle<GameObject>>> AddressToInstanceCollectionMap { get; set; } = new ();
-     
+        
         public static AsyncOperationHandle<GameObject> LoadHandle(string address)
         {
             if (AddressToInstanceCollectionMap.TryGetValue(address, out var handles) == false)
@@ -47,7 +48,6 @@ namespace Jin5eok
 
             return handle;
         }
-
         
         public static List<AsyncOperationHandle<GameObject>> GetLoadedHandleAll(string address)
         {
@@ -62,16 +62,30 @@ namespace Jin5eok
         
         public static void InstantiateCoroutine(string address, Action<GameObject> onResult) 
         {
-            var handle = LoadHandle(address);
-            AddressablesHandleProcessor.ProcessAsyncCoroutine(handle, onResult);
+            MainThreadDispatcher.Enqueue(async () =>
+            {
+                var handle = LoadHandle(address);
+                CoroutineManager.WaitUntil(() => handle.IsDone, () => onResult?.Invoke(handle.Result));    
+            });
+        }
+
+        public static async Task<GameObject> InstantiateAsync(string address)
+        {
+            var completeToken = new TaskCompletionSource<GameObject>();
+            MainThreadDispatcher.Enqueue(async () =>
+            {
+                var handle = LoadHandle(address);
+                var go = await handle.Task;
+                completeToken.SetResult(go);
+            });
+            return await completeToken.Task;
         }
         
 #if USE_UNITASK
         public static async UniTask<GameObject> InstantiateAsyncUniTask(string address)
         {
             await UniTask.SwitchToMainThread();
-            var handle = LoadHandle(address);
-            return await AddressablesHandleProcessor.ProcessAsyncUniTask(handle);
+            return await LoadHandle(address).Task;
         }
 #endif
         
@@ -79,8 +93,7 @@ namespace Jin5eok
         public static async Awaitable<GameObject> InstantiateAsyncAwaitable(string address)
         {
             await Awaitable.MainThreadAsync();
-            var handle = LoadHandle(address);
-            return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
+            return await LoadHandle(address).Task;
         }
 #endif
         

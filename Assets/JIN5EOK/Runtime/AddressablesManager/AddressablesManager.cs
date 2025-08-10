@@ -2,6 +2,7 @@
 #if USE_UNITASK
 using Cysharp.Threading.Tasks;
 #endif
+using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,23 +86,40 @@ namespace Jin5eok
         
         public static void LoadAssetCoroutine<T>(string address, Action<T> onResult) where T : Object 
         {
-            var handle = LoadHandle<T>(address);
-            AddressablesHandleProcessor.ProcessAsyncCoroutine(handle, onResult);
+            MainThreadDispatcher.Enqueue(async () =>
+            {
+                var handle = LoadHandle<T>(address);
+                CoroutineManager.WaitUntil(() => handle.IsDone, () => onResult?.Invoke(handle.Result));    
+            });
+        }
+        
+        public static async Task<T> LoadAssetAsync<T>(string address) where T : Object
+        {
+            var completeToken = new TaskCompletionSource<T>();
+            MainThreadDispatcher.Enqueue(async () =>
+            {
+                var handle = LoadHandle<T>(address);
+                var asset = await handle.Task;
+                completeToken.SetResult(asset);
+            });
+            return await completeToken.Task;
         }
         
 #if USE_UNITASK
         public static async UniTask<T> LoadAssetUniTask<T>(string address) where T : Object
         {
+            await UniTask.SwitchToMainThread();
             var handle = LoadHandle<T>(address);
-            return await AddressablesHandleProcessor.ProcessAsyncUniTask(handle);
+            return await handle.Task;
         }
 #endif
         
 #if USE_AWAITABLE
         public static async Awaitable<T> LoadAssetAwaitable<T>(string address) where T : Object
         {
+            await Awaitable.MainThreadAsync();
             var handle = LoadHandle<T>(address);
-            return await AddressablesHandleProcessor.ProcessAsyncAwaitable(handle);
+            return await handle.Task;
         }
 #endif
         

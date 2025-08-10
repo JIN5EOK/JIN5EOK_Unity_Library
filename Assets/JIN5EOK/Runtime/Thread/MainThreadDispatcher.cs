@@ -6,13 +6,20 @@ namespace Jin5eok
 {
     public class MainThreadDispatcher : MonoSingleton<MainThreadDispatcher>
     {
+        public static readonly string MainThreadId;
+        
         private static readonly ConcurrentQueue<Action> ExecutionQueue = new ();
-
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Initialize()
         {
             // Create Instance
             _ = Instance;
+        }
+
+        public void Awake()
+        {
+            
         }
         
         public static void Enqueue(Action action)
