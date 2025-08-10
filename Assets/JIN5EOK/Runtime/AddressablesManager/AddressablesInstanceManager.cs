@@ -62,7 +62,7 @@ namespace Jin5eok
         
         public static void InstantiateCoroutine(string address, Action<GameObject> onResult) 
         {
-            MainThreadDispatcher.Enqueue(async () =>
+            MainThreadDispatcher.RunOrEnqueue(() =>
             {
                 var handle = LoadHandle(address);
                 CoroutineManager.WaitUntil(() => handle.IsDone, () => onResult?.Invoke(handle.Result));    
@@ -72,7 +72,7 @@ namespace Jin5eok
         public static async Task<GameObject> InstantiateAsync(string address)
         {
             var completeToken = new TaskCompletionSource<GameObject>();
-            MainThreadDispatcher.Enqueue(async () =>
+            MainThreadDispatcher.RunOrEnqueue(async () =>
             {
                 var handle = LoadHandle(address);
                 var go = await handle.Task;

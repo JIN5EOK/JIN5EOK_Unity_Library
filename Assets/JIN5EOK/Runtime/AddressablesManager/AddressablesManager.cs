@@ -86,7 +86,7 @@ namespace Jin5eok
         
         public static void LoadAssetCoroutine<T>(string address, Action<T> onResult) where T : Object 
         {
-            MainThreadDispatcher.Enqueue(async () =>
+            MainThreadDispatcher.RunOrEnqueue(() =>
             {
                 var handle = LoadHandle<T>(address);
                 CoroutineManager.WaitUntil(() => handle.IsDone, () => onResult?.Invoke(handle.Result));    
@@ -96,7 +96,7 @@ namespace Jin5eok
         public static async Task<T> LoadAssetAsync<T>(string address) where T : Object
         {
             var completeToken = new TaskCompletionSource<T>();
-            MainThreadDispatcher.Enqueue(async () =>
+            MainThreadDispatcher.RunOrEnqueue(async () =>
             {
                 var handle = LoadHandle<T>(address);
                 var asset = await handle.Task;

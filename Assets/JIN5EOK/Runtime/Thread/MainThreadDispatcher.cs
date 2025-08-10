@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using UnityEngine;
 
 namespace Jin5eok
 {
     public class MainThreadDispatcher : MonoSingleton<MainThreadDispatcher>
     {
-        public static readonly string MainThreadId;
+        private static int _mainThreadId;
         
         private static readonly ConcurrentQueue<Action> ExecutionQueue = new ();
         
@@ -15,20 +16,31 @@ namespace Jin5eok
         {
             // Create Instance
             _ = Instance;
+            
+            _mainThreadId = Thread.CurrentThread.ManagedThreadId;
         }
 
-        public void Awake()
+        public static bool IsMainThread()
         {
-            
+            return Thread.CurrentThread.ManagedThreadId == _mainThreadId;
         }
         
-        public static void Enqueue(Action action)
+        public static void RunOrEnqueue(Action action)
         {
             if (action == null)
             {
                 return;
             }
-            ExecutionQueue.Enqueue(action);
+        
+            // When run on Main Thread : Execute immediately  
+            if (IsMainThread() == true)
+            {
+                action?.Invoke();
+            }
+            else
+            {
+                ExecutionQueue.Enqueue(action);
+            }
         }
 
         private void Update()
