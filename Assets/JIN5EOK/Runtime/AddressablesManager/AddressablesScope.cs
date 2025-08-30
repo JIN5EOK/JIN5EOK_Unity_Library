@@ -17,6 +17,8 @@ namespace Jin5eok
 
         public AsyncOperationHandle<T> LoadAssetAsync<T>(AssetReferenceT<T> assetReference)  where T : Object
         {
+            ThrowIfDisposed();
+            
             var key = assetReference.RuntimeKey.ToString();
             if (_assetReferenceToHandles.TryGetValue(key, out AsyncOperationHandle handle))
             {
@@ -36,6 +38,8 @@ namespace Jin5eok
         
         public AsyncOperationHandle<T> LoadAssetAsync<T>(string address) where T : Object
         {
+            ThrowIfDisposed();
+            
             if (_addressToHandles.TryGetValue(address, out AsyncOperationHandle handle))
             {
                 if (handle.IsValid())
@@ -54,12 +58,16 @@ namespace Jin5eok
         
         public AsyncOperationHandle<GameObject> InstantiateAsync(AssetReferenceGameObject assetReference, bool releaseOnGameObjectDestroy = true)
         {
+            ThrowIfDisposed();
+            
             var handle = assetReference.InstantiateAsync();
             return InstantiateProcess(handle,releaseOnGameObjectDestroy);
         }
         
         public AsyncOperationHandle<GameObject> InstantiateAsync(string address, bool releaseOnGameObjectDestroy = true)
         {
+            ThrowIfDisposed();
+            
             var handle = Addressables.InstantiateAsync(address);
             return InstantiateProcess(handle,releaseOnGameObjectDestroy);
         }
@@ -91,8 +99,7 @@ namespace Jin5eok
         
         public void Dispose()
         {
-            if (_isDisposed)
-                return;
+            ThrowIfDisposed();
 
             foreach (var handle in _addressToHandles.Values)
             {
@@ -122,11 +129,21 @@ namespace Jin5eok
             _assetReferenceToHandles.Clear();
             _instantiatedHandles.Clear();
             _isDisposed = true;
+            
+            GC.SuppressFinalize(this);
         }
 
         ~AddressablesScope()
         {
             Dispose();
+        }
+        
+        private void ThrowIfDisposed()
+        {
+            if (_isDisposed)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
         }
     }
 }
