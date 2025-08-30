@@ -22,7 +22,7 @@ namespace Jin5eok
 
         private void OnDestroy()
         {
-            if (_handle.IsValid() == true && _handle.IsDone == true && _handle.Status == AsyncOperationStatus.Succeeded)
+            if (_handle.IsValid() == true)
             {
                 Addressables.Release(_handle);
             }
