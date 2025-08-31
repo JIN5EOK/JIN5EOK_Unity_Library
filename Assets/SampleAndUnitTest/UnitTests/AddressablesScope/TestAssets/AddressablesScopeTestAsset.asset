@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9752125144df749b09bf6c9333a5188d, type: 3}
+  m_Name: AddressablesScopeTestAsset
+  m_EditorClassIdentifier: 
+  assetReferenceAsset:
+    m_AssetGUID: e055c3eca2cd04669ac4bc05ab561922
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 1
+  assetReferencePrefab:
+    m_AssetGUID: f0c560f9135464fd899073743d8cfa17
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  assetAddress: AddressablesScopeMaterial1
+  prefabAddress: AddressablesScopePrefab1
