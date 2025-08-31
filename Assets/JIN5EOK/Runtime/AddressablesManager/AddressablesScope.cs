@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -11,7 +12,7 @@ namespace Jin5eok
     {
         private readonly Dictionary<string, AsyncOperationHandle> _addressToHandles = new();
         private readonly Dictionary<string, AsyncOperationHandle> _assetReferenceToHandles = new();
-        private readonly HashSet<AsyncOperationHandle<GameObject>> _instantiatedHandles = new();
+        private readonly HashSet<AsyncOperationHandle> _instantiatedHandles = new();
 
         private bool _isDisposed = false;
 
@@ -32,8 +33,14 @@ namespace Jin5eok
             
             AsyncOperationHandle<T> newHandle = assetReference.LoadAssetAsync<T>();
             _assetReferenceToHandles[key] = newHandle;
-
+            newHandle.Destroyed += Destroyed;
+            
             return newHandle;
+            
+            void Destroyed(AsyncOperationHandle handle)
+            {
+                _assetReferenceToHandles.Remove(key);
+            }
         }
         
         public AsyncOperationHandle<T> LoadAssetAsync<T>(string address) where T : Object
@@ -52,8 +59,14 @@ namespace Jin5eok
             
             AsyncOperationHandle<T> newHandle = Addressables.LoadAssetAsync<T>(address);
             _addressToHandles[address] = newHandle;
-
+            newHandle.Destroyed += Destroyed;
+            
             return newHandle;
+            
+            void Destroyed(AsyncOperationHandle handle)
+            {
+                _addressToHandles.Remove(address);
+            }
         }
         
         public AsyncOperationHandle<GameObject> InstantiateAsync(AssetReference assetReference, bool releaseOnGameObjectDestroy = true)
@@ -90,32 +103,48 @@ namespace Jin5eok
                     _instantiatedHandles.Remove(handle);
                 }
             };
+            handle.Destroyed += Destroyed;
             
             return handle;
+            
+            void Destroyed(AsyncOperationHandle handle)
+            {
+                _instantiatedHandles.Remove(handle);
+            }
         }
         
         public void Dispose()
         {
             ThrowIfDisposed();
-
-            foreach (var handle in _addressToHandles.Values)
+            
+            // 순회 도중 컬렉션 내용 변경으로 인한 예외 방지
+            var addressToHandlesCache = _addressToHandles.Values.ToArray();
+            
+            for (int i = 0; i < addressToHandlesCache.Length; i++)
             {
+                var handle = addressToHandlesCache[i]; 
                 if (handle.IsValid())
                 {
                     Addressables.Release(handle);
                 }
             }
             
-            foreach (var handle in _assetReferenceToHandles.Values)
+            var assetReferenceToHandlesCache = _assetReferenceToHandles.Values.ToArray();
+            
+            for (int i = 0; i < assetReferenceToHandlesCache.Length; i++)
             {
+                var handle = assetReferenceToHandlesCache[i]; 
                 if (handle.IsValid())
                 {
                     Addressables.Release(handle);
                 }
             }
             
-            foreach (var handle in _instantiatedHandles)
+            var instantiatedHandlesCache = _instantiatedHandles.ToArray();
+            
+            for (int i = 0; i < instantiatedHandlesCache.Length; i++)
             {
+                var handle = instantiatedHandlesCache[i]; 
                 if (handle.IsValid())
                 {
                     Addressables.ReleaseInstance(handle);

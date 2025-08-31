@@ -1,6 +1,7 @@
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.TestTools;
 
 namespace Jin5eok.Test
@@ -42,9 +43,9 @@ namespace Jin5eok.Test
             Assert.AreEqual(handleB1, handleB2); 
         }
 
-        [Description("스코프를 통한 에셋/프리펩 로드 및 스코프 해제시 포함된 핸들들이 정상적으로 릴리즈되는지 확인")]
+        [Description("스코프 해제시 포함된 핸들들이 정상적으로 릴리즈되는지 확인")]
         [UnityTest]
-        public IEnumerator Test_AssetLoadAndRelease()
+        public IEnumerator Test_ScopeDisposeAndHandleRelease()
         {
             var handleA = _scope.LoadAssetAsync<Object>(_scopeTestData.assetAddress);
             var handleB = _scope.InstantiateAsync(_scopeTestData.prefabAddress);
@@ -59,6 +60,53 @@ namespace Jin5eok.Test
             Assert.IsTrue(handleA.IsValid());
             Assert.IsTrue(handleB.IsValid());
             Assert.IsTrue(handleC.IsValid());
+            Assert.IsTrue(handleD.IsValid());
+            
+            _scope?.Dispose();
+            _scope = null;
+            
+            Assert.IsFalse(handleA.IsValid());
+            Assert.IsFalse(handleB.IsValid());
+            Assert.IsFalse(handleC.IsValid());
+            Assert.IsFalse(handleD.IsValid());
+        }
+        
+        [Description("스코프 외부에서 핸들을 릴리즈해도 문제 없이 동작하는지 확인")]
+        [UnityTest]
+        public IEnumerator Test_HandleRelease()
+        {
+            var handleA = _scope.LoadAssetAsync<Object>(_scopeTestData.assetAddress);
+            var handleB = _scope.InstantiateAsync(_scopeTestData.prefabAddress);
+            var handleC = _scope.LoadAssetAsync<Object>(_scopeTestData.assetReferenceAsset);
+            var handleD = _scope.InstantiateAsync(_scopeTestData.assetReferencePrefab);
+            
+            yield return handleA;
+            yield return handleB;
+            yield return handleC;
+            yield return handleD;
+            
+            Assert.IsTrue(handleA.IsValid());
+            Assert.IsTrue(handleB.IsValid());
+            Assert.IsTrue(handleC.IsValid());
+            Assert.IsTrue(handleD.IsValid());
+            
+            Addressables.Release(handleA);
+            Addressables.Release(handleB);
+            Addressables.ReleaseInstance(handleC);
+            Addressables.ReleaseInstance(handleD);
+            
+            Assert.IsFalse(handleA.IsValid());
+            Assert.IsFalse(handleB.IsValid());
+            Assert.IsFalse(handleC.IsValid());
+            Assert.IsFalse(handleD.IsValid());
+            
+            handleA = _scope.LoadAssetAsync<Object>(_scopeTestData.assetAddress);
+            handleD = _scope.InstantiateAsync(_scopeTestData.assetReferencePrefab);
+            
+            yield return handleA;
+            yield return handleD;
+            
+            Assert.IsTrue(handleA.IsValid());
             Assert.IsTrue(handleD.IsValid());
             
             _scope?.Dispose();
