@@ -15,7 +15,7 @@ namespace Jin5eok
         private readonly HashSet<AsyncOperationHandle> _instantiatedHandles = new();
 
         private bool _isDisposed = false;
-
+        
         public AsyncOperationHandle<T> LoadAssetAsync<T>(AssetReference assetReference)  where T : Object
         {
             ThrowIfDisposed();
@@ -69,23 +69,23 @@ namespace Jin5eok
             }
         }
         
-        public AsyncOperationHandle<GameObject> InstantiateAsync(AssetReference assetReference, bool releaseOnGameObjectDestroy = true)
+        public AsyncOperationHandle<GameObject> InstantiateAsync(AssetReference assetReference)
         {
             ThrowIfDisposed();
             
             var handle = assetReference.InstantiateAsync();
-            return InstantiateProcess(handle,releaseOnGameObjectDestroy);
+            return InstantiateProcess(handle);
         }
         
-        public AsyncOperationHandle<GameObject> InstantiateAsync(string address, bool releaseOnGameObjectDestroy = true)
+        public AsyncOperationHandle<GameObject> InstantiateAsync(string address)
         {
             ThrowIfDisposed();
             
             var handle = Addressables.InstantiateAsync(address);
-            return InstantiateProcess(handle,releaseOnGameObjectDestroy);
+            return InstantiateProcess(handle);
         }
 
-        private AsyncOperationHandle<GameObject> InstantiateProcess(AsyncOperationHandle<GameObject> handle, bool releaseOnGameObjectDestroy = true)
+        private AsyncOperationHandle<GameObject> InstantiateProcess(AsyncOperationHandle<GameObject> handle)
         {
             ThrowIfDisposed();
             
@@ -93,11 +93,6 @@ namespace Jin5eok
             
             handle.Completed += h =>
             {
-                if (releaseOnGameObjectDestroy == true)
-                {
-                    h.Result.AddComponent<AddressablesInstanceReleaser>().Initialize(h); 
-                }
-                
                 if (h.Status == AsyncOperationStatus.Failed)
                 {
                     _instantiatedHandles.Remove(handle);

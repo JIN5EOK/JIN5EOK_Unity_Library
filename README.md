@@ -12,12 +12,13 @@
 > 각 기능별 함수나 기능, 주의사항들이 적힌 문서입니다.
 > 아직 문서가 준비되지 않은 기능들도 있습니다.
 
-### [AddressablesManager](Assets/JIN5EOK/Runtime/AddressablesManager/README/README_KR.md)
-* 어드레서블 에셋 로드 및 릴리즈를 도와주는 매니저 클래스입니다.
-* UniTask, Awaiatable, Coroutine등 다양한 방식으로 로드할 수 있습니다.
-* 이 클래스를 통해 에셋을 로드할 경우
-  * 주소와 핸들을 내부에 캐시하고 관리할 수 있습니다.
-  * 처음 로드시 내부 컬렉션에 핸들을 캐싱하여 추후 로드시에도 하나의 핸들만 반환합니다.
+### [AddressablesScope](Assets/JIN5EOK/Runtime/AddressablesScope/README/README_KR.md)
+* 어드레서블로 로드한 에셋 / 프리펩 인스턴스의 생명주기 관리를 용이하게 하기 위한 스코프 클래스입니다.
+* 스코프를 통해 에셋을 로드할 경우 핸들들이 스코프 내부에 캐싱되며 스코프가 Dispose될 때 포함된 에셋들을 모두 Release처리합니다.
+    * 에셋의 경우 : 같은 주소 혹은 에셋 레퍼런스당 하나의 핸들만 캐싱하며 캐싱된 상태에서 요청시 이전에 반환된 핸들을 반환합니다
+    * 프리펩 인스턴스의 경우 : 인스턴스와 핸들은 1:1 관계이므로 인스턴스 생성시마다 새로운 핸들이 생성되어 반환됩니다.
+* Dispose 호출을 누락한채 스코프에 대한 참조를 잃어버렸을 경우 이후 소멸자에서 Dispose를 호출합니다.
+    * 하지만 GC의 소멸자 호출 시점은 명확하지 않으며 그에 따른 갑작스런 성능저하가 발생할 수 있으므로 권장하지 않습니다.
 
 ### [AudioPlayer](Assets/JIN5EOK/Runtime/AudioPlayer/README/README_KR.md)
 * 오디오 소스를 래핑하는 오디오 플레이어 클래스입니다.
