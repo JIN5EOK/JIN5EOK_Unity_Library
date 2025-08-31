@@ -37,7 +37,7 @@ namespace Jin5eok
             
             return newHandle;
             
-            void Destroyed(AsyncOperationHandle handle)
+            void Destroyed(AsyncOperationHandle _)
             {
                 _assetReferenceToHandles.Remove(key);
             }
@@ -63,7 +63,7 @@ namespace Jin5eok
             
             return newHandle;
             
-            void Destroyed(AsyncOperationHandle handle)
+            void Destroyed(AsyncOperationHandle _)
             {
                 _addressToHandles.Remove(address);
             }
@@ -102,9 +102,9 @@ namespace Jin5eok
             
             return handle;
             
-            void Destroyed(AsyncOperationHandle handle)
+            void Destroyed(AsyncOperationHandle destroyedHandle)
             {
-                _instantiatedHandles.Remove(handle);
+                _instantiatedHandles.Remove(destroyedHandle);
             }
         }
         

@@ -91,8 +91,8 @@ namespace Jin5eok.Test
             Assert.IsTrue(handleD.IsValid());
             
             Addressables.Release(handleA);
-            Addressables.Release(handleB);
-            Addressables.ReleaseInstance(handleC);
+            Addressables.ReleaseInstance(handleB);
+            Addressables.Release(handleC);
             Addressables.ReleaseInstance(handleD);
             
             Assert.IsFalse(handleA.IsValid());
