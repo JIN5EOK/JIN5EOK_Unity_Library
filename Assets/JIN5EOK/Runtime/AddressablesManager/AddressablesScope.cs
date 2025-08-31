@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
 namespace Jin5eok
@@ -15,7 +15,7 @@ namespace Jin5eok
 
         private bool _isDisposed = false;
 
-        public AsyncOperationHandle<T> LoadAssetAsync<T>(AssetReferenceT<T> assetReference)  where T : Object
+        public AsyncOperationHandle<T> LoadAssetAsync<T>(AssetReference assetReference)  where T : Object
         {
             ThrowIfDisposed();
             
@@ -56,7 +56,7 @@ namespace Jin5eok
             return newHandle;
         }
         
-        public AsyncOperationHandle<GameObject> InstantiateAsync(AssetReferenceGameObject assetReference, bool releaseOnGameObjectDestroy = true)
+        public AsyncOperationHandle<GameObject> InstantiateAsync(AssetReference assetReference, bool releaseOnGameObjectDestroy = true)
         {
             ThrowIfDisposed();
             
@@ -74,6 +74,8 @@ namespace Jin5eok
 
         private AsyncOperationHandle<GameObject> InstantiateProcess(AsyncOperationHandle<GameObject> handle, bool releaseOnGameObjectDestroy = true)
         {
+            ThrowIfDisposed();
+            
             _instantiatedHandles.Add(handle);
             
             handle.Completed += h =>
@@ -88,12 +90,7 @@ namespace Jin5eok
                     _instantiatedHandles.Remove(handle);
                 }
             };
-
-            handle.Destroyed += _ =>
-            {
-                _instantiatedHandles.Remove(handle);
-            };
-
+            
             return handle;
         }
         
