@@ -1,6 +1,6 @@
 {
     "name": "Localization",
-    "rootNamespace": "",
+    "rootNamespace": "Jin5eok",
     "references": [
         "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5"
     ],
