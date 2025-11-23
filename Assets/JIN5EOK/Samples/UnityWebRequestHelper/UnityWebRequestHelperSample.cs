@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -94,7 +93,7 @@ namespace Jin5eok
             _targetAudioSource.Play();
         }
         
-        private void OnError(UnityWebRequestException exception)
+        private void OnError(Exception exception)
         {
             Debug.LogError(exception.Message);
         }

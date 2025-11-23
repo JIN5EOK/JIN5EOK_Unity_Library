@@ -4,35 +4,32 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-#if USE_UNITASK
-using Cysharp.Threading.Tasks;
-#endif
 
 namespace Jin5eok
 {
     public static class UnityWebRequestHelper
     {
-        public static void Get(string url, Action<string> onSuccess, Action<UnityWebRequestException> onError = null, CancellationToken cancellationToken = default)
+        public static void Get(string url, Action<string> onSuccess, Action<Exception> onError = null, CancellationToken cancellationToken = default)
         {
             CoroutineManager.Instance.StartCoroutine(RequestRoutine(UnityWebRequest.Get(url), onSuccess, onError, r => r.downloadHandler.text, cancellationToken));
         }
-        
-        public static void GetTexture(string url, Action<Texture2D> onSuccess, Action<UnityWebRequestException> onError = null, CancellationToken cancellationToken = default)
+
+        public static void GetTexture(string url, Action<Texture2D> onSuccess, Action<Exception> onError = null, CancellationToken cancellationToken = default)
         {
             CoroutineManager.Instance.StartCoroutine(RequestRoutine(UnityWebRequestTexture.GetTexture(url), onSuccess, onError, DownloadHandlerTexture.GetContent, cancellationToken));
         }
-        
-        public static void GetAudioClip(string url, AudioType audioType, Action<AudioClip> onSuccess, Action<UnityWebRequestException> onError = null, CancellationToken cancellationToken = default)
+
+        public static void GetAudioClip(string url, AudioType audioType, Action<AudioClip> onSuccess, Action<Exception> onError = null, CancellationToken cancellationToken = default)
         {
             CoroutineManager.Instance.StartCoroutine(RequestRoutine(UnityWebRequestMultimedia.GetAudioClip(url, audioType), onSuccess, onError, DownloadHandlerAudioClip.GetContent, cancellationToken));
         }
 
-        public static void GetAssetBundle(string url, Action<AssetBundle> onSuccess, Action<UnityWebRequestException> onError = null, CancellationToken cancellationToken = default)
+        public static void GetAssetBundle(string url, Action<AssetBundle> onSuccess, Action<Exception> onError = null, CancellationToken cancellationToken = default)
         {
             CoroutineManager.Instance.StartCoroutine(RequestRoutine(UnityWebRequestAssetBundle.GetAssetBundle(url), onSuccess, onError, DownloadHandlerAssetBundle.GetContent, cancellationToken));
         }
-        
-        private static IEnumerator RequestRoutine<T>(UnityWebRequest request, Action<T> onSuccess, Action<UnityWebRequestException> onError, Func<UnityWebRequest, T> contentExtractor, CancellationToken cancellationToken = default)
+
+        private static IEnumerator RequestRoutine<T>(UnityWebRequest request, Action<T> onSuccess, Action<Exception> onError, Func<UnityWebRequest, T> contentExtractor, CancellationToken cancellationToken = default)
         {
             using (request)
             {
@@ -43,7 +40,7 @@ namespace Jin5eok
                     if (cancellationToken.IsCancellationRequested)
                     {
                         request.Abort();
-                        onError?.Invoke(new UnityWebRequestException(request));
+                        onError?.Invoke(new OperationCanceledException("Request was cancelled"));
                         yield break;
                     }
 
@@ -55,7 +52,7 @@ namespace Jin5eok
                     var result = ProcessUnityWebRequestResult(request, contentExtractor);
                     onSuccess?.Invoke(result);
                 }
-                catch (UnityWebRequestException e)
+                catch (Exception e)
                 {
                     onError?.Invoke(e);
                 }
@@ -66,12 +63,12 @@ namespace Jin5eok
         {
             return RequestAsync(UnityWebRequest.Get(url), r => r.downloadHandler.text);
         }
-        
+
         public static Task<Texture2D> GetTextureAsync(string url)
         {
             return RequestAsync(UnityWebRequestTexture.GetTexture(url), DownloadHandlerTexture.GetContent);
         }
-        
+
         public static Task<AudioClip> GetAudioClipAsync(string url, AudioType audioType)
         {
             return RequestAsync(UnityWebRequestMultimedia.GetAudioClip(url, audioType), DownloadHandlerAudioClip.GetContent);
@@ -81,7 +78,7 @@ namespace Jin5eok
         {
             return RequestAsync(UnityWebRequestAssetBundle.GetAssetBundle(url), DownloadHandlerAssetBundle.GetContent);
         }
-        
+
         private static async Task<T> RequestAsync<T>(UnityWebRequest request, Func<UnityWebRequest, T> contentExtractor)
         {
             using (request)
@@ -90,12 +87,12 @@ namespace Jin5eok
                 return ProcessUnityWebRequestResult(request, contentExtractor);
             }
         }
-        
+
         private static T ProcessUnityWebRequestResult<T>(UnityWebRequest request, Func<UnityWebRequest, T> contentExtractor)
         {
             if (request.result != UnityWebRequest.Result.Success)
             {
-                throw new UnityWebRequestException(request);
+                throw new InvalidOperationException($"UnityWebRequest failed: {request.url}\nError: {request.error}\nResponse Code: {request.responseCode}");
             }
             return contentExtractor(request);
         }
