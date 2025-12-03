@@ -29,6 +29,10 @@ namespace Jin5eok
         /// <summary>
         /// 새로운 AudioPlayer GameObject를 생성하여 반환합니다.
         /// </summary>
+        /// <param name="audioClip">재생할 오디오 클립</param>
+        /// <param name="audioMixerGroup">사용할 오디오 믹서 그룹</param>
+        /// <param name="parent">부모 Transform</param>
+        /// <returns>생성된 AudioPlayer 인스턴스</returns>
         public static AudioPlayer Create(AudioClip audioClip = null, AudioMixerGroup audioMixerGroup = null, Transform parent = null)
         {
             var playerGameObject = new GameObject(nameof(AudioPlayer));
@@ -46,6 +50,9 @@ namespace Jin5eok
         /// 플레이 상태를 추적하기 위해 내부적으로 AudioPlayer 오브젝트 풀에서 AudioPlayer를 가져와 PlayWithCallback을 호출하는 방식으로 동작합니다.
         /// 플레이 종료시 결과를 반환하는 콜백함수를 등록할 수 있습니다.
         /// </summary>
+        /// <param name="audioClip">재생할 오디오 클립</param>
+        /// <param name="audioMixerGroup">사용할 오디오 믹서 그룹</param>
+        /// <param name="onPlayFinished">플레이 종료 시 호출될 콜백</param>
         public static void PlayOneShot(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null, Action<PlayResult> onPlayFinished = null)
         {
             if (audioClip == null)
@@ -61,7 +68,8 @@ namespace Jin5eok
             
             oneShotPlayer.Play(onPlayFinished);
         }
-        
+
+
         private void Awake()
         {
             AudioSource = gameObject.AddOrGetComponent<AudioSource>();
@@ -70,6 +78,7 @@ namespace Jin5eok
         /// <summary>
         /// 오디오를 재생하며 동시에 플레이 종료시 결과를 반환하는 콜백함수를 등록할 수 있습니다.
         /// </summary>
+        /// <param name="onPlayFinished">플레이 종료 시 호출될 콜백</param>
         public void Play(Action<PlayResult> onPlayFinished = null)
         {
             if (AudioSource.clip == null)

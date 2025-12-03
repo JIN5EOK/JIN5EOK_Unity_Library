@@ -2,6 +2,11 @@ using System;
 
 namespace Jin5eok
 {
+    /// <summary>
+    /// 입력값이 변경될 때 호출되는 콜백 델리게이트입니다.
+    /// </summary>
+    /// <typeparam name="T">입력값의 타입</typeparam>
+    /// <param name="input">변경된 입력값</param>
     public delegate void InputCallback<T>(T input) where T : notnull;
 
     /// <summary>
@@ -54,9 +59,19 @@ namespace Jin5eok
             } 
         }
         
+        /// <summary>
+        /// 현재 입력된 키 입력값을 반환합니다.
+        /// </summary>
         public abstract T Value { get; protected set; }
+        /// <summary>
+        /// InputHandler가 Dispose되었는지 여부를 반환합니다.
+        /// </summary>
         public bool Disposed { get; private set; }
         
+        /// <summary>
+        /// InputHandlerUpdater에 의해 매 프레임 호출되며 호출시 입력 값을 반영하는 업데이트를 수행합니다.
+        /// 일반적으로는 사용자가 직접 호출할 필요 없습니다.
+        /// </summary>
         public abstract void UpdateState();
         
         public InputHandler()

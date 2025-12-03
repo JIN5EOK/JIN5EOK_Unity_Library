@@ -28,6 +28,11 @@ namespace Jin5eok
     {
         protected List<IBehaviourTreeNode> Children { get; set; }
         
+        /// <summary>
+        /// 자식 노드를 추가합니다.
+        /// </summary>
+        /// <param name="child">추가할 자식 노드</param>
+        /// <returns>체이닝을 위한 자기 자신</returns>
         public IBehaviourTreeNode AddChild(IBehaviourTreeNode child)
         {
             if (Children != null)

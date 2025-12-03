@@ -13,6 +13,9 @@ namespace Jin5eok
     /// </summary>
     public abstract class CompositeInputHandlerBase<T> : InputHandler<T> where T : notnull
     {
+        /// <summary>
+        /// 현재 입력된 키 입력값을 반환합니다. 내부에 포함된 InputHandler들 중 하나라도 입력이 있으면 해당 값을 반환합니다.
+        /// </summary>
         public override T Value { get; protected set; }
 
         private List<IInputHandler<T>> _childInputs = new();
@@ -43,6 +46,7 @@ namespace Jin5eok
         /// <summary>
         /// CompositeInput 내부에 포함된 InputHandler들을 반환합니다.
         /// </summary>
+        /// <returns>포함된 InputHandler들의 배열</returns>
         public IInputHandler<T>[] GetInputs()
         {
             return ChildInputs.ToArray();
@@ -51,6 +55,7 @@ namespace Jin5eok
         /// <summary>
         /// InputHandler를 추가합니다.
         /// </summary>
+        /// <param name="inputHandler">추가할 InputHandler</param>
         public void AddInput(IInputHandler<T> inputHandler)
         {
             if (ChildInputs.Contains(inputHandler) == false)
@@ -62,6 +67,7 @@ namespace Jin5eok
         /// <summary>
         /// InputHandler를 제거합니다.
         /// </summary>
+        /// <param name="inputHandler">제거할 InputHandler</param>
         public void RemoveInput(IInputHandler<T> inputHandler)
         {
             if (ChildInputs.Contains(inputHandler) == true)
@@ -78,6 +84,9 @@ namespace Jin5eok
             ChildInputs.Clear();
         }
 
+        /// <summary>
+        /// 내부에 포함된 모든 InputHandler들을 업데이트하고, 입력값이 변경되면 이벤트를 발생시킵니다.
+        /// </summary>
         public override void UpdateState()
         {
             if (ChildInputs == null || ChildInputs.Count == 0)
@@ -143,6 +152,10 @@ namespace Jin5eok
     /// </summary>
     public class IntCompositeInputHandler : CompositeInputHandlerBase<int>
     {
+        /// <summary>
+        /// IntCompositeInputHandler를 생성합니다.
+        /// </summary>
+        /// <param name="inputGroup">합성할 InputHandler들</param>
         public IntCompositeInputHandler(params IInputHandler<int>[] inputGroup) : base(inputGroup) { }
 
         protected override bool IsEquals(int a, int b)
@@ -156,6 +169,10 @@ namespace Jin5eok
     /// </summary>
     public class FloatCompositeInputHandler : CompositeInputHandlerBase<float>
     {
+        /// <summary>
+        /// FloatCompositeInputHandler를 생성합니다.
+        /// </summary>
+        /// <param name="inputGroup">합성할 InputHandler들</param>
         public FloatCompositeInputHandler(params IInputHandler<float>[] inputGroup) : base(inputGroup) { }
         
         protected override bool IsEquals(float a, float b)
@@ -169,6 +186,10 @@ namespace Jin5eok
     /// </summary>
     public class BoolCompositeInputHandler : CompositeInputHandlerBase<bool>
     {
+        /// <summary>
+        /// BoolCompositeInputHandler를 생성합니다.
+        /// </summary>
+        /// <param name="inputGroup">합성할 InputHandler들</param>
         public BoolCompositeInputHandler(params IInputHandler<bool>[] inputGroup) : base(inputGroup) { }
 
         protected override bool IsEquals(bool a, bool b)
@@ -182,6 +203,10 @@ namespace Jin5eok
     /// </summary>
     public class Vector2CompositeInputHandler : CompositeInputHandlerBase<Vector2>
     {
+        /// <summary>
+        /// Vector2CompositeInputHandler를 생성합니다.
+        /// </summary>
+        /// <param name="inputGroup">합성할 InputHandler들</param>
         public Vector2CompositeInputHandler(params IInputHandler<Vector2>[] inputGroup) : base(inputGroup) { }
         
         protected override bool IsEquals(Vector2 a, Vector2 b)
@@ -195,6 +220,10 @@ namespace Jin5eok
     /// </summary>
     public class Vector3CompositeInputHandler : CompositeInputHandlerBase<Vector3>
     {
+        /// <summary>
+        /// Vector3CompositeInputHandler를 생성합니다.
+        /// </summary>
+        /// <param name="inputGroup">합성할 InputHandler들</param>
         public Vector3CompositeInputHandler(params IInputHandler<Vector3>[] inputGroup) : base(inputGroup) { }
         
         protected override bool IsEquals(Vector3 a, Vector3 b)

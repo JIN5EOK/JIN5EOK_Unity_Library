@@ -37,6 +37,10 @@ namespace Jin5eok
             }
         }
         
+        /// <summary>
+        /// InputHandler를 업데이트 목록에 추가합니다.
+        /// </summary>
+        /// <param name="handler">추가할 InputHandler</param>
         public static void Add(IInputHandlerBase handler)
         {
             if (Contains(handler) == false)
@@ -46,6 +50,10 @@ namespace Jin5eok
             }
         }
         
+        /// <summary>
+        /// InputHandler를 업데이트 목록에서 제거합니다.
+        /// </summary>
+        /// <param name="handler">제거할 InputHandler</param>
         public static void Remove(IInputHandlerBase handler)
         {
             if (Contains(handler) == true)
@@ -54,6 +62,11 @@ namespace Jin5eok
             }
         }
         
+        /// <summary>
+        /// InputHandler가 업데이트 목록에 포함되어 있는지 확인합니다.
+        /// </summary>
+        /// <param name="handler">확인할 InputHandler</param>
+        /// <returns>포함되어 있으면 true, 그렇지 않으면 false</returns>
         public static bool Contains(IInputHandlerBase handler)
         {
             return InputHandlers.Contains(handler);
@@ -61,7 +74,7 @@ namespace Jin5eok
         
         private void Update()
         {
-            // Cache a copy to prevent changes during iteration
+            // 컬렉션에 변화 일어나면 작동 문제가 생겨서 매 프레임 캐싱하도록 임시조치.. 추후 성능 개선 필요
             var inputHandlers = InputHandlers.ToArray();
 
             foreach (var input in inputHandlers)

@@ -11,6 +11,9 @@ namespace Jin5eok
     public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T _instance;
+        /// <summary>
+        /// 싱글턴 인스턴스를 반환합니다. 인스턴스가 없으면 자동으로 생성합니다.
+        /// </summary>
         public static T Instance
         {
             get

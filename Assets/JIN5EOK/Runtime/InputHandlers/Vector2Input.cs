@@ -7,6 +7,9 @@ namespace Jin5eok
     /// </summary>
     public abstract class Vector2InputHandlerBase : InputHandler<Vector2>
     {
+        /// <summary>
+        /// 현재 Vector2 입력 값을 반환합니다. X와 Y 축의 입력을 조합한 값입니다.
+        /// </summary>
         public override Vector2 Value { get; protected set; }
 
         protected void UpdateState(Vector2 currentValue)
@@ -61,12 +64,22 @@ namespace Jin5eok
             set =>_axisInputX.PositiveKeyCode = value;
         }
         
+        /// <summary>
+        /// Vector2InputHandlerKeyCode를 생성합니다.
+        /// </summary>
+        /// <param name="up">상 입력에 사용할 KeyCode</param>
+        /// <param name="down">하 입력에 사용할 KeyCode</param>
+        /// <param name="left">좌 입력에 사용할 KeyCode</param>
+        /// <param name="right">우 입력에 사용할 KeyCode</param>
         public Vector2InputHandlerKeyCode(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
         {
             _axisInputX = new AxisInputHandlerKeyCode(right, left);
             _axisInputY = new AxisInputHandlerKeyCode(up, down);
         }
         
+        /// <summary>
+        /// KeyCode를 기반으로 Vector2 입력 값을 업데이트합니다.
+        /// </summary>
         public override void UpdateState()
         {
             _axisInputX.UpdateState();
@@ -117,12 +130,21 @@ namespace Jin5eok
             } 
         }
         
+        /// <summary>
+        /// Vector2InputHandlerOldInputSystem을 생성합니다.
+        /// </summary>
+        /// <param name="axisNameX">X 좌표 입력에 사용할 OldInputSystem Axis 이름</param>
+        /// <param name="axisNameY">Y 좌표 입력에 사용할 OldInputSystem Axis 이름</param>
+        /// <param name="isUsingAxisRaw">AxisRaw를 사용할지 여부</param>
         public Vector2InputHandlerOldInputSystem(string axisNameX, string axisNameY, bool isUsingAxisRaw = false)
         {
             _axisInputX = new AxisInputHandlerOldInputSystem(axisNameX, isUsingAxisRaw);
             _axisInputY = new AxisInputHandlerOldInputSystem(axisNameY, isUsingAxisRaw);
         }
         
+        /// <summary>
+        /// OldInputSystem을 기반으로 Vector2 입력 값을 업데이트합니다.
+        /// </summary>
         public override void UpdateState()
         {
             _axisInputX.UpdateState();

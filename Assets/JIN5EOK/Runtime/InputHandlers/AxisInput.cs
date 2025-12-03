@@ -7,6 +7,9 @@ namespace Jin5eok
     /// </summary>
     public abstract class AxisInputHandlerBase : InputHandler<float>
     {
+        /// <summary>
+        /// 현재 축 입력 값을 반환합니다. 양수 방향이면 양수, 음수 방향이면 음수, 입력이 없으면 0입니다.
+        /// </summary>
         public override float Value { get; protected set; }
         
         protected void UpdateState(float currentValue)
@@ -33,12 +36,20 @@ namespace Jin5eok
         /// </summary>
         public KeyCode NegativeKeyCode { get; set; }
         
+        /// <summary>
+        /// AxisInputHandlerKeyCode를 생성합니다.
+        /// </summary>
+        /// <param name="positiveKeyCode">양수 방향에 사용할 KeyCode</param>
+        /// <param name="negativeKeyCode">음수 방향에 사용할 KeyCode</param>
         public AxisInputHandlerKeyCode(KeyCode positiveKeyCode, KeyCode negativeKeyCode)
         {
             PositiveKeyCode = positiveKeyCode;
             NegativeKeyCode = negativeKeyCode;
         }
 
+        /// <summary>
+        /// KeyCode를 기반으로 축 입력 값을 업데이트합니다.
+        /// </summary>
         public override void UpdateState()
         {
             var isNegative = Input.GetKey(NegativeKeyCode) == true && Input.GetKeyUp(NegativeKeyCode) == false && Input.GetKey(PositiveKeyCode) == false;
@@ -62,12 +73,20 @@ namespace Jin5eok
         /// </summary>
         public bool IsUsingAxisRaw { get; set; }
         
+        /// <summary>
+        /// AxisInputHandlerOldInputSystem을 생성합니다.
+        /// </summary>
+        /// <param name="axisName">키 입력에 사용할 OldInputSystem의 Axis 이름</param>
+        /// <param name="isUsingAxisRaw">AxisRaw를 사용할지 여부</param>
         public AxisInputHandlerOldInputSystem(string axisName, bool isUsingAxisRaw = false)
         {
             AxisName = axisName;
             IsUsingAxisRaw = isUsingAxisRaw;
         }
 
+        /// <summary>
+        /// OldInputSystem을 기반으로 축 입력 값을 업데이트합니다.
+        /// </summary>
         public override void UpdateState()
         {
             var currentValue = IsUsingAxisRaw == true ? Input.GetAxisRaw(AxisName) : Input.GetAxis(AxisName);

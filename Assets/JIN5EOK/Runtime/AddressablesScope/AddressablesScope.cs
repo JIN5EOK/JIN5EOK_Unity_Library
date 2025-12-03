@@ -28,6 +28,9 @@ namespace Jin5eok
         /// <summary>
         /// 에셋 레퍼런스를 기반으로 에셋을 로드하여 반환합니다.
         /// </summary>
+        /// <typeparam name="T">로드할 에셋의 타입</typeparam>
+        /// <param name="assetReference">로드할 에셋의 레퍼런스</param>
+        /// <returns>에셋 로드 작업 핸들</returns>
         public AsyncOperationHandle<T> LoadAssetAsync<T>(AssetReference assetReference)  where T : Object
         {
             ThrowIfDisposed();
@@ -58,6 +61,9 @@ namespace Jin5eok
         /// <summary>
         /// 주소를 기반으로 에셋을 로드하여 반환합니다.
         /// </summary>
+        /// <typeparam name="T">로드할 에셋의 타입</typeparam>
+        /// <param name="address">에셋의 주소</param>
+        /// <returns>에셋 로드 작업 핸들</returns>
         public AsyncOperationHandle<T> LoadAssetAsync<T>(string address) where T : Object
         {
             ThrowIfDisposed();
@@ -87,6 +93,8 @@ namespace Jin5eok
         /// <summary>
         /// 에셋 레퍼런스를 기반으로 프리펩을 인스턴스화하여 반환합니다.
         /// </summary>
+        /// <param name="assetReference">인스턴스화할 프리펩의 레퍼런스</param>
+        /// <returns>프리펩 인스턴스화 작업 핸들</returns>
         public AsyncOperationHandle<GameObject> InstantiateAsync(AssetReference assetReference)
         {
             ThrowIfDisposed();
@@ -98,6 +106,8 @@ namespace Jin5eok
         /// <summary>
         /// 주소를 기반으로 프리펩을 인스턴스화하여 반환합니다.
         /// </summary>
+        /// <param name="address">프리펩의 주소</param>
+        /// <returns>프리펩 인스턴스화 작업 핸들</returns>
         public AsyncOperationHandle<GameObject> InstantiateAsync(string address)
         {
             ThrowIfDisposed();

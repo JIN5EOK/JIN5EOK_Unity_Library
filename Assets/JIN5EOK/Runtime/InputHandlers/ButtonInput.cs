@@ -7,7 +7,9 @@ namespace Jin5eok
     /// </summary>
     public abstract class ButtonInputHandlerBase : InputHandler<bool>
     {
-
+        /// <summary>
+        /// 현재 버튼 입력 상태를 반환합니다. 입력 여부에 따라 true 혹은 false를 반환합니다.
+        /// </summary>
         public override bool Value { get; protected set; }
         
         protected void UpdateState(bool currentValue)
@@ -30,11 +32,18 @@ namespace Jin5eok
         /// </summary>
         public KeyCode KeyCode { get; set; }
         
+        /// <summary>
+        /// ButtonInputHandlerKeyCode를 생성합니다.
+        /// </summary>
+        /// <param name="keyCode">키 입력에 사용할 KeyCode</param>
         public ButtonInputHandlerKeyCode(KeyCode keyCode)
         {
             KeyCode = keyCode;
         }
 
+        /// <summary>
+        /// KeyCode를 기반으로 버튼 입력 상태를 업데이트합니다.
+        /// </summary>
         public override void UpdateState()
         {
             var currentInput = Input.GetKey(KeyCode) == true && Input.GetKeyUp(KeyCode) == false;
@@ -52,11 +61,18 @@ namespace Jin5eok
         /// </summary>
         public string ButtonName { get; set; }
         
+        /// <summary>
+        /// ButtonInputHandlerOldInputSystem을 생성합니다.
+        /// </summary>
+        /// <param name="buttonName">키 입력에 사용할 OldInputSystem 버튼 이름</param>
         public ButtonInputHandlerOldInputSystem(string buttonName)
         {
             ButtonName = buttonName;
         }
 
+        /// <summary>
+        /// OldInputSystem을 기반으로 버튼 입력 상태를 업데이트합니다.
+        /// </summary>
         public override void UpdateState()
         {
             var currentInput = Input.GetButton(ButtonName) == true && Input.GetButtonUp(ButtonName) == false;
