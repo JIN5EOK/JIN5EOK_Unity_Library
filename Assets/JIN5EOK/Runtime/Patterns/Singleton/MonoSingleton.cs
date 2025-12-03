@@ -2,6 +2,12 @@ using UnityEngine;
 
 namespace Jin5eok
 {
+    /// <summary>
+    /// MonoBehaviour 기반 싱글턴 패턴을 구현한 클래스입니다.
+    /// DontDestroyOnLoad를 사용하여 씬 전환 시에도 유지됩니다.
+    /// 인스턴스가 없을 경우 자동으로 생성합니다.
+    /// </summary>
+    /// <typeparam name="T">싱글턴으로 만들 컴포넌트 타입</typeparam>
     public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T _instance;
@@ -26,6 +32,9 @@ namespace Jin5eok
             }
         }
 
+        /// <summary>
+        /// 싱글턴 인스턴스가 초기화되었는지 여부를 반환합니다.
+        /// </summary>
         public static bool IsInitialized => _instance != null;
         
         protected virtual void Awake()

@@ -5,6 +5,11 @@ using UnityEngine;
 
 namespace Jin5eok
 {
+    /// <summary>
+    /// 메인 스레드에서 액션을 실행하기 위한 디스패처입니다.
+    /// 다른 스레드에서 호출된 액션을 큐에 넣고, 메인 스레드의 Update에서 실행합니다.
+    /// 메인 스레드에서 호출된 경우 즉시 실행합니다.
+    /// </summary>
     public class MainThreadDispatcher : MonoSingleton<MainThreadDispatcher>
     {
         private static int _mainThreadId;
@@ -20,11 +25,19 @@ namespace Jin5eok
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
         }
 
+        /// <summary>
+        /// 현재 스레드가 메인 스레드인지 확인합니다.
+        /// </summary>
+        /// <returns>메인 스레드이면 true, 그렇지 않으면 false</returns>
         public static bool IsMainThread()
         {
             return Thread.CurrentThread.ManagedThreadId == _mainThreadId;
         }
         
+        /// <summary>
+        /// 액션을 실행합니다. 메인 스레드에서 호출된 경우 즉시 실행하고, 그렇지 않으면 큐에 넣어 메인 스레드에서 실행합니다.
+        /// </summary>
+        /// <param name="action">실행할 액션</param>
         public static void RunOrEnqueue(Action action)
         {
             if (action == null)
