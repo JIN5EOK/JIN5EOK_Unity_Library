@@ -1,4 +1,4 @@
-# InputHandlers 튜토리얼
+# InputHandlers 사용자 가이드
 
 InputHandlers는 KeyCode와 Old Input System을 래핑하여 이벤트 기반으로 키 입력을 처리하고 키 리바인딩을 지원하는 시스템입니다.
 
