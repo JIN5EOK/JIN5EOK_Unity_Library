@@ -493,7 +493,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Play SFX 2
+  m_text: Play SFX Async
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e8541ae6103e44bf693ac83f4e76c5b5, type: 2}
   m_sharedMaterial: {fileID: -2926757682159551505, guid: e8541ae6103e44bf693ac83f4e76c5b5, type: 2}
@@ -1486,8 +1486,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1097423507}
-        m_TargetAssemblyTypeName: Jin5eok.Samples.AudioPlayerSample, Sample
-        m_MethodName: PlaySfx
+        m_TargetAssemblyTypeName: Jin5eok.Samples.AudioPlayerSample, JIN5EOK
+        m_MethodName: PlaySfxAsync
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}
@@ -1679,6 +1679,7 @@ GameObject:
   - component: {fileID: 1096098235}
   - component: {fileID: 1096098234}
   - component: {fileID: 1096098233}
+  - component: {fileID: 1096098236}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1736,6 +1737,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1096098236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096098232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 429fb0e52a0d94cfda40387287877813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1097423505
 GameObject:
   m_ObjectHideFlags: 0
@@ -2983,7 +2996,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Play SFX 1
+  m_text: Play SFX Coroutine
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e8541ae6103e44bf693ac83f4e76c5b5, type: 2}
   m_sharedMaterial: {fileID: -2926757682159551505, guid: e8541ae6103e44bf693ac83f4e76c5b5, type: 2}
@@ -3146,8 +3159,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1097423507}
-        m_TargetAssemblyTypeName: Jin5eok.Samples.AudioPlayerSample, Sample
-        m_MethodName: PlaySfx
+        m_TargetAssemblyTypeName: Jin5eok.Samples.AudioPlayerSample, JIN5EOK
+        m_MethodName: PlaySfxCoroutine
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 8300000, guid: 2667a0a008b044e218b63df62e2be749, type: 3}

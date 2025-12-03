@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -28,10 +29,14 @@ namespace Jin5eok.Samples
             _sfxPlayer = AudioPlayer.Create(null, _sfxMixer, transform);
         }
         
-        public void PlayBgm(AudioClip clip)
+        public async void PlayBgm(AudioClip clip)
         {
+            if (_bgmPlayer == null)
+                return;
+                
             _bgmPlayer.AudioSource.clip = clip;
-            _bgmPlayer.Play((result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
+            var result = await _bgmPlayer.PlayAsync();
+            Debug.Log($"{clip.name} : {result.ToString()}");
         }
         
         public void StopBgm()
@@ -39,20 +44,34 @@ namespace Jin5eok.Samples
             _bgmPlayer.AudioSource.Stop();
         }
         
-        public void PlaySfx(AudioClip clip)
+        public async void PlaySfxAsync(AudioClip clip)
         {
+            if (_sfxPlayer == null)
+                return;
+                
             _sfxPlayer.AudioSource.clip = clip;
-            _sfxPlayer.Play((result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
+            var result = await _sfxPlayer.PlayAsync();
+            Debug.Log($"{clip.name} : {result.ToString()}");
         }
         
+        public async void PlaySfxCoroutine(AudioClip clip)
+        {
+            if (_sfxPlayer == null)
+                return;
+                
+            _sfxPlayer.AudioSource.clip = clip;
+            _sfxPlayer.Play(result => Debug.Log($"{clip.name} : {result.ToString()}"));
+        }
+
         public void StopSfx()
         {
             _sfxPlayer.AudioSource.Stop();
         }
         
-        public void PlayOneShot(AudioClip clip)
+        public async void PlayOneShot(AudioClip clip)
         {
-            AudioPlayer.PlayOneShot(clip, null, (result) => Debug.Log($"{clip.name} : { result.ToString()}" ));
+            var result = await AudioPlayer.PlayOneShotAsync(clip, null);
+            Debug.Log($"{clip.name} : {result.ToString()}");
         }
     }
 }
