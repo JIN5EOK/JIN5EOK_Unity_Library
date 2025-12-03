@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -8,7 +9,8 @@ namespace Jin5eok
     /// <summary>
     /// 오디오 소스를 래핑하는 오디오 플레이어 클래스입니다.
     /// 오디오 재생 간편화 : 정적 함수로 OneShot 오디오를 재생하거나 AudioSource를 래핑한 객체 AudioPlayer를 생성할 수 있습니다.
-    /// 오디오 재생 결과 콜백 : 오디오 재생의 성공,실패,중단 여부를 판단하고 그와 관련한 콜백을 등록할 수 있습니다.
+    /// 재생 방식 지원 : 코루틴 기반 콜백 방식(Play)과 async/await 비동기 방식(PlayAsync)을 모두 제공합니다.
+    /// 오디오 재생 결과 반환 : 오디오 재생의 성공, 실패, 중단 여부를 Enum PlayResult로 반환합니다.
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     public class AudioPlayer : MonoBehaviour
@@ -17,7 +19,7 @@ namespace Jin5eok
         
         public enum PlayResult
         {
-            Succeed, // Playback ended without any problems
+            Succeed,
             Stopped, // Paused or Stopped
             Failed
         }
@@ -26,6 +28,11 @@ namespace Jin5eok
         /// </summary>
         public AudioSource AudioSource { get; private set; }
         
+        private void Awake()
+        {
+            AudioSource = gameObject.AddOrGetComponent<AudioSource>();
+        }
+
         /// <summary>
         /// 새로운 AudioPlayer GameObject를 생성하여 반환합니다.
         /// </summary>
@@ -37,18 +44,18 @@ namespace Jin5eok
         {
             var playerGameObject = new GameObject(nameof(AudioPlayer));
             var playerInstance = playerGameObject.AddComponent<AudioPlayer>();
-            
+
             playerInstance.AudioSource.clip = audioClip;
             playerInstance.AudioSource.outputAudioMixerGroup = audioMixerGroup;
             playerInstance.transform.SetParent(parent);
-            
+
             return playerInstance;
         }
         
         /// <summary>
-        /// OneShot 형태의 오디오를 재생합니다.
-        /// 플레이 상태를 추적하기 위해 내부적으로 AudioPlayer 오브젝트 풀에서 AudioPlayer를 가져와 PlayWithCallback을 호출하는 방식으로 동작합니다.
-        /// 플레이 종료시 결과를 반환하는 콜백함수를 등록할 수 있습니다.
+        /// OneShot 형태의 오디오를 재생합니다. (코루틴 콜백 방식)
+        /// 플레이 상태를 추적하기 위해 내부적으로 AudioPlayer 오브젝트 풀에서 AudioPlayer를 가져와 Play를 호출하는 방식으로 동작합니다.
+        /// 재생이 완료되면 자동으로 풀에 반환됩니다.
         /// </summary>
         /// <param name="audioClip">재생할 오디오 클립</param>
         /// <param name="audioMixerGroup">사용할 오디오 믹서 그룹</param>
@@ -57,7 +64,8 @@ namespace Jin5eok
         {
             if (audioClip == null)
             {
-                onPlayFinished?.Invoke(PlayResult.Failed);   
+                onPlayFinished?.Invoke(PlayResult.Failed);
+                return;
             }
             
             var oneShotPlayer = AudioPlayerPool.Instance.Pool.Get();
@@ -68,15 +76,40 @@ namespace Jin5eok
             
             oneShotPlayer.Play(onPlayFinished);
         }
-
-
-        private void Awake()
+        
+        /// <summary>
+        /// OneShot 형태의 오디오를 비동기적으로 재생합니다. (async/await 방식)
+        /// 플레이 상태를 추적하기 위해 내부적으로 AudioPlayer 오브젝트 풀에서 AudioPlayer를 가져와 PlayAsync를 호출하는 방식으로 동작합니다.
+        /// 재생이 완료되면 자동으로 풀에 반환됩니다.
+        /// </summary>
+        /// <param name="audioClip">재생할 오디오 클립</param>
+        /// <param name="audioMixerGroup">사용할 오디오 믹서 그룹</param>
+        /// <returns>재생 완료 시 PlayResult를 반환하는 Task</returns>
+        public static async Task<PlayResult> PlayOneShotAsync(AudioClip audioClip, AudioMixerGroup audioMixerGroup = null)
         {
-            AudioSource = gameObject.AddOrGetComponent<AudioSource>();
+            if (audioClip == null)
+            {
+                return PlayResult.Failed;
+            }
+            
+            var oneShotPlayer = AudioPlayerPool.Instance.Pool.Get();
+            oneShotPlayer.AudioSource.clip = audioClip;
+            oneShotPlayer.AudioSource.outputAudioMixerGroup = audioMixerGroup;
+
+            try
+            {
+                var result = await oneShotPlayer.PlayAsync();
+                return result;
+            }
+            finally
+            {
+                AudioPlayerPool.Instance.Pool.Release(oneShotPlayer);
+            }
         }
         
         /// <summary>
-        /// 오디오를 재생하며 동시에 플레이 종료시 결과를 반환하는 콜백함수를 등록할 수 있습니다.
+        /// 오디오를 재생합니다. (코루틴 콜백 방식)
+        /// 재생이 완료되면 콜백 함수를 호출합니다.
         /// </summary>
         /// <param name="onPlayFinished">플레이 종료 시 호출될 콜백</param>
         public void Play(Action<PlayResult> onPlayFinished = null)
@@ -84,48 +117,65 @@ namespace Jin5eok
             if (AudioSource.clip == null)
             {
                 onPlayFinished?.Invoke(PlayResult.Failed);
+                return;
             }
-            else
-            {
-                StartCoroutine(MonitorPlayback(onPlayFinished));    
-            }
+            
+            StartCoroutine(MonitorPlaybackCoroutine(onPlayFinished));
         }
         
-        private IEnumerator MonitorPlayback(Action<PlayResult> onPlayFinished = null)
+        /// <summary>
+        /// 오디오를 비동기적으로 재생합니다. (async/await 방식)
+        /// 재생이 완료될 때까지 대기하며, 재생 결과를 반환합니다.
+        /// </summary>
+        /// <returns>재생 완료 시 PlayResult를 반환하는 Task</returns>
+        public Task<PlayResult> PlayAsync()
+        {
+            if (AudioSource.clip == null)
+            {
+                return Task.FromResult(PlayResult.Failed);
+            }
+            
+            var tcs = new TaskCompletionSource<PlayResult>();
+            StartCoroutine(MonitorPlaybackCoroutine(null, tcs));
+            return tcs.Task;
+        }
+        
+        private IEnumerator MonitorPlaybackCoroutine(Action<PlayResult> onPlayFinished = null, TaskCompletionSource<PlayResult> tcs = null)
         {
             float playTime = 0f;
             AudioClip playedClip = AudioSource.clip;
-            
+
             AudioSource.Play();
-            
+
+            // 재생이 완료되거나 중단될 때까지 매 프레임마다 상태를 확인합니다.
             while (AudioSource.isPlaying == true)
             {
-                var isPlaybackTargetChanged = playTime > AudioSource.time || playedClip != AudioSource.clip; 
+                var isPlaybackTargetChanged = playTime > AudioSource.time || playedClip != AudioSource.clip;
                 if (isPlaybackTargetChanged == true)
                 {
                     break;
                 }
-                
+
                 playTime = AudioSource.time;
+                // 다음 프레임까지 대기 (메인 스레드에서 실행됨)
                 yield return null;
             }
-            
+
+            // 루프가 아닌 경우 재생 완료 여부를 확인합니다.
+            PlayResult result;
             if (AudioSource.loop == false && playedClip == AudioSource.clip)
             {
                 var playBackCompletion = playedClip.length - PlaybackCompletionTolerance;
-                if (playTime >= playBackCompletion)
-                {
-                    onPlayFinished?.Invoke(PlayResult.Succeed);
-                }
-                else
-                {
-                    onPlayFinished?.Invoke(PlayResult.Stopped);
-                }
+                result = playTime >= playBackCompletion ? PlayResult.Succeed : PlayResult.Stopped;
             }
             else
             {
-                onPlayFinished?.Invoke(PlayResult.Stopped);
+                result = PlayResult.Stopped;
             }
+
+            // 메인 스레드에서 결과를 처리합니다.
+            onPlayFinished?.Invoke(result);
+            tcs?.SetResult(result);
         }
     }
 }
