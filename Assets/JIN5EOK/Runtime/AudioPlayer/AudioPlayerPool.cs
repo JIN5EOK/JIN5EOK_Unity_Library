@@ -3,8 +3,16 @@ using UnityEngine.Pool;
 
 namespace Jin5eok
 {
+    /// <summary>
+    /// AudioPlayer의 오브젝트 풀입니다.
+    /// 생성 로직으로 AudioPlayer의 Create 함수를 사용합니다.
+    /// AudioPlayer의 PlayOneShot에서 사용하기 위해 만들었으나 필요한 경우 사용해도 무방합니다.
+    /// </summary>
     public class AudioPlayerPool : MonoSingleton<AudioPlayerPool>
     {
+        /// <summary>
+        /// 오브젝트 풀
+        /// </summary>
         public IObjectPool<AudioPlayer> Pool { get; private set; }
         
         protected override void Awake()

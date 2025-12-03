@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Jin5eok
 {
+    /// <summary>
+    /// bool 형식의 버튼 입력 값을 반환하는 InputHandler의 베이스 클래스입니다.
+    /// </summary>
     public abstract class ButtonInputHandlerBase : InputHandler<bool>
     {
 
@@ -17,8 +20,14 @@ namespace Jin5eok
         }
     }
     
+    /// <summary>
+    /// KeyCode를 기반으로 Button 입력을 수행합니다.
+    /// </summary>
     public class ButtonInputHandlerKeyCode : ButtonInputHandlerBase
     {
+        /// <summary>
+        /// 키 입력에 사용할 KeyCode
+        /// </summary>
         public KeyCode KeyCode { get; set; }
         
         public ButtonInputHandlerKeyCode(KeyCode keyCode)
@@ -33,8 +42,14 @@ namespace Jin5eok
         }
     }
     
+    /// <summary>
+    /// OldInputSystem을 기반으로 Button 입력을 수행합니다.
+    /// </summary>
     public class ButtonInputHandlerOldInputSystem : ButtonInputHandlerBase
     {
+        /// <summary>
+        /// 키 입력에 사용할 OldInputSystem 버튼 이름
+        /// </summary>
         public string ButtonName { get; set; }
         
         public ButtonInputHandlerOldInputSystem(string buttonName)

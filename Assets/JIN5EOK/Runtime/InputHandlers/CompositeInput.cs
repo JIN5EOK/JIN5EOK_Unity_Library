@@ -4,6 +4,13 @@ using UnityEngine;
 
 namespace Jin5eok
 {
+    /// <summary>
+    /// 같은 반환형을 가진 입력 핸들러 여러개가 합성된 복합 입력 핸들러를 구성합니다.
+    /// 한가지 입력에 여러가지 입력수단을 할당하고 싶을 때 사용합니다.
+    /// 예) 공격 명령에 KeyCode 입력값 Space Bar 키, Old InputSystem의 Attack 입력을 할당합니다.
+    /// 주의사항: CompositeInputHandler에 포함된 개별 InputHandler를 포함시키면 해당 InputHandler는 CompositeInputHandler와 생명주기를 함께합니다.
+    /// 따라서 요소로 넣은 핸들러를 독립적으로 다룰수는 있으나 권장하지는 않습니다.
+    /// </summary>
     public abstract class CompositeInputHandlerBase<T> : InputHandler<T> where T : notnull
     {
         public override T Value { get; protected set; }
@@ -33,11 +40,17 @@ namespace Jin5eok
             }
         }
 
+        /// <summary>
+        /// CompositeInput 내부에 포함된 InputHandler들을 반환합니다.
+        /// </summary>
         public IInputHandler<T>[] GetInputs()
         {
             return ChildInputs.ToArray();
         }
         
+        /// <summary>
+        /// InputHandler를 추가합니다.
+        /// </summary>
         public void AddInput(IInputHandler<T> inputHandler)
         {
             if (ChildInputs.Contains(inputHandler) == false)
@@ -46,6 +59,9 @@ namespace Jin5eok
             }
         }
         
+        /// <summary>
+        /// InputHandler를 제거합니다.
+        /// </summary>
         public void RemoveInput(IInputHandler<T> inputHandler)
         {
             if (ChildInputs.Contains(inputHandler) == true)
@@ -54,6 +70,9 @@ namespace Jin5eok
             }
         }
 
+        /// <summary>
+        /// InputHandler를 모두 제거합니다.
+        /// </summary>
         public void RemoveAllInputs()
         {
             ChildInputs.Clear();
@@ -119,6 +138,9 @@ namespace Jin5eok
         }
     }
     
+    /// <summary>
+    /// int 타입 CompositeInputHandler
+    /// </summary>
     public class IntCompositeInputHandler : CompositeInputHandlerBase<int>
     {
         public IntCompositeInputHandler(params IInputHandler<int>[] inputGroup) : base(inputGroup) { }
@@ -129,6 +151,9 @@ namespace Jin5eok
         }
     }
     
+    /// <summary>
+    /// float 타입 CompositeInputHandler
+    /// </summary>
     public class FloatCompositeInputHandler : CompositeInputHandlerBase<float>
     {
         public FloatCompositeInputHandler(params IInputHandler<float>[] inputGroup) : base(inputGroup) { }
@@ -139,6 +164,9 @@ namespace Jin5eok
         }
     }
     
+    /// <summary>
+    /// bool 타입 CompositeInputHandler
+    /// </summary>
     public class BoolCompositeInputHandler : CompositeInputHandlerBase<bool>
     {
         public BoolCompositeInputHandler(params IInputHandler<bool>[] inputGroup) : base(inputGroup) { }
@@ -149,6 +177,9 @@ namespace Jin5eok
         }
     }
     
+    /// <summary>
+    /// Vector2 타입 CompositeInputHandler
+    /// </summary>
     public class Vector2CompositeInputHandler : CompositeInputHandlerBase<Vector2>
     {
         public Vector2CompositeInputHandler(params IInputHandler<Vector2>[] inputGroup) : base(inputGroup) { }
@@ -159,6 +190,9 @@ namespace Jin5eok
         }
     }
     
+    /// <summary>
+    /// Vector3 타입 CompositeInputHandler
+    /// </summary>
     public class Vector3CompositeInputHandler : CompositeInputHandlerBase<Vector3>
     {
         public Vector3CompositeInputHandler(params IInputHandler<Vector3>[] inputGroup) : base(inputGroup) { }
