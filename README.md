@@ -5,14 +5,14 @@
 
 [Assets/JIN5EOK/](Assets/JIN5EOK/)
 
-## 설치 방법
+## 💾 설치 방법
 
 1. 유니티 -> `Windows` -> `Package Manager` -> + 클릭 -> `Install package from git url`
 2. `https://github.com/JIN5EOK/JIN5EOK_Unity_Framework.git?path=Assets/JIN5EOK#main` 을 입력합니다.
 
 * 혹은 단순히 샘플 프로젝트를 실행하려면 프로젝트를 Clone하거나 다운로드 받으세요.
 
-## 사용자 가이드
+## 🧑‍🏫 사용자 가이드
 
 > 각 기능의 사용 예제, 주의사항들이 적힌 문서입니다.
 > 아직 문서가 준비되지 않은 기능들도 있습니다.
@@ -52,3 +52,25 @@
 [📑 사용자 가이드](Assets/JIN5EOK/Runtime/InputHandlers/README/README_KR.md)
 
 [📁 디렉토리 위치](Assets/JIN5EOK/Runtime/InputHandlers)
+
+---
+### CoroutineManager
+* MonoBehaviour가 없는 정적 클래스에서도 코루틴을 사용할 수 있도록 해줍니다.
+* 코루틴에서 자주 쓰이는 간단한 패턴에 대한 편의 함수들을 제공합니다.
+  * 지연 실행 (Delay, DelayRealtime)
+  * 조건 대기 (WaitUntil, WaitWhile)
+  * 코루틴 순차 실행 (Sequence)
+
+[📑 사용자 가이드](Assets/JIN5EOK/Runtime/Coroutine/README/README_KR.md)
+
+[📁 디렉토리 위치](Assets/JIN5EOK/Runtime/Coroutine)
+
+---
+### MainThreadDispatcher
+* 다른 스레드에서 실행되는 명령을 메인 스레드에서 실행하도록 도와주는 디스패처입니다.
+* 백그라운드 스레드에서 Unity API를 호출해야 할 때 사용합니다.
+* 단 현 시점에서는 UniTask같은 플러그인이나 Awaitable를 사용하면 거의 필요가 없으니 그쪽을 사용해보세요.
+
+[📑 사용자 가이드](Assets/JIN5EOK/Runtime/Thread/README/README_KR.md)
+
+[📁 디렉토리 위치](Assets/JIN5EOK/Runtime/Thread)
