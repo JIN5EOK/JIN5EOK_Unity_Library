@@ -1,8 +1,8 @@
 {
-  "name": "com.jin5eok.jin5eokframework",
+  "name": "com.jin5eok.jin5eoklibrary",
   "version": "0.0.1",
-  "displayName": "JIN5EOK's Framework",
-  "description": "JIN5EOK's Framework",
+  "displayName": "JIN5EOK's Library",
+  "description": "JIN5EOK's Library",
   "unity": "2021.1",
   "documentationUrl": "",
   "changelogUrl": "",

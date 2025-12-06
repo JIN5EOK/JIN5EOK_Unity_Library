@@ -1,5 +1,5 @@
-# JIN5EOK_Framework
-> 유니티 게임 개발을 위한 프레임워크입니다.
+# JIN5EOK_Unity_Library
+> 유니티 게임 개발을 위한 라이브러리입니다.
 
 이 리포지토리는 실제로 실행가능한 유니티 프로젝트이며 개발된 기능 코드, 샘플은 모두 아래 경로에 존재합니다.
 
@@ -8,7 +8,7 @@
 ## 💾 설치 방법
 
 1. 유니티 -> `Windows` -> `Package Manager` -> + 클릭 -> `Install package from git url`
-2. `https://github.com/JIN5EOK/JIN5EOK_Unity_Framework.git?path=Assets/JIN5EOK#main` 을 입력합니다.
+2. `https://github.com/JIN5EOK/JIN5EOK_Unity_Library.git?path=Assets/JIN5EOK#main` 을 입력합니다.
 
 * 혹은 단순히 샘플 프로젝트를 실행하려면 프로젝트를 Clone하거나 다운로드 받으세요.
 
