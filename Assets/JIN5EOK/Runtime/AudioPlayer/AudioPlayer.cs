@@ -157,7 +157,6 @@ namespace Jin5eok
                 }
 
                 playTime = AudioSource.time;
-                // 다음 프레임까지 대기 (메인 스레드에서 실행됨)
                 yield return null;
             }
 
@@ -173,7 +172,6 @@ namespace Jin5eok
                 result = PlayResult.Stopped;
             }
 
-            // 메인 스레드에서 결과를 처리합니다.
             onPlayFinished?.Invoke(result);
             tcs?.SetResult(result);
         }
