@@ -56,7 +56,7 @@
 
 ---
 ### CoroutineManager
-* MonoBehaviour가 없는 정적 클래스에서도 코루틴을 사용할 수 있도록 해줍니다.
+* MonoBehaviour를 상속받지 않은 클래스에서도 코루틴을 사용할 수 있도록 해줍니다.
 * 코루틴에서 자주 쓰이는 간단한 패턴에 대한 편의 함수들을 제공합니다.
   * 지연 실행 (Delay, DelayRealtime)
   * 조건 대기 (WaitUntil, WaitWhile)
