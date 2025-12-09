@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ namespace Jin5eok
     internal class InputHandlerUpdater : MonoSingleton<InputHandlerUpdater>
     {
         private static readonly List<IInputHandlerBase> InputHandlers = new();
+        private static IInputHandlerBase[] _cachedHandlers = Array.Empty<IInputHandlerBase>();
+        private static bool _isDirty = true;
         
         private static bool _runtimeInitialized = false;
         private static bool _updaterInstantiated = false;
@@ -46,7 +49,8 @@ namespace Jin5eok
             if (Contains(handler) == false)
             {
                 EnsureUpdaterInstance();
-                InputHandlers.Add(handler);    
+                InputHandlers.Add(handler);
+                _isDirty = true;
             }
         }
         
@@ -58,7 +62,8 @@ namespace Jin5eok
         {
             if (Contains(handler) == true)
             {
-                InputHandlers.Remove(handler);    
+                InputHandlers.Remove(handler);
+                _isDirty = true;
             }
         }
         
@@ -74,11 +79,21 @@ namespace Jin5eok
         
         private void Update()
         {
-            // 컬렉션에 변화 일어나면 작동 문제가 생겨서 매 프레임 캐싱하도록 임시조치.. 추후 성능 개선 필요
-            var inputHandlers = InputHandlers.ToArray();
-
-            foreach (var input in inputHandlers)
+            // 컬렉션이 변경되었을 때만 캐시 갱신 (GC 할당 최소화)
+            if (_isDirty)
             {
+                _cachedHandlers = InputHandlers.ToArray();
+                _isDirty = false;
+            }
+
+            foreach (var input in _cachedHandlers)
+            {
+                // 순회 중 Dispose된 핸들러는 스킵 (캐시된 배열이므로 순회 중 컬렉션 변경 가능)
+                if (input.Disposed)
+                {
+                    continue;
+                }
+                
                 input.UpdateState();
             }
         }

@@ -15,6 +15,11 @@ namespace Jin5eok
     public interface IInputHandlerBase : IDisposable
     {
         /// <summary>
+        /// InputHandler가 Dispose되었는지 여부를 반환합니다.
+        /// </summary>
+        public bool Disposed { get; }
+        
+        /// <summary>
         /// InputHandlerUpdater에 의해 매 프레임 호출되며 호출시 입력 값을 반영하는 업데이트를 수행합니다.
         /// 일반적으로는 사용자가 직접 호출할 필요 없습니다.
         /// </summary>

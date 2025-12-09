@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,6 +20,8 @@ namespace Jin5eok
         public override T Value { get; protected set; }
 
         private List<IInputHandler<T>> _childInputs = new();
+        private IInputHandler<T>[] _cachedChildInputs = Array.Empty<IInputHandler<T>>();
+        private bool _isDirty = true;
 
         private List<IInputHandler<T>> ChildInputs
         {
@@ -60,7 +63,8 @@ namespace Jin5eok
         {
             if (ChildInputs.Contains(inputHandler) == false)
             {
-                ChildInputs.Add(inputHandler);   
+                ChildInputs.Add(inputHandler);
+                _isDirty = true;
             }
         }
         
@@ -73,6 +77,7 @@ namespace Jin5eok
             if (ChildInputs.Contains(inputHandler) == true)
             {
                 ChildInputs.Remove(inputHandler);
+                _isDirty = true;
             }
         }
 
@@ -82,6 +87,7 @@ namespace Jin5eok
         public void RemoveAllInputs()
         {
             ChildInputs.Clear();
+            _isDirty = true;
         }
 
         /// <summary>
@@ -94,12 +100,21 @@ namespace Jin5eok
                 return;
             }
             
-            // Cache a copy to prevent changes during iteration
-            var inputGroup = ChildInputs.ToList();
-
-            T changedValue = default;
-            foreach (var input in inputGroup)
+            // 컬렉션이 변경되었을 때만 캐시 갱신 (GC 할당 최소화)
+            if (_isDirty)
             {
+                _cachedChildInputs = ChildInputs.ToArray();
+                _isDirty = false;
+            }
+            
+            T changedValue = default;
+            foreach (var input in _cachedChildInputs)
+            {
+                if (input == null || input.Disposed)
+                {
+                    continue;
+                }
+                
                 input.UpdateState();
                 if (IsEquals(input.Value, default) == false)
                 {
