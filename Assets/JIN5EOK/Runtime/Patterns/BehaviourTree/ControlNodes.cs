@@ -1,83 +1,111 @@
 namespace Jin5eok
 {
     /// <summary>
-    /// 순차 실행 노드입니다. 모든 자식 노드를 순서대로 실행하며, 하나라도 실패하면 즉시 false를 반환합니다.
+    /// 순차 실행 노드입니다. 모든 자식 노드를 순서대로 실행하며, 하나라도 실패하면 즉시 Failure를 반환합니다.
+    /// 자식이 Running이면 Running을 전파합니다.
     /// </summary>
-    public class SequencerNode : BehaviourTreeNode
+    public class SequencerNode<TContext> : BehaviourTreeNode<TContext>
     {
-        /// <summary>
-        /// 모든 자식 노드를 순서대로 실행합니다. 하나라도 실패하면 즉시 false를 반환합니다.
-        /// </summary>
-        /// <returns>모든 자식 노드가 성공하면 true, 하나라도 실패하면 false</returns>
-        public override bool Execute()
+        public override BTStatus Execute(TContext context)
         {
             foreach (var child in Children)
             {
-                if (child.Execute() == false)
+                var status = child.Execute(context);
+                if (status == BTStatus.Failure)
                 {
-                    return false;
+                    return BTStatus.Failure;
+                }
+
+                if (status == BTStatus.Running)
+                {
+                    return BTStatus.Running;
                 }
             }
-            return true;
+
+            return BTStatus.Success;
         }
     }
-    
+
     /// <summary>
-    /// 병렬 순차 실행 노드입니다. 모든 자식 노드를 병렬로 실행하며, 모든 노드가 성공해야 true를 반환합니다.
+    /// 병렬 순차 실행 노드입니다. 모든 자식 노드를 병렬로 실행하며, 모든 노드가 성공해야 Success를 반환합니다.
+    /// 하나라도 실패하면 Failure, 하나라도 Running이면 Running을 반환합니다.
     /// </summary>
-    public class ParallelSequencerNode : BehaviourTreeNode
+    public class ParallelSequencerNode<TContext> : BehaviourTreeNode<TContext>
     {
-        /// <summary>
-        /// 모든 자식 노드를 병렬로 실행합니다. 모든 노드가 성공해야 true를 반환합니다.
-        /// </summary>
-        /// <returns>모든 자식 노드가 성공하면 true, 하나라도 실패하면 false</returns>
-        public override bool Execute()
+        /// <inheritdoc />
+        public override BTStatus Execute(TContext context)
         {
-            var isSucceedAll = true;
+            var hasRunning = false;
             foreach (var child in Children)
             {
-                isSucceedAll &= child.Execute();
+                var status = child.Execute(context);
+                if (status == BTStatus.Failure)
+                {
+                    return BTStatus.Failure;
+                }
+
+                if (status == BTStatus.Running)
+                {
+                    hasRunning = true;
+                }
             }
-            return isSucceedAll;
+
+            return hasRunning ? BTStatus.Running : BTStatus.Success;
         }
     }
-    
+
     /// <summary>
-    /// 선택 노드입니다. 자식 노드를 순서대로 실행하며, 하나라도 성공하면 즉시 true를 반환합니다.
+    /// 선택 노드입니다. 자식 노드를 순서대로 실행하며, 하나라도 성공하면 즉시 Success를 반환합니다.
+    /// 자식이 Running이면 Running을 전파합니다.
     /// </summary>
-    public class SelectorNode : BehaviourTreeNode
+    public class SelectorNode<TContext> : BehaviourTreeNode<TContext>
     {
-        /// <summary>
-        /// 자식 노드를 순서대로 실행합니다. 하나라도 성공하면 즉시 true를 반환합니다.
-        /// </summary>
-        /// <returns>하나라도 성공하면 true, 모두 실패하면 false</returns>
-        public override bool Execute() 
+        /// <inheritdoc />
+        public override BTStatus Execute(TContext context)
         {
             foreach (var child in Children)
             {
-                if (child.Execute() == true) return true; 
+                var status = child.Execute(context);
+                if (status == BTStatus.Success)
+                {
+                    return BTStatus.Success;
+                }
+
+                if (status == BTStatus.Running)
+                {
+                    return BTStatus.Running;
+                }
             }
-            return false;
+
+            return BTStatus.Failure;
         }
     }
-    
+
     /// <summary>
-    /// 병렬 선택 노드입니다. 모든 자식 노드를 병렬로 실행하며, 하나라도 성공하면 true를 반환합니다.
+    /// 병렬 선택 노드입니다. 모든 자식 노드를 병렬로 실행하며, 하나라도 성공하면 Success를 반환합니다.
+    /// 모두 실패하면 Failure, 하나라도 Running이면 Running을 반환합니다.
     /// </summary>
-    public class ParallelSelectorNode : BehaviourTreeNode
+    public class ParallelSelectorNode<TContext> : BehaviourTreeNode<TContext>
     {
-        /// <summary>
-        /// 모든 자식 노드를 병렬로 실행합니다. 하나라도 성공하면 true를 반환합니다.
-        /// </summary>
-        /// <returns>하나라도 성공하면 true, 모두 실패하면 false</returns>
-        public override bool Execute()
+        /// <inheritdoc />
+        public override BTStatus Execute(TContext context)
         {
-            var isSucceed = false;
+            var hasRunning = false;
             foreach (var child in Children)
             {
-                isSucceed |= child.Execute();
+                var status = child.Execute(context);
+                if (status == BTStatus.Success)
+                {
+                    return BTStatus.Success;
+                }
+
+                if (status == BTStatus.Running)
+                {
+                    hasRunning = true;
+                }
             }
-            return isSucceed;
+
+            return hasRunning ? BTStatus.Running : BTStatus.Failure;
         }
     }
 }
