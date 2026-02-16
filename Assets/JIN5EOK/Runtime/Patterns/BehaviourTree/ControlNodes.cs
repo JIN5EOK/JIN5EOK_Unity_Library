@@ -108,4 +108,28 @@ namespace Jin5eok
             return hasRunning ? BTStatus.Running : BTStatus.Failure;
         }
     }
+
+    /// <summary>
+    /// 자식 하나의 결과를 반전하는 데코레이터 노드입니다.
+    /// Success는 Failure로, Failure는 Success로 반환하며, Running은 그대로 전파합니다.
+    /// </summary>
+    public class InverterNode<TContext> : BehaviourTreeNode<TContext>
+    {
+        /// <inheritdoc />
+        public override BTStatus Execute(TContext context)
+        {
+            if (Children.Count == 0)
+            {
+                return BTStatus.Failure;
+            }
+
+            var status = Children[0].Execute(context);
+            return status switch
+            {
+                BTStatus.Success => BTStatus.Failure,
+                BTStatus.Failure => BTStatus.Success,
+                _ => status
+            };
+        }
+    }
 }
