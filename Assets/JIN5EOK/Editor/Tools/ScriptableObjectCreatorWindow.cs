@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Linq;
 using System.Reflection;
@@ -147,3 +148,4 @@ namespace Jin5eok.Editor
         }
     }
 }
+#endif
